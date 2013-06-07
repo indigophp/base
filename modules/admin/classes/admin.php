@@ -11,5 +11,6 @@ class Admin
 		$monolog->pushHandler($stream);
 
 		$monolog->log('WARNING', 'This is a test message');
+		// var_dump(\Config::get('theme')); exit;
 	}
 }
