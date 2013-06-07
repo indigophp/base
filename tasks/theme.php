@@ -23,8 +23,6 @@ class Theme
 
 		try {
 			\File::copy_dir($theme['path'] . 'assets', $path . $theme['name']);
-			static::save_theme($theme);
-			return \Cli::write(\Cli::color('Install successful!', 'blue'));
 		}
 		catch (\OutsideAreaException $e)
 		{
@@ -38,6 +36,9 @@ class Theme
 		{
 			return \Cli::error(\Cli::color('Asset path already exists', 'red'));
 		}
+
+		static::save_theme($theme);
+		return \Cli::write(\Cli::color('Install successful!', 'blue'));
 	}
 
 	public static function uninstall($theme = null)
@@ -52,8 +53,6 @@ class Theme
 
 		try {
 			\File::delete_dir($path . $theme['name']);
-			static::save_theme($theme, false);
-			return \Cli::write(\Cli::color('Uninstall successful!', 'blue'));
 		}
 		catch (\OutsideAreaException $e)
 		{
@@ -67,6 +66,9 @@ class Theme
 		{
 			return \Cli::error(\Cli::color('Asset path not exists', 'red'));
 		}
+
+		static::save_theme($theme, false);
+		return \Cli::write(\Cli::color('Uninstall successful!', 'blue'));
 	}
 
 	public static function reinstall($theme = null)
