@@ -8,106 +8,205 @@ class Theme
 	public static function run()
 	{
 		\Cli::write(\Cli::color('Fuel Asset Installer', 'blue') . "\n");
-		\Cli::write("Usage:\noil r asset::(un)install [theme]");
+		\Cli::write("Usage:\noil r asset::(un)install [theme[,theme,...]]");
+		\Cli::write("Advanced:\noil r asset::(un)install [theme[,theme,...]] -m, --manual");
 	}
 
-	public static function install($theme = null)
+	public function install($themes = null)
 	{
-		$theme = static::get_theme($theme);
-		$path = DOCROOT . 'public' . DS . \Config::get('theme.assets_folder', 'themes') . DS;
-
-		if ( ! is_array($theme))
+		if (\Cli::option('manual', \Cli::option('m'))) {
+			$this->install_manual($themes);
+		}
+		else
 		{
-			return \Cli::error(\Cli::color('Theme not found', 'red'));
+			$this->install_auto($themes);
 		}
-
-		try {
-			\File::copy_dir($theme['path'] . 'assets', $path . $theme['name']);
-		}
-		catch (\OutsideAreaException $e)
-		{
-			return \Cli::error(\Cli::color('Asset path not found', 'red'));
-		}
-		catch (\InvalidPathException $e)
-		{
-			return \Cli::error(\Cli::color('Asset path not found', 'red'));
-		}
-		catch (\FileAccessException $e)
-		{
-			return \Cli::error(\Cli::color('Asset path already exists', 'red'));
-		}
-
-		static::save_theme($theme);
-		return \Cli::write(\Cli::color('Install successful!', 'blue'));
 	}
 
-	public static function uninstall($theme = null)
+	public function uninstall($themes = null)
 	{
-		$theme = static::get_theme($theme);
-		$path = DOCROOT . 'public' . DS . \Config::get('theme.assets_folder', 'themes') . DS;
-
-		if ( ! is_array($theme))
+		if (\Cli::option('manual', \Cli::option('m'))) {
+			$this->uninstall_manual($themes);
+		}
+		else
 		{
-			return \Cli::error(\Cli::color('Theme not found', 'red'));
+			$this->uninstall_auto($themes);
 		}
-
-		try {
-			\File::delete_dir($path . $theme['name']);
-		}
-		catch (\OutsideAreaException $e)
-		{
-			return \Cli::error(\Cli::color('Asset path not found', 'red'));
-		}
-		catch (\InvalidPathException $e)
-		{
-			return \Cli::error(\Cli::color('Asset path not found', 'red'));
-		}
-		catch (\FileAccessException $e)
-		{
-			return \Cli::error(\Cli::color('Asset path not exists', 'red'));
-		}
-
-		static::save_theme($theme, false);
-		return \Cli::write(\Cli::color('Uninstall successful!', 'blue'));
 	}
 
-	public static function reinstall($theme = null)
+	public function reinstall($themes = null)
 	{
 		static::uninstall();
 		return static::install();
 	}
 
-	private static function get_theme($theme = null)
+	private function install_manual($themes = null)
 	{
-		$instance = \Theme::instance();
-		$path = \Config::get('theme.asset_path', 'themes');
 
-		if ($theme === null)
+		if (is_string($themes))
 		{
-			$theme = $instance->active();
-		}
-		elseif($instance->find($theme))
-		{
-			$theme = array(
-				'name' => $theme,
-				'path' => $instance->find($theme)
-			);
+			$themes = explode(',', $themes);
 		}
 		else
 		{
-			return false;
+			$themes = \Theme::instance()->all();
 		}
 
-		return $theme;
+		$assets_folder = DOCROOT . 'public' . DS . \Config::get('theme.assets_folder', 'themes') . DS;
+
+		foreach ($themes as $theme)
+		{
+			$asset_path = $assets_folder . $theme;
+			$path = \Theme::instance()->find($theme);
+			if ($path && ! is_readable($asset_path))
+			{
+				try {
+					\File::copy_dir($path . 'assets', $asset_path);
+					\Cli::write(\Cli::color($theme . ' installed successfully!', 'green'));
+				}
+				catch (\OutsideAreaException $e)
+				{
+					\Cli::error(\Cli::color('Asset path not found', 'red'));
+				}
+				catch (\InvalidPathException $e)
+				{
+					\Cli::error(\Cli::color('Asset path not found', 'red'));
+				}
+				catch (\FileAccessException $e)
+				{
+					\Cli::error(\Cli::color('Asset path already exists', 'red'));
+				}
+			}
+			elseif($path && is_readable($asset_path))
+			{
+				\Cli::error(\Cli::color($theme . ' theme is already installed', 'red'));
+			}
+			else
+			{
+				\Cli::error(\Cli::color($theme . ' theme cannot be installed', 'red'));
+			}
+		}
 	}
 
-	private static function save_theme($theme, $method = true)
+	private function uninstall_manual($themes = null)
 	{
-		$instance = \Theme::instance();
-		$info = $instance->load_info($theme['name']);
 
-		\Arr::set($info, 'installed', (bool)$method);
+		if (is_string($themes))
+		{
+			$themes = explode(',', $themes);
+		}
+		else
+		{
+			$themes = \Theme::instance()->all();
+		}
 
-		return \Config::save($theme['path'] . \Config::get('theme.info_file_name', 'themeinfo.php'), $info);
+		$assets_folder = DOCROOT . 'public' . DS . \Config::get('theme.assets_folder', 'themes') . DS;
+
+		foreach ($themes as $theme)
+		{
+			$asset_path = $assets_folder . $theme;
+			if (is_dir($asset_path))
+			{
+				try {
+					\File::delete_dir($asset_path);
+					\Cli::write(\Cli::color($theme . ' uninstalled successfully!', 'green'));
+				}
+				catch (\OutsideAreaException $e)
+				{
+					\Cli::error(\Cli::color('Asset path not found', 'red'));
+				}
+				catch (\InvalidPathException $e)
+				{
+					\Cli::error(\Cli::color('Asset path not found', 'red'));
+				}
+				catch (\FileAccessException $e)
+				{
+					\Cli::error(\Cli::color('Something went wrong', 'red'));
+				}
+			}
+			else
+			{
+				\Cli::error(\Cli::color($theme . ' theme cannot be uninstalled', 'red'));
+			}
+		}
+	}
+
+	private function install_auto($themes = null)
+	{
+
+		if (is_string($themes))
+		{
+			$themes = explode(',', $themes);
+		}
+		else
+		{
+			$themes = \Theme::instance()->all();
+		}
+
+		$assets_folder = DOCROOT . 'public' . DS . \Config::get('theme.assets_folder', 'themes') . DS;
+
+		foreach ($themes as $theme)
+		{
+			$asset_path = $assets_folder . $theme;
+			$path = \Theme::instance()->find($theme);
+			if ($path && ! is_readable($asset_path))
+			{
+				$return = symlink($path . 'assets', $asset_path);
+
+				if ($return)
+				{
+					\Cli::write(\Cli::color($theme . ' theme is successfully installed', 'green'));
+				}
+				else
+				{
+					\Cli::error(\Cli::color($theme . ' theme cannot be installed', 'red'));
+				}
+			}
+			elseif($path && is_readable($asset_path))
+			{
+				\Cli::error(\Cli::color($theme . ' theme is already installed', 'red'));
+			}
+			else
+			{
+				\Cli::error(\Cli::color($theme . ' theme cannot be installed', 'red'));
+			}
+		}
+	}
+
+	private function uninstall_auto($themes = null)
+	{
+
+		if (is_string($themes))
+		{
+			$themes = explode(',', $themes);
+		}
+		else
+		{
+			$themes = \Theme::instance()->all();
+		}
+
+		$assets_folder = DOCROOT . 'public' . DS . \Config::get('theme.assets_folder', 'themes') . DS;
+
+		foreach ($themes as $theme)
+		{
+			$asset_path = $assets_folder . $theme;
+			if (is_link($asset_path))
+			{
+				$return = unlink($asset_path);
+
+				if ($return)
+				{
+					\Cli::write(\Cli::color($theme . ' theme is successfully uninstalled', 'green'));
+				}
+				else
+				{
+					\Cli::error(\Cli::color($theme . ' theme cannot be uninstalled', 'red'));
+				}
+			}
+			elseif(is_dir($asset_path))
+			{
+				\Cli::error(\Cli::color($theme . ' theme is manually installed', 'red'));
+			}
+		}
 	}
 }
