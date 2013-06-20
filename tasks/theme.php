@@ -36,8 +36,15 @@ class Theme
 
 	public function reinstall($themes = null)
 	{
-		static::uninstall();
-		return static::install();
+		if (\Cli::option('manual', \Cli::option('m'))) {
+			$this->install_manual($themes);
+			$this->uninstall_manual($themes);
+		}
+		else
+		{
+			$this->install_auto($themes);
+			$this->uninstall_auto($themes);
+		}
 	}
 
 	private function install_manual($themes = null)
