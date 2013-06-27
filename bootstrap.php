@@ -1,7 +1,9 @@
 <?php
 
+define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
+
 $paths = \Config::get( 'module_paths', array() );
-$paths[] = __DIR__.DS.'modules'.DS;
+$paths[] = BASEPATH.'modules'.DS;
 \Config::set('module_paths', $paths);
 
 Autoloader::add_core_namespace('Base');
@@ -12,6 +14,8 @@ Autoloader::add_classes(array(
 ));
 
 \Config::load('theme', true, true);
+
+\Config::load('base');
 
 \Theme::instance();
 
