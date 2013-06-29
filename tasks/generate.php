@@ -109,6 +109,9 @@ class Generate
 			"email": "AUTHOR@example.com"
 		}
 	],
+	"require": {
+		"composer/installers": "~1.0"
+	},
 	"extra": {
 		"installer-name": "{$name}"
 	}
