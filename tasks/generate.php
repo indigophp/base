@@ -159,7 +159,7 @@ class {$class_name}
 	 */
 	public static function _init()
 	{
-		\Config::load({$name}, true);
+		\Config::load('{$name}', true);
 	}
 
 	/**
@@ -192,8 +192,8 @@ class {$class_name}
 	/**
 	 * Return a specific driver, or the default instance (is created if necessary)
 	 *
-	 * @param   string  $instance
-	 * @return  {$class_name}_Driver
+	 * @param   string  \$instance
+	 * @return  {$class_name} instance
 	 */
 	public static function instance(\$instance = null)
 	{
@@ -296,7 +296,7 @@ CONFIG;
 
 namespace {$class_name};
 
-class {$class_name}_{$driver_name}
+class {$class_name}_{$driver_name}  extends {$class_name}_Driver
 {
 	/**
 	* Driver specific functions
