@@ -160,8 +160,10 @@ class {$class_name}
 	 * @param	array			\$config		Extra config array
 	 * @return  {$class_name} instance
 	 */
-	public static function forge(array \$config = array())
+	public static function forge(\$config = array())
 	{
+		! is_array(\$config) && \$config = array('driver' => \$config);
+
 		\$config = \Arr::merge(static::\$_defaults, \Config::load('{$name}', array()), \$config);
 
 		\$class = '\\{$class_name}\\{$class_name}_' . ucfirst(\$config['driver']);
@@ -171,11 +173,11 @@ class {$class_name}
 			throw new \FuelException('Could not find {$class_name} driver: ' . \$config['driver']);
 		}
 
-		$driver = $class($queue, $config);
+		\$driver = \$class(\$queue, \$config);
 
-		static::$_instances[$queue] = $driver;
+		static::\$_instances[\$queue] = \$driver;
 
-		return $driver;
+		return \$driver;
 	}
 
 	/**
