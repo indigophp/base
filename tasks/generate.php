@@ -275,7 +275,7 @@ class {$class_name}_{$driver_name}
 	*/
 }
 CLASS;
-			$bootstrap .= "\n\t'{$class_name}\\{$class_name}_{$driver_name}' => __DIR__ . '/classes/{$name}/{$driver}.php',";
+			$bootstrap .= "\n\t'{$class_name}\\\\{$class_name}_{$driver_name}' => __DIR__ . '/classes/{$name}/{$driver}.php',";
 			static::create($path . 'classes' . DS . $name . DS . $driver . '.php', $output);
 		}
 
@@ -285,10 +285,10 @@ CLASS;
 Autoloader::add_core_namespace('{$class_name}');
 
 Autoloader::add_classes(array(
-	'{$class_name}\\{$class_name}' => __DIR__ . '/classes/{$name}.php',
-	'{$class_name}\\{$class_name}Exception' => __DIR__ . '/classes/{$name}.php',
+	'{$class_name}\\\\{$class_name}' => __DIR__ . '/classes/{$name}.php',
+	'{$class_name}\\\\{$class_name}Exception' => __DIR__ . '/classes/{$name}.php',
 
-	'{$class_name}\\{$class_name}_Driver' => __DIR__ . '/classes/{$name}/driver.php',
+	'{$class_name}\\\\{$class_name}_Driver' => __DIR__ . '/classes/{$name}/driver.php',
 {$bootstrap}
 ));
 CLASS;
