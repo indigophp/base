@@ -257,6 +257,16 @@ DRIVER;
 
 		static::create($path . 'classes' . DS . $name . DS . 'driver.php', $output);
 
+		$output = <<<CONFIG
+<?php
+
+return array(
+
+);
+CONFIG;
+
+		static::create($path . 'config' . DS . $name . '.php', $output);
+
 
 		$bootstrap = "";
 		foreach ($drivers as $driver)
