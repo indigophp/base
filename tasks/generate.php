@@ -227,7 +227,7 @@ CLASS;
 
 namespace {$class_name};
 
-class {$class_name}_Driver
+abstract class {$class_name}_Driver
 {
 	/**
 	* Driver config
