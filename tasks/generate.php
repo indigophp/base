@@ -155,16 +155,25 @@ class {$class_name}
 	protected static \$_defaults = array();
 
 	/**
+	 * Init
+	 */
+	public static function _init()
+	{
+		\Config::load({$name}, true);
+	}
+
+	/**
 	 * {$class_name} driver forge.
 	 *
+	 * @param	string			\$instance		Instance name
 	 * @param	array			\$config		Extra config array
 	 * @return  {$class_name} instance
 	 */
-	public static function forge(\$config = array())
+	public static function forge(\$instance = 'default', \$config = array())
 	{
 		! is_array(\$config) && \$config = array('driver' => \$config);
 
-		\$config = \Arr::merge(static::\$_defaults, \Config::load('{$name}', array()), \$config);
+		\$config = \Arr::merge(static::\$_defaults, \Config::get('{$name}', array()), \$config);
 
 		\$class = '\\{$class_name}\\{$class_name}_' . ucfirst(\$config['driver']);
 
@@ -173,9 +182,9 @@ class {$class_name}
 			throw new \FuelException('Could not find {$class_name} driver: ' . \$config['driver']);
 		}
 
-		\$driver = \$class(\$queue, \$config);
+		\$driver = \$class(\$config);
 
-		static::\$_instances[\$queue] = \$driver;
+		static::\$_instances[\$instance] = \$driver;
 
 		return \$driver;
 	}
@@ -183,7 +192,7 @@ class {$class_name}
 	/**
 	 * Return a specific driver, or the default instance (is created if necessary)
 	 *
-	 * @param   string  queue
+	 * @param   string  $instance
 	 * @return  {$class_name}_Driver
 	 */
 	public static function instance(\$instance = null)
