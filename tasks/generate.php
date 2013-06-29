@@ -171,7 +171,11 @@ class {$class_name}
 			throw new \FuelException('Could not find {$class_name} driver: ' . \$config['driver']);
 		}
 
-		return new \$class(\$config);
+		$driver = $class($queue, $config);
+
+		static::$_instances[$queue] = $driver;
+
+		return $driver;
 	}
 
 	/**
