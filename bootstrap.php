@@ -9,16 +9,13 @@ $paths[] = BASEPATH.'modules'.DS;
 Autoloader::add_core_namespace('Base');
 
 Autoloader::add_classes(array(
-	// 'Admin\\Admin' => __DIR__.'/modules/admin/classes/admin.php',
 	'Module' => __DIR__ . '/classes/module.php',
 	'Fuel\\Core\\Controller_Theme' => __DIR__ . '/classes/controller/theme.php',
 ));
 
 \Config::load('theme', true, true);
-
 \Config::load('base');
 
 
 \Module::load('admin');
 \Module::load('auth');
-\Package::load('rss');

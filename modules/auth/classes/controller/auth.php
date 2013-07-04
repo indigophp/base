@@ -7,18 +7,9 @@ class Controller_Auth extends \Controller_Theme
 
 	public $template = "layout";
 
-	public function before($data = null)
-	{
-		parent::before($data);
-
-		$this->template->set('title', 'My homepage');
-	}
-
 	public function action_login()
 	{
-		// $data["subnav"] = array('login'=> 'active' );
-		// $this->template->title = 'Auth &raquo; Login';
-		// $this->template->content = View::forge('auth/login', $data);
+		$this->template->title = __('auth.login.title');
 		$this->theme->set_partial('content', 'login');
 	}
 
@@ -31,16 +22,14 @@ class Controller_Auth extends \Controller_Theme
 
 	public function action_register()
 	{
-		$data["subnav"] = array('register'=> 'active' );
-		$this->template->title = 'Auth &raquo; Register';
-		$this->template->content = View::forge('auth/register', $data);
+		$this->template->title = __('auth.register.title');
+		$this->theme->set_partial('content', 'register');
 	}
 
 	public function action_reset()
 	{
-		$data["subnav"] = array('reset'=> 'active' );
-		$this->template->title = 'Auth &raquo; Reset';
-		$this->template->content = View::forge('auth/reset', $data);
+		$this->template->title = __('auth.reset.title');
+		$this->theme->set_partial('content', 'reset');
 	}
 
 	public function action_confirm()
