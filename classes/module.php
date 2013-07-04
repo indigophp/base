@@ -1,7 +1,5 @@
 <?php
 
-namespace Base;
-
 class Module extends \Fuel\Core\Module
 {
 

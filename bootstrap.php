@@ -10,16 +10,14 @@ Autoloader::add_core_namespace('Base');
 
 Autoloader::add_classes(array(
 	// 'Admin\\Admin' => __DIR__.'/modules/admin/classes/admin.php',
-	'Base\\Module' => __DIR__ . '/classes/module.php',
+	'Module' => __DIR__ . '/classes/module.php',
+	'Fuel\\Core\\Controller_Theme' => __DIR__ . '/classes/controller/theme.php',
 ));
 
 \Config::load('theme', true, true);
 
 \Config::load('base');
 
-\Theme::instance();
-
-// Autoloader::load('Admin\\Admin');
 
 \Module::load('admin');
 \Module::load('auth');

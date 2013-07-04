@@ -6,4 +6,5 @@ return array(
 	),
 	'assets_folder' => 'themes',
 	'view_ext' => '.php',
+	'use_modules' => true
 );
