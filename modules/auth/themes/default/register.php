@@ -3,59 +3,47 @@
 		<form class="form-horizontal">
 			<h2 class="form-signin-heading"><?php echo __('auth.register.title'); ?></h2>
 			<div class="control-group">
-				<label class="control-label" for="first_name">First Name</label>
+				<label class="control-label" for="first_name"><?php echo __('auth.register.fields.first_name'); ?></label>
 				<div class="controls">
 					<div class="input-prepend">
 						<span class="add-on"><i class="icon-user"></i></span>
-						<input type="text" class="input-xlarge" id="first_name" name="first_name" placeholder="First Name">
+						<input type="text" class="input-xlarge" id="first_name" name="first_name" placeholder="<?php echo __('auth.register.fields.first_name'); ?>">
 					</div>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">Last Name</label>
+				<label class="control-label" for="last_name"><?php echo __('auth.register.fields.last_name'); ?></label>
 				<div class="controls">
 					<div class="input-prepend">
 						<span class="add-on"><i class="icon-user"></i></span>
-						<input type="text" class="input-xlarge" id="lname" name="lname" placeholder="Last Name">
+						<input type="text" class="input-xlarge" id="last_name" name="last_name" placeholder="<?php echo __('auth.register.fields.last_name'); ?>">
 					</div>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">Email</label>
+				<label class="control-label" for="email"><?php echo __('auth.register.fields.email'); ?></label>
 				<div class="controls">
 					<div class="input-prepend">
 						<span class="add-on"><i class="icon-envelope"></i></span>
-						<input type="text" class="input-xlarge" id="email" name="email" placeholder="Email">
+						<input type="text" class="input-xlarge" id="email" name="email" placeholder="<?php echo __('auth.register.fields.email'); ?>">
 					</div>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">Gender</label>
-				<div class="controls">
-
-						<p><div id="gender" name="gender" class="btn-group" data-toggle="buttons-radio">
-						<button type="button" class="btn btn-info">Male</button>
-						<button type="button" class="btn btn-info">Female</button>
-
-					  </div></p>
-
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label">Password</label>
+				<label class="control-label" for="password"><?php echo __('auth.register.fields.password'); ?></label>
 				<div class="controls">
 					<div class="input-prepend">
 					<span class="add-on"><i class="icon-lock"></i></span>
-						<input type="Password" id="passwd" class="input-xlarge" name="passwd" placeholder="Password">
+						<input type="password" id="password" class="input-xlarge" name="password" placeholder="<?php echo __('auth.register.fields.password'); ?>">
 					</div>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">Confirm Password</label>
+				<label class="control-label" for="confirm_password"><?php echo __('auth.register.fields.confirm_password'); ?></label>
 				<div class="controls">
 					<div class="input-prepend">
 					<span class="add-on"><i class="icon-lock"></i></span>
-						<input type="Password" id="conpasswd" class="input-xlarge" name="conpasswd" placeholder="Re-enter Password">
+						<input type="password" id="confirm_password" class="input-xlarge" name="confirm_password" placeholder="<?php echo __('auth.register.fields.confirm_password'); ?>">
 					</div>
 				</div>
 			</div>
@@ -63,9 +51,7 @@
 			<button class="btn btn-large btn-primary" type="submit"><?php echo __('auth.login.fields.sign_in'); ?></button>
 		</form>
 		<?php
-			echo \Html::anchor(\Uri::create('auth/register'), __('auth.register.title'));
-			echo "<br />";
-			echo \Html::anchor(\Uri::create('auth/reset'), __('auth.reset.title'));
+			echo \Html::anchor(\Uri::create('auth/login'), __('auth.login.title'));
 		?>
 	</div>
 </div>

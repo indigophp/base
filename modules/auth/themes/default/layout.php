@@ -7,8 +7,8 @@
 		<title><?php echo $title; ?></title>
 
 		<!-- Le styles -->
-		<?php echo Asset::css('bootstrap.css'); ?>
-		<?php echo Asset::js('bootstrap.js'); ?>
+		<?php echo $asset->css('bootstrap.css'); ?>
+		<?php echo $asset->js('bootstrap.js'); ?>
 		<style type="text/css">
 		body {
 			padding-top: 40px;

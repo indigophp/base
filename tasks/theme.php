@@ -12,6 +12,12 @@ class Theme
 		\Cli::write("Advanced:\noil r asset::(un)install [theme[,theme,...]] -m, --manual");
 	}
 
+	public function __construct()
+	{
+		$assets_folder = DOCROOT . 'public' . DS . \Config::get('theme.assets_folder', 'themes') . DS;
+		is_dir($assets_folder) || mkdir($assets_folder, 0755);
+	}
+
 	public function install($themes = null)
 	{
 		if (\Cli::option('manual', \Cli::option('m'))) {

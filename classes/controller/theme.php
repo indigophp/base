@@ -22,6 +22,7 @@ class Controller_Theme extends Controller
 			// Load the template
 			$this->template = $this->theme->set_template($this->template);
 		}
+		$this->template->set_global('asset', $this->theme->asset, false);
 
 		return parent::before($data);
 	}

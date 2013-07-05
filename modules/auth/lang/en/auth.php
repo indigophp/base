@@ -11,7 +11,14 @@ return array(
 		)
 	),
 	'register' => array(
-		'title' => 'Create an account'
+		'title' => 'Create an account',
+		'fields' => array(
+			'first_name' => 'First name',
+			'last_name' => 'Last name',
+			'email' => 'Email',
+			'password' => 'Password',
+			'confirm_password' => 'Confirm password'
+		)
 	),
 	'reset' => array(
 		'title' => 'Reset password'
