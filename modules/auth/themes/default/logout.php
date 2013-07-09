@@ -1,9 +1,10 @@
-<ul class="nav nav-pills">
-	<li class='<?php echo Arr::get($subnav, "login" ); ?>'><?php echo Html::anchor('auth/login','Login');?></li>
-	<li class='<?php echo Arr::get($subnav, "logout" ); ?>'><?php echo Html::anchor('auth/logout','Logout');?></li>
-	<li class='<?php echo Arr::get($subnav, "register" ); ?>'><?php echo Html::anchor('auth/register','Register');?></li>
-	<li class='<?php echo Arr::get($subnav, "reset" ); ?>'><?php echo Html::anchor('auth/reset','Reset');?></li>
-	<li class='<?php echo Arr::get($subnav, "confirm" ); ?>'><?php echo Html::anchor('auth/confirm','Confirm');?></li>
-
-</ul>
-<p>Logout</p>
+<div class="row">
+	<div id="content" class="span3 offset4">
+		<h2><?php echo __('auth.logout.messages.success'); ?></h2>
+		<?php
+			echo \Html::anchor(\Uri::create('auth/login'), __('auth.login.title'));
+			echo \Html::br();
+			echo \Html::anchor(\Uri::create('auth/register'), __('auth.register.title'));
+		?>
+	</div>
+</div>
