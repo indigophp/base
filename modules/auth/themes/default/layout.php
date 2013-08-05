@@ -7,8 +7,11 @@
 		<title><?php echo $title; ?></title>
 
 		<!-- Le styles -->
-		<?php echo $asset->css('bootstrap.css'); ?>
-		<?php echo $asset->js('bootstrap.js'); ?>
+		<?php
+			echo $asset->css('bootstrap.css');
+			echo $asset->js('bootstrap.js');
+			echo $asset->css('bootstrap-responsive.css');
+		?>
 		<style type="text/css">
 		body {
 			padding-top: 40px;
@@ -33,16 +36,9 @@
 		.form-signin .checkbox {
 			margin-bottom: 10px;
 		}
-		.form-signin input[type="text"],
-		.form-signin input[type="password"] {
-			font-size: 16px;
-			height: auto;
-			margin-bottom: 15px;
-			padding: 7px 9px;
-		}
+
 
 		</style>
-		<?php echo Asset::css('bootstrap-responsive.css'); ?>
 
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>

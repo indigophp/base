@@ -18,5 +18,5 @@ Autoloader::add_classes(array(
 \Config::load('base');
 
 
-\Module::load('admin');
+// \Module::load('admin');
 \Module::load('auth');
