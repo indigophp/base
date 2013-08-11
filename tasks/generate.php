@@ -175,16 +175,16 @@ class {$class_name}
 
 		\$config = \Arr::merge(static::\$_defaults, \Config::get('{$name}', array()), \$config);
 
-		\$class = '\\{$class_name}\\{$class_name}_' . ucfirst(\$config['driver']);
+		\$class = '\\{$class_name}\\{$class_name}_' . ucfirst(strtolower(\$config['driver']));
 
 		if( ! class_exists(\$class, true))
 		{
-			throw new \FuelException('Could not find {$class_name} driver: ' . \$config['driver']);
+			throw new \FuelException('Could not find {$class_name} driver: ' . ucfirst(strtolower(\$config['driver']));
 		}
 
-		\$driver = \$class(\$config);
+		\$driver = new \$class(\$config);
 
-		static::\$_instances[\$instance] = \$driver;
+		static::\$_instances[\$instance] =& \$driver;
 
 		return \$driver;
 	}
