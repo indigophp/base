@@ -9,10 +9,10 @@ $paths[] = BASEPATH.'modules'.DS;
 Autoloader::add_core_namespace('Base');
 
 Autoloader::add_classes(array(
-	'Module' => __DIR__ . '/classes/module.php',
-	'Html' => __DIR__ . '/classes/html.php',
+	'Module'                       => __DIR__ . '/classes/module.php',
+	'Html'                         => __DIR__ . '/classes/html.php',
 	'Fuel\\Core\\Controller_Theme' => __DIR__ . '/classes/controller/theme.php',
-	'Orm\\Model_Lang' => __DIR__ . '/classes/model/lang.php',
+	// 'Orm\\Model_Lang' => __DIR__ . '/classes/model/lang.php',
 ));
 
 \Config::load('theme', true, true);
