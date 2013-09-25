@@ -10,7 +10,6 @@ class Module extends \Fuel\Core\Module
 		if ($parent === true)
 		{
 			$path = static::exists($module);
-			\Finder::instance()->add_path($path, 1);
 			if (\Finder::forge(array($path))->locate('', 'bootstrap') !== false)
 			{
 				\Fuel::load($path . 'bootstrap.php');
