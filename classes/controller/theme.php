@@ -17,6 +17,11 @@ class Controller_Theme extends Controller
 	{
 		$this->theme = \Theme::instance();
 
+		if ($engine = $this->theme->get_info('engine'))
+		{
+			var_dump($engine);
+			$this->theme->set_config('view_ext', '.' . $engine);
+		}
 		if ( ! empty($this->template) and is_string($this->template))
 		{
 			// Load the template
