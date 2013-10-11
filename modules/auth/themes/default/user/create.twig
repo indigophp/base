@@ -1,0 +1,44 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Create User{% endblock %}
+
+{% block content %}
+
+<h2>Create User	<small>Define a new user to be created</small></h2>
+<!-- <p class="lead">Provide the details needed to create a user.</p> -->
+
+{% include 'user/form.twig' %}
+
+{% endblock %}
+
+{% block documentready %}
+	$('#inputGroup').selectpicker();
+	$('[name=password]').pwstrength();
+	$('[name=password2]').on('input', function() {
+		if ($(this).val() != $('[name=password]').val()) {
+			$(this)[0].setCustomValidity('The two passwords must match.');
+		} else {
+			$(this)[0].setCustomValidity('');
+		}
+	});
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+	<script src="{{ base_url() }}assets/theme/js/pwstrength.js"></script>
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	<style type="text/css">
+		/*.navbar-default
+		{
+			border-bottom-width: 6px !important;
+			background-color: #222 !important;
+		}
+		.side-navigation
+		{
+			top: 47px !important;
+		}*/
+	</style>
+{% endblock %}

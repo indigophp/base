@@ -1,0 +1,39 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<h2>Users <small>Listing users registered in the system</small></h2>
+<!-- <p class="lead">You can manage your users registered in the system here.</p> -->
+
+<p>
+	<a href="{{ base_url() }}admin/auth/create" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Register new user</a>
+</p>
+
+<div class="panel panel-default">
+	<!-- <div class="panel-heading">
+		<div class="panel-title">
+			<span class="glyphicon glyphicon-user"></span>
+			Users
+		</div>
+	</div> -->
+	<table class="datatables table table-striped table-hover" data-source="{{ base_url() }}admin/auth/ajax/list.json">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Username</th>
+				<th>E-mail</th>
+				<th>Full name</th>
+				<th>Group</th>
+				<th style="width: 140px;"></th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div><!-- /.panel -->
+
+<p>
+	<a href="{{ base_url() }}admin/auth/create" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Register new user</a>
+</p>
+
+{% endblock %}

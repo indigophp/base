@@ -11,6 +11,7 @@ Autoloader::add_core_namespace('Base');
 Autoloader::add_classes(array(
 	'Module'                       => __DIR__ . '/classes/module.php',
 	'Controller_Base'              => __DIR__ . '/classes/controller/base.php',
+	'Controller_Assets'            => __DIR__ . '/classes/controller/assets.php',
 	'Fuel\\Core\\Controller_Theme' => __DIR__ . '/classes/controller/theme.php',
 ));
 

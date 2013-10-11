@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="shortcut icon" href="{{ base_url() }}/assets/ico/favicon.png">
+
+	<title>Sign In &raquo; {{ site_name }}</title>
+
+	<link rel="stylesheet" href="{{ base_url() }}/assets/theme/css/bootstrap.min.css" title="Indigo theme">
+	<link rel="alternate stylesheet" href="{{ base_url() }}/assets/theme/css/bootstrap.asparagus.min.css" title="Asparagus theme">
+
+	<!-- Custom styles for this template and from Bootstrap example -->
+	<style>
+		body {
+			padding-top: 40px;
+			padding-bottom: 40px;
+			background-color: transparent;
+			background-image: none;
+		}
+		html {
+			background-color: #ddd;
+			background-image: url('{{ base_url() }}assets/theme/css/backs/16.jpg');
+			/*background-image: url('{{ base_url() }}assets/theme/css/backs/Squares.png');*/
+			/*background-image: url('backs/wallpaper-1141624.jpg');*/
+			/*background-image: url('backs/wallpaper-1030382.jpg');*/
+			/*background-image: url('backs/wallpaper-1141624.jpg');*/
+			background-position: center center;
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+		}
+
+		.form-signin {
+			max-width: 330px;
+			/*padding: 15px;*/
+			margin: 0 auto;
+		}
+		.form-signin .form-signin-heading,
+		.form-signin .checkbox {
+			margin-bottom: 10px;
+		}
+		.form-signin .checkbox {
+			font-weight: normal;
+		}
+		.form-signin .form-control {
+			position: relative;
+			font-size: 16px;
+			height: auto;
+			padding: 10px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		.form-signin .form-control:focus {
+			z-index: 2;
+		}
+		.form-signin input[type="text"] {
+			margin-bottom: -1px;
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+		.form-signin input[type="password"] {
+			margin-bottom: 10px;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+	</style>
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	  <script src="{{ base_url() }}/assets/theme/js/html5shiv.js"></script>
+	  <script src="{{ base_url() }}/assets/theme/js/respond.min.js"></script>
+	  <![endif]-->
+	</head>
+
+	<body>
+
+		<div class="container">
+
+			<form method="post" action="" class="form-signin panel-default panel">
+				<div class="panel-heading">
+					<h2 class="panel-title">Please sign in</h2>
+				</div>
+				<div class="panel-body">
+					<p class="text-danger">{{ session_get_flash('error') }}</p>
+					<p class="text-success">{{ session_get_flash('success') }}</p>
+					<input name="username" type="text" class="form-control" placeholder="Email address" autofocus>
+					<input name="password" type="password" class="form-control" placeholder="Password">
+					<div class="checkbox">
+						<span class="make-switch">
+							<input name="remember-me" type="checkbox" value="remember-me" id="remember-me">
+						</span>
+						<label class="checkbox" for="remember-me">
+							 Remember me
+						</label>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+				</div>
+			</form>
+
+		</div> <!-- /container -->
+
+
+	<script src="{{ base_url() }}assets/theme/js/jquery-1.9.1.min.js"></script>
+	<script src="{{ base_url() }}assets/theme/js/bootstrap.min.js"></script>
+	<script src="{{ base_url() }}assets/theme/js/bootstrap-switch.min.js"></script>
+	<script src="{{ base_url() }}assets/theme/js/bootstrap-select.min.js"></script>
+	<script src="{{ base_url() }}assets/theme/js/jquery.dataTables.min.js"></script>
+	<script src="{{ base_url() }}assets/theme/js/datatables.js"></script>
+	<script src="{{ base_url() }}assets/theme/js/application.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			IndigoAdmin.pageInit();
+			IndigoAdmin.addFastButton('Mentés', 'save', function() {
+				alert('A mentésre kattintottál');
+			});
+		});
+	</script>
+</body>
+</html>
