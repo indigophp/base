@@ -12,7 +12,7 @@ class Controller_Admin extends \Controller_Base
 
 			if (\Auth::check())
 			{
-				if ( ! \Auth::member(6))
+				if ( ! \Auth::has_access('view_admin'))
 				{
 					\Session::set_flash('error', e('You are not authorized to use the administration panel.'));
 					\Response::redirect('/');

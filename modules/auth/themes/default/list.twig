@@ -7,7 +7,9 @@
 <!-- <p class="lead">You can manage your users registered in the system here.</p> -->
 
 <p>
+	{% if auth_has_access('users.create') %}
 	<a href="{{ base_url() }}admin/auth/create" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Register new user</a>
+	{% endif %}
 </p>
 
 <div class="panel panel-default">
@@ -33,7 +35,9 @@
 </div><!-- /.panel -->
 
 <p>
+	{% if auth_has_access('users.create') %}
 	<a href="{{ base_url() }}admin/auth/create" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Register new user</a>
+	{% endif %}
 </p>
 
 {% endblock %}

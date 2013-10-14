@@ -33,6 +33,8 @@ class Controller_Base extends \Controller_Theme
 			// Iterate through modules, and add them namespaced (I hope it gets added namespaced)
 			// The container directory of twigs that are referenced from View::forge() are automatically
 			// added, so for those namespaces are not required to specify.
+			//
+			// Update: It doesn't get namespaced, but we can stick with it
 			foreach (Module::loaded() as $module => $path) {
 				if (file_exists($path.'themes'.DS.$theme_name))
 				{
