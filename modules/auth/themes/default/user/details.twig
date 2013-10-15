@@ -1,10 +1,10 @@
 {% extends 'layout.twig' %}
 
-{% block title %}Profile of {{ model.fullname }} (@{{ model.username }}){% endblock %}
+{% block title %}Profile of {{ model.fullname }} ({{ model.username }}){% endblock %}
 
 {% block content %}
 
-<h2>{{ model.fullname }} <small>@{{ model.username }}, {{ model.group.name }}</small></h2>
+<h2>{{ model.fullname }} <small>{{ model.username }}, {{ model.group.name }}</small></h2>
 
 <div class="row">
 	<div class="col-sm-3">

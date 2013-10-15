@@ -35,6 +35,8 @@ class Controller_Admin extends \Admin\Controller_Admin
 			return;
 		}
 
+		$original_post = \Input::post();
+
 		$username = \Input::post('username');
 		$password = \Input::post('password');
 		$email    = \Input::post('email');
@@ -57,7 +59,7 @@ class Controller_Admin extends \Admin\Controller_Admin
 			) === false)
 			{
 				\Session::set_flash('error', 'Could not create user.');
-				$this->template->content->model = Model\Auth_User::forge(\Input::post());
+				$this->template->content->model = Model\Auth_User::forge($original_post);
 			}
 			else
 			{
@@ -68,7 +70,7 @@ class Controller_Admin extends \Admin\Controller_Admin
 		catch (\SimpleUserUpdateException $e)
 		{
 			\Session::set_flash('error', $e->getMessage());
-			$this->template->content->model = Model\Auth_User::forge(\Input::post());
+			$this->template->content->model = Model\Auth_User::forge($original_post);
 		}
 
 	}
@@ -83,13 +85,13 @@ class Controller_Admin extends \Admin\Controller_Admin
 
 		if (is_null($id))
 		{
-			throw new HttpNotFoundException();
+			throw new \HttpNotFoundException();
 		}
 
 		$model = Model\Auth_User::query()->where('id', $id)->get_one();
 		if (!$model)
 		{
-			throw new HttpNotFoundException();
+			throw new \HttpNotFoundException();
 		}
 
 		if (Auth::delete_user($model->username))
@@ -107,13 +109,13 @@ class Controller_Admin extends \Admin\Controller_Admin
 	{
 		if (is_null($id))
 		{
-			throw new HttpNotFoundException();
+			throw new \HttpNotFoundException();
 		}
 
 		$model = Model\Auth_User::query()->where('id', $id)->get_one();
 		if (!$model)
 		{
-			throw new HttpNotFoundException();
+			throw new \HttpNotFoundException();
 		}
 
 		if (!Auth::has_access('users.edit_other'))
@@ -127,9 +129,9 @@ class Controller_Admin extends \Admin\Controller_Admin
 
 		if (\Input::method() == 'POST')
 		{
-
+			var_dump(\Input::post());
 			$input = array_filter(\Input::post());
-
+			var_dump($input);exit;
 			try {
 				if (Auth::update_user($input, $model->username))
 				{
@@ -162,13 +164,13 @@ class Controller_Admin extends \Admin\Controller_Admin
 
 		if (is_null($id))
 		{
-			throw new HttpNotFoundException();
+			throw new \HttpNotFoundException();
 		}
 
 		$model = Model\Auth_User::query()->where('id', $id)->get_one();
 		if (!$model)
 		{
-			throw new HttpNotFoundException();
+			throw new \HttpNotFoundException();
 		}
 
 		$this->template->content = $this->theme->view('user/details.twig');
