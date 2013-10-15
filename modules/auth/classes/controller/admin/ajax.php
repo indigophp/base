@@ -13,7 +13,7 @@ class Controller_Admin_Ajax extends \Controller_Rest
 
 			if (\Auth::check())
 			{
-				if ( ! \Auth::has_access('view_admin'))
+				if ( ! \Auth::has_access('admin.view'))
 				{
 					\Session::set_flash('error', e('You are not authorized to use the administration panel.'));
 					\Response::redirect('/');

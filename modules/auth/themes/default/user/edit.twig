@@ -1,12 +1,12 @@
 {% extends 'layout.twig' %}
 
-{% block title %}Create User{% endblock %}
+{% block title %}Edit User{% endblock %}
 
 {% block content %}
 
-<h2>Create User	<small>Define a new user to be created</small></h2>
+<h2>Edit User <small>Define the new details for the user</small></h2>
 
-{% include 'user/form.twig' with { 'action': 'create' } %}
+{% include 'user/form.twig' with { 'action': 'edit' } %}
 
 {% endblock %}
 
@@ -25,19 +25,4 @@
 {% block javascript %}
     {{ parent() }}
 	<script src="{{ base_url() }}assets/theme/js/pwstrength.js"></script>
-{% endblock %}
-
-{% block head %}
-	{{ parent() }}
-	<style type="text/css">
-		/*.navbar-default
-		{
-			border-bottom-width: 6px !important;
-			background-color: #222 !important;
-		}
-		.side-navigation
-		{
-			top: 47px !important;
-		}*/
-	</style>
 {% endblock %}
