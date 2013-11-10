@@ -5,22 +5,24 @@ namespace Admin;
 class Controller_Admin extends \Controller_Base
 {
 
+	public $template = 'admin/template';
+
 	public function before($data = null)
 	{
 		parent::before($data);
-		if (\Request::active()->controller !== 'Admin\Controller_Admin' or ! in_array(\Request::active()->action, array('login', 'logout'))) {
-
+		if (\Request::active()->controller !== 'Admin\Controller_Admin' or ! in_array(\Request::active()->action, array('login', 'logout')))
+		{
 			if (\Auth::check())
 			{
 				if ( ! \Auth::has_access('admin.view'))
 				{
-					\Session::set_flash('error', e('You are not authorized to use the administration panel.'));
+					\Session::set_flash('error', gettext('You are not authorized to use the administration panel.'));
 					\Response::redirect('/');
 				}
 			}
 			else
 			{
-				\Response::redirect('admin/login?uri=' . urlencode(\Uri::current()));
+				\Response::redirect('admin/login?uri=' . urlencode(\Uri::string()));
 			}
 		}
 	}
@@ -34,9 +36,9 @@ class Controller_Admin extends \Controller_Base
 
 		if (\Input::method() == 'POST')
 		{
-			$val->add('username', 'E-mail, or username')
+			$val->add('username', gettext('E-mail, or username'))
 				->add_rule('required');
-			$val->add('password', 'Password')
+			$val->add('password', gettext('Password'))
 				->add_rule('required');
 
 			$monolog = new \Monolog\Logger('firephp');
@@ -52,12 +54,12 @@ class Controller_Admin extends \Controller_Base
 				if (\Auth::check() or $auth->login())
 				{
 					$current_user = \Model\Auth_User::find_by_username(\Auth::get_screen_name());
-					\Session::set_flash('success', e('Welcome, '.$current_user->fullname.'!'));
+					\Session::set_flash('success', sprintf(gettext('Welcome, %s!'), $current_user->fullname));
 					\Response::redirect(\Input::get('uri') ? : 'admin');
 				}
 				else
 				{
-					\Session::set_flash('error', 'Wrong credentials!');
+					\Session::set_flash('error', gettext('Wrong credentials!'));
 				}
 			}
 			else
@@ -67,7 +69,7 @@ class Controller_Admin extends \Controller_Base
 			}
 		}
 
-		$this->template->title = 'Login';
+		$this->template->title = gettext('Login');
 		$this->template->content = $this->theme->view('admin/login', array('val' => $val), false);
 	}
 
@@ -85,7 +87,23 @@ class Controller_Admin extends \Controller_Base
 
 	public function action_index()
 	{
-		$this->template->content = $this->theme->view('dashboard');
+		$this->template->content = $this->theme->view('admin/dashboard');
+
+		$widgets = array();
+
+		foreach (\Module::loaded() as $name => $path)
+		{
+			$class_name = \Inflector::words_to_upper($name) . '\\Controller_Widgets';
+			if (class_exists($class_name) and in_array('action_dashboard', get_class_methods($class_name)))
+			{
+				$widgets[] = \Request::forge($name.'/widgets/dashboard', false)->execute()->response()->body();
+			}
+		}
+
+		// var_dump($widgets);exit;
+
+		$this->template->content->set('widgets', $widgets, false);
+
 	}
 
 }

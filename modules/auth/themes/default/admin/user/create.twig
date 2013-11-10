@@ -1,12 +1,12 @@
-{% extends 'layout.twig' %}
+{% extends 'admin/layout.twig' %}
 
-{% block title %}Create User{% endblock %}
+{% block title %}{% trans 'Create User' %}{% endblock %}
 
 {% block content %}
 
-<h2>Create User	<small>Define a new user to be created</small></h2>
+<h2>{% trans 'Create User' %} <small>{% trans 'Define a new user to be created' %}</small></h2>
 
-{% include 'user/form.twig' with { 'action': 'create' } %}
+{% include 'admin/user/form.twig' with { 'action': 'create' } %}
 
 {% endblock %}
 
@@ -15,11 +15,12 @@
 	$('[name=password]').pwstrength();
 	$('[name=password2]').on('input', function() {
 		if ($(this).val() != $('[name=password]').val()) {
-			$(this)[0].setCustomValidity('The two passwords must match.');
+			$(this)[0].setCustomValidity('{% trans 'The two passwords must match.' %}');
 		} else {
 			$(this)[0].setCustomValidity('');
 		}
 	});
+	IndigoAdmin.addProxyButton('{% trans 'Save' %}', 'save', '#form-button-save');
 {% endblock %}
 
 {% block javascript %}

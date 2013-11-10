@@ -1,21 +1,22 @@
-{% extends 'layout.twig' %}
+{% extends 'admin/layout.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}{% trans 'Edit User' %}{% endblock %}
 
 {% block content %}
 
-<h2>Edit User <small>Define the new details for the user</small></h2>
+<h2>{% trans 'Edit User' %} <small>{% trans 'Define the new details for the user' %}</small></h2>
 
-{% include 'user/form.twig' with { 'action': 'edit' } %}
+{% include 'admin/user/form.twig' with { 'action': 'edit' } %}
 
 {% endblock %}
 
 {% block documentready %}
+	IndigoAdmin.addProxyButton('{% trans 'Save' %}', 'save', '#form-button-save');
 	$('#inputGroup').selectpicker();
 	$('[name=password]').pwstrength();
 	$('[name=password2]').on('input', function() {
 		if ($(this).val() != $('[name=password]').val()) {
-			$(this)[0].setCustomValidity('The two passwords must match.');
+			$(this)[0].setCustomValidity('{% trans 'The two passwords must match.' %}');
 		} else {
 			$(this)[0].setCustomValidity('');
 		}

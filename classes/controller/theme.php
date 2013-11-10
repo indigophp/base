@@ -15,7 +15,7 @@ class Controller_Theme extends Controller
 	 */
 	public function before($data = null)
 	{
-		$this->theme = \Theme::instance();
+		$this->theme = clone \Theme::instance();
 
 		if ($engine = $this->theme->get_info('engine'))
 		{

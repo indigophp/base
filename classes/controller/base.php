@@ -5,14 +5,21 @@ class Controller_Base extends \Controller_Theme
 
 	public function before($data = null)
 	{
-		parent::before();
+		parent::before($data);
+
+		bindtextdomain('indigoadmin', APPPATH.'lang');
+		bind_textdomain_codeset('indigoadmin', 'UTF-8');
+
+		// Choose domain
+		textdomain('indigoadmin');
+
 
 		// Making the site name available in all views.
-		$this->template->set_global('site_name', 'Indigo Admin');
+		$this->template->set_global('site_name', \Config::get('app.site_name', 'Indigo Admin'));
 
 		// Make logged in user available in all views.
 		$this->current_user = \Model\Auth_User::find_by_username(Auth::get_screen_name());
-		View::set_global('current_user', $this->current_user);
+		$this->template->set_global('current_user', $this->current_user, false);
 
 		if ('twig' == $this->theme->get_info('engine')) {
 

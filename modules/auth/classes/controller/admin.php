@@ -12,21 +12,21 @@ class Controller_Admin extends \Admin\Controller_Admin
 
 	public function action_index()
 	{
-		if (!Auth::has_access('users.list'))
+		if ( ! Auth::has_access('users.list'))
 		{
 			return HttpForbiddenException();
 		}
-		$this->template->content = $this->theme->view('list');
+		$this->template->content = $this->theme->view('admin/user/list');
 	}
 
 	public function action_create($clone_id = null)
 	{
-		if (!Auth::has_access('users.create'))
+		if ( ! Auth::has_access('users.create'))
 		{
-			\Session::set_flash('error', 'You are not authorized to create users.');
+			\Session::set_flash('error', gettext('You are not authorized to create users.'));
 			\Response::redirect_back();
 		}
-		$this->template->content = $this->theme->view('user/create.twig');
+		$this->template->content = $this->theme->view('admin/user/create.twig');
 		$this->template->content->groups = Model\Auth_Group::query()->get();
 		$this->template->content->default_group = 3;
 		if (\Input::method() == 'GET')
@@ -58,12 +58,12 @@ class Controller_Admin extends \Admin\Controller_Admin
 				\Input::post()
 			) === false)
 			{
-				\Session::set_flash('error', 'Could not create user.');
+				\Session::set_flash('error', gettext('Could not create user.'));
 				$this->template->content->model = Model\Auth_User::forge($original_post);
 			}
 			else
 			{
-				\Session::set_flash('success', 'User successfully created.');
+				\Session::set_flash('success', gettext('User successfully created.'));
 				\Response::redirect('admin/auth');
 			}
 		}
@@ -77,9 +77,9 @@ class Controller_Admin extends \Admin\Controller_Admin
 
 	public function action_delete($id = null)
 	{
-		if (!Auth::has_access('users.delete'))
+		if ( ! Auth::has_access('users.delete'))
 		{
-			\Session::set_flash('error', 'You are not authorized to delete users.');
+			\Session::set_flash('error', gettext('You are not authorized to delete users.'));
 			\Response::redirect_back();
 		}
 
@@ -89,18 +89,18 @@ class Controller_Admin extends \Admin\Controller_Admin
 		}
 
 		$model = Model\Auth_User::query()->where('id', $id)->get_one();
-		if (!$model)
+		if ( ! $model)
 		{
 			throw new \HttpNotFoundException();
 		}
 
 		if (Auth::delete_user($model->username))
 		{
-			\Session::set_flash('success', 'Successfully deleted user.');
+			\Session::set_flash('success', gettext('Successfully deleted user.'));
 		}
 		else
 		{
-			\Session::set_flash('error', 'Could not delete user.');
+			\Session::set_flash('error', gettext('Could not delete user.'));
 		}
 		\Response::redirect_back();
 	}
@@ -122,25 +122,27 @@ class Controller_Admin extends \Admin\Controller_Admin
 		{
 			if (!Auth::has_access('users.edit_own') or Auth::get_screen_name() != $model->username)
 			{
-				\Session::set_flash('error', 'You are not authorized to edit this user.');
+				\Session::set_flash('error', gettext('You are not authorized to edit this user.'));
 				\Response::redirect_back();
 			}
 		}
 
 		if (\Input::method() == 'POST')
 		{
-			var_dump(\Input::post());
+			// var_dump(\Input::post());
 			$input = array_filter(\Input::post());
-			var_dump($input);exit;
+			// var_dump($input);exit;
 			try {
 				if (Auth::update_user($input, $model->username))
 				{
-					\Session::set_flash('success', 'User profile saved');
+					\Session::set_flash('success', gettext('User profile saved'));
 				}
 				else
 				{
-					\Session::set_flash('error', 'Could not save user');
+					\Session::set_flash('error', gettext('Could not save user'));
 				}
+			} catch (\SimpleUserWrongPassword $e) {
+				\Session::set_flash('error', $e->getMessage());
 			} catch (\SimpleUserUpdateException $e) {
 				\Session::set_flash('error', $e->getMessage());
 			}
@@ -148,7 +150,7 @@ class Controller_Admin extends \Admin\Controller_Admin
 			\Response::redirect('admin/auth');
 		}
 
-		$this->template->content = $this->theme->view('user/edit.twig');
+		$this->template->content = $this->theme->view('admin/user/edit.twig');
 		$this->template->content->groups = Model\Auth_Group::query()->get();
 		$this->template->content->default_group = 3;
 		$this->template->content->model = $model;
@@ -158,7 +160,7 @@ class Controller_Admin extends \Admin\Controller_Admin
 	{
 		if (!Auth::has_access('users.view_details'))
 		{
-			\Session::set_flash('error', 'You are not authorized to view users\' details.');
+			\Session::set_flash('error', gettext('You are not authorized to view users\' details.'));
 			\Response::redirect_back();
 		}
 
@@ -173,8 +175,8 @@ class Controller_Admin extends \Admin\Controller_Admin
 			throw new \HttpNotFoundException();
 		}
 
-		$this->template->content = $this->theme->view('user/details.twig');
-		$this->template->content->model = $model;
+		$this->template->content = $this->theme->view('admin/user/details.twig');
+		$this->template->content->set('model', $model, false);
 	}
 
 }
