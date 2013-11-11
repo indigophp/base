@@ -11,7 +11,7 @@
 
 <div class="row">
 	<div class="col-sm-3">
-		<img src="https://secure.gravatar.com/avatar/{{ model.email | md5 }}?s=750&amp;d={{ 'default_img(model)' }}" alt="" class="img-thumbnail">
+		<img src="https://secure.gravatar.com/avatar/{{ model.email | md5 }}?s=750&amp;d={{ default_img(model) }}" alt="" class="img-thumbnail">
 	</div>
 	<div class="col-sm-9">
 		<table class="table table-striped">

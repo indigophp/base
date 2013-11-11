@@ -2,11 +2,16 @@
 
 define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
-define('NUMBER_OF_RIGHTS_IN_BASE', 1);
+$module_paths = \Config::get( 'module_paths', array() );
+$module_paths[] = BASEPATH.'modules'.DS;
+\Config::set('module_paths', $module_paths);
 
-$paths = \Config::get( 'module_paths', array() );
-$paths[] = BASEPATH.'modules'.DS;
-\Config::set('module_paths', $paths);
+// Adding the possible theme paths to the config of Theme.
+$theme_paths = \Config::get('theme.paths', array());
+$theme_paths[] = BASEPATH.'themes';
+$theme_paths[] = BASEPATH.'modules'.DS.'auth'.DS.'themes';
+$theme_paths[] = BASEPATH.'modules'.DS.'admin'.DS.'themes';
+\Config::set('theme.paths', $theme_paths);
 
 Autoloader::add_core_namespace('Base');
 
