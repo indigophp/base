@@ -14,6 +14,9 @@ class Controller_Themes extends Controller_Admin
 
 	public function themes($type = null)
 	{
+
+		return array_unique($this->theme->all());
+
 		$return = array();
 
 		foreach (\Package::loaded() as $package => $path)
