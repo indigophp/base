@@ -8,7 +8,7 @@ class Create_enums
 	{
 		\DBUtil::create_table('enums', array(
 			'id'          => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
-			'enum'        => array('constraint' => 32, 'type' => 'varchar', 'unsigned' => true),
+			'enum'        => array('constraint' => 32, 'type' => 'varchar'),
 			'item_id'     => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
 			'name'        => array('constraint' => 64, 'type' => 'varchar'),
 			'slug'        => array('constraint' => 67, 'type' => 'varchar'),
