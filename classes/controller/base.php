@@ -19,14 +19,19 @@ class Controller_Base extends \Controller_Theme
 
 			$paths = array();
 
-			foreach (\Config::get('theme.paths', array()) as $key => $path)
+			$theme_name = \Arr::get($this->theme->active(), 'name');
+
+			foreach ($this->theme->get_parent_themes($theme_name) as $theme)
 			{
-				if (is_dir($path .= DS . \Arr::get($this->theme->active(), 'name')))
+				foreach ($this->theme->get_paths() as $path)
 				{
-					$paths[$key] = $path;
+					if (is_dir($path .= $theme['name']))
+					{
+						$paths[] = $path ;
+					}
 				}
 			}
-			// var_dump($paths);exit;
+
 			Config::set('parser.View_Twig.views_paths', $paths);
 		}
 	}

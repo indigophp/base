@@ -10,12 +10,29 @@ class Controller_Theme extends Controller
 	*/
 	public $template = 'template';
 
+	public $theme_type = 'frontend';
+
 	/**
 	 * Load the template and create the $this->theme object
 	 */
 	public function before($data = null)
 	{
-		$this->theme = clone \Theme::instance();
+		if ($this->request->is_hmvc())
+		{
+			$this->theme = clone \Theme::instance('indigo');
+		}
+		else
+		{
+			$this->theme = \Theme::instance('indigo');
+		}
+
+		if ( ! $this->theme->find(\Config::get('base.theme.' . $this->theme_type)))
+		{
+			\Config::set('base.theme.' . $this->theme_type, 'default');
+			\Config::save('base.db', 'base');
+		}
+
+		$this->theme->active(\Config::get('base.theme.' . $this->theme_type, 'default'));
 
 		if ($engine = $this->theme->get_info('engine'))
 		{

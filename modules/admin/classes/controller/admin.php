@@ -7,6 +7,8 @@ class Controller_Admin extends \Controller_Base
 
 	public $template = 'admin/template';
 
+	public $theme_type = 'admin';
+
 	public function before($data = null)
 	{
 		parent::before($data);
@@ -99,8 +101,6 @@ class Controller_Admin extends \Controller_Base
 				$widgets[] = \Request::forge($name.'/widgets/dashboard', false)->execute()->response()->body();
 			}
 		}
-
-		// var_dump($widgets);exit;
 
 		$this->template->content->set('widgets', $widgets, false);
 

@@ -4,7 +4,6 @@ namespace Auth;
 
 class Controller_Admin extends \Admin\Controller_Admin
 {
-
 	public function before($data = null)
 	{
 		parent::before($data);

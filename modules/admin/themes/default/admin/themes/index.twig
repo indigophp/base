@@ -9,8 +9,8 @@
 <div class="row">
 
 	<div class="col-lg-6">
-		<h3>Frontend themes</h3>
-		{% for theme in admin_themes %}
+		<h3>{% trans 'Frontend themes' %}</h3>
+		{% for theme in frontend_themes %}
 		    {% include 'admin/themes/theme.twig' with { 'type': 'frontend' } %}
 		{% else %}
 		    <p>{% trans 'You have no themes installed that support the frontend modules.' %}</p>
@@ -18,7 +18,7 @@
 	</div>
 
 	<div class="col-lg-6">
-		<h3>Admin themes</h3>
+		<h3>{% trans 'Admin themes' %}</h3>
 		{% for theme in admin_themes %}
 		    {% include 'admin/themes/theme.twig' with { 'type': 'admin' } %}
 		{% else %}

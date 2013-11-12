@@ -1,1 +1,3 @@
-{{ theme }} <br>
+<hr>
+{{ theme.name }} <br><br>
+<a href="{{ base_url() }}admin/themes/activate/{{ type }}/{{ theme.id }}" {% if theme.is_active %}disabled{% endif %} class="btn btn-sm btn-success">{% if theme.is_active %}{% trans 'Activated' %}{% else %}{% trans 'Activate' %}{% endif %}</a>

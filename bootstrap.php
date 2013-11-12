@@ -4,17 +4,18 @@ define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
 \Config::load('theme', true, true);
 \Config::load('base');
+\Config::load('base.db', true);
 
 $module_paths = \Config::get('module_paths', array());
 $module_paths[] = BASEPATH.'modules'.DS;
 \Config::set('module_paths', $module_paths);
 
 // Adding the possible theme paths to the config of Theme.
-$theme_paths = \Config::get('theme.paths', array());
+$theme_paths = array();
 $theme_paths[] = BASEPATH.'themes';
 $theme_paths[] = BASEPATH.'modules'.DS.'auth'.DS.'themes';
 $theme_paths[] = BASEPATH.'modules'.DS.'admin'.DS.'themes';
-\Config::set('theme.paths', $theme_paths);
+\Theme::instance('indigo')->add_paths($theme_paths);
 
 
 // GNU Gettext translation settings
@@ -23,7 +24,6 @@ bind_textdomain_codeset('indigoadmin', 'UTF-8');
 
 // Choose domain
 textdomain('indigoadmin');
-
 
 Autoloader::add_core_namespace('Indigo\\Base');
 
