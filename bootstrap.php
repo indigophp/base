@@ -54,11 +54,13 @@ $menu->add(array(
 	array(
 		'name' => 'Dashboard',
 		'url' => 'admin',
-		'icon' => 'glyphicon glyphicon-dashboard'
+		'icon' => 'glyphicon glyphicon-dashboard',
+		'sort' => 1,
 	),
 	array(
 		'name' => 'Authentication',
 		'icon' => 'glyphicon glyphicon-user',
+		'sort' => 10,
 		'children' => array(
 			array(
 				'name' => 'Users',
@@ -73,6 +75,7 @@ $menu->add(array(
 	array(
 		'name' => 'Settings',
 		'icon' => 'fa fa-cogs',
+		'sort' => 100,
 		'children' => array(
 			array(
 				'name' => 'Themes',
