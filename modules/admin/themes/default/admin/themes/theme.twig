@@ -1,3 +1,9 @@
-<hr>
-{{ theme.name }} <br><br>
-<a href="{{ base_url() }}admin/themes/activate/{{ type }}/{{ theme.id }}" {% if theme.is_active %}disabled{% endif %} class="btn btn-sm btn-success">{% if theme.is_active %}{% trans 'Activated' %}{% else %}{% trans 'Activate' %}{% endif %}</a>
+<div class="theme-container">
+	<img src="{{ base_url() }}admin/themes/preview/{{ theme.id }}.png" width="100" height="100" alt="" class="pull-left img-thumbnail">
+	<h3>{{ theme.name }} <small>{{ theme.version }}</small></h3>
+	<p><strong>{% trans 'Author:' %} {{ theme.author }}</strong></p>
+	<p>
+		<a href="{{ base_url() }}admin/themes/activate/{{ type }}/{{ theme.id }}" {% if theme.is_active %}disabled{% endif %} class="btn btn-sm btn-success">{% if theme.is_active %}{% trans 'Activated' %}{% else %}{% trans 'Activate' %}{% endif %}</a>
+	</p>
+	<div class="clearfix"></div>
+</div>

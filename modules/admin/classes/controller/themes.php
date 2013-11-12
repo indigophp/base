@@ -37,6 +37,19 @@ class Controller_Themes extends Controller_Admin
 		\Response::redirect_back('admin/themes');
 	}
 
+	public function action_preview($name = null)
+	{
+		try
+		{
+			$image = \File::read($this->theme->find($name) . DS . 'preview.png', true);
+		}
+		catch (\InvalidPathException $e)
+		{
+			$image = \File::read(BASEPATH.'themes'.DS.'default'.DS.'default.png', true);
+		}
+		return \Response::forge($image, 200, array('Content-type' => 'image/png'));
+	}
+
 	public function themes($type = null)
 	{
 		$themes = array_unique($this->theme->all());
@@ -52,38 +65,6 @@ class Controller_Themes extends Controller_Admin
 		$themes);
 
 		return array_unique($this->theme->all());
-
-		$return = array();
-
-		foreach (\Package::loaded() as $package => $path)
-		{
-			$themesDir = $path . DS . 'themes';
-			if ( ! is_dir($themesDir))
-			{
-				continue;
-			}
-
-			foreach (new \DirectoryIterator($themesDir) as $fileInfo)
-			{
-				if ( ! $this->is_valid_theme($fileInfo))
-				{
-					continue;
-				}
-				$return[$fileInfo->getFilename()] = $fileInfo->getFilename();
-			}
-		}
-
-		return $return;
-
-	}
-
-	public function is_valid_theme($fileInfo)
-	{
-		return ! $fileInfo->isDot();
-		foreach (new \DirectoryIterator($fileInfo) as $fileInfo)
-		{
-
-		}
 	}
 
 }
