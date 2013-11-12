@@ -40,6 +40,7 @@ Autoloader::add_classes(array(
 Autoloader::add_classes(array(
 	'Indigo\\Base\\Model_Enum'      => __DIR__ . '/classes/model/enum.php',
 	'Indigo\\Base\\Model_Enum_Meta' => __DIR__ . '/classes/model/enum/meta.php',
+	'Indigo\\Base\\Menu_Admin'      => __DIR__ . '/classes/menu/admin.php',
 ));
 
 \Module::load('admin');

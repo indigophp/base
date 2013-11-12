@@ -16,10 +16,11 @@ class Twig_Indigo_Extension extends Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			'auth_has_access'    => new Twig_Function_Function('Auth::has_access'),
-			'gravatar'           => new Twig_Function_Function('Gravatar::forge'),
-			'menu_render'        => new Twig_Function_Function('Menu::render_menu'),
-			'default_img'        => new Twig_Function_Method($this, 'getDefaultImage'),
+			'auth_has_access' => new Twig_Function_Function('Auth::has_access'),
+			'gravatar'        => new Twig_Function_Function('Gravatar::forge'),
+			'menu'            => new Twig_Function_Function('Menu::render_menu'),
+			'admin_menu'      => new Twig_Function_Function('Menu_Admin::render_menu'),
+			'default_img'     => new Twig_Function_Method($this, 'getDefaultImage'),
 		);
 	}
 
