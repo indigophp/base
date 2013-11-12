@@ -48,7 +48,7 @@ Autoloader::add_classes(array(
 
 \Package::load('menu');
 
-$menu = \Menu::instance('admin');
+$menu = \Menu_Admin::instance('indigo');
 
 $menu->add(array(
 	array(
