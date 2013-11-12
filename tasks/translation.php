@@ -58,7 +58,7 @@ class Translation
 			{
 				$twig->loadTemplate(str_replace($tplDir.'/', '', $file));
 			}
-			elseif ($file->isDir() && ! $file->isDot())
+			elseif ($file->isDir() && $file->getFilename() != '.' && $file->getFilename() != '..')
 			{
 				echo $file->getPathName();
 				$this->_iterate_dir($file->getPathName(), $twig);
