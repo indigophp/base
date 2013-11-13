@@ -28,7 +28,7 @@ class Model_Enum extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'enum_id' => array('data_type' => 'int'),
+		'enum',
 		'item_id' => array('data_type' => 'int'),
 		'name',
 		'slug',
