@@ -4,6 +4,7 @@ define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
 \Config::load('theme', true, true);
 \Config::load('base');
+\Config::load('config', null, false, true);
 \Config::load('base.db', true);
 
 $module_paths = \Config::get('module_paths', array());
