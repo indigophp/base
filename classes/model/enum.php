@@ -56,11 +56,14 @@ class Model_Enum extends \Orm\Model
 
 	protected static $_sort = true;
 
+	protected static $_enum;
+
 	protected static $_table_name = 'enums';
 
 	public function _event_before_insert()
 	{
-		$this->item_id = $this->query()->where('enum_id', $this->enum_id)->max('item_id') + 1;
-		static::$_sort === true and $this->sort = $this->query()->where('enum_id', $this->enum_id)->max('sort') + 10;
+		empty(static::$_enum) or $this->enum = static::$_enum;
+		$this->item_id = $this->query()->where('enum', $this->enum)->max('item_id') + 1;
+		static::$_sort === true and $this->sort = $this->query()->where('enum', $this->enum)->max('sort') + 10;
 	}
 }
