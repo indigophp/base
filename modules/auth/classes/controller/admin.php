@@ -16,6 +16,7 @@ class Controller_Admin extends \Admin\Controller_Admin
 			return HttpForbiddenException();
 		}
 		$this->template->content = $this->theme->view('admin/user/list');
+		$this->template->content->groups = Model\Auth_Group::query()->get();
 	}
 
 	public function action_create($clone_id = null)
