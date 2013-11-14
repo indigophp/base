@@ -11,7 +11,7 @@ class Create_enums
 			'name'        => array('constraint' => 64, 'type' => 'varchar'),
 			'slug'        => array('constraint' => 67, 'type' => 'varchar'),
 			'description' => array('type' => 'text', 'null' => true),
-			'default'     => array('type' => 'int', 'default' => 1, 'unsigned' => true),
+			'default_id'  => array('type' => 'int', 'default' => 1, 'unsigned' => true, 'null' => true),
 			'active'      => array('type' => 'tinyint', 'default' => 1),
 			'read_only'   => array('type' => 'tinyint', 'default' => 0),
 		), array('id'));
