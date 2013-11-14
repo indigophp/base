@@ -51,7 +51,7 @@ class Controller_Ajax extends \Controller_Rest
 		$order_by = array();
 		for ($i = 0; $i < \Input::param('iSortingCols'); $i++)
 		{
-			\Input::param('bSortable_'.$i, true) and $order_by[$columns[\Input::param('iSortCol_'.$i)]] = \Input::param('sSortDir_'.$i);
+			\Input::param('bSortable_'.$i, false) and $order_by[$columns[\Input::param('iSortCol_'.$i)]] = \Input::param('sSortDir_'.$i);
 		}
 		$query->order_by($order_by);
 
@@ -59,7 +59,7 @@ class Controller_Ajax extends \Controller_Rest
 		{
 			$filter = \Input::param('sSearch_'.$i);
 
-			if ((isset($filter) and in_array($filter, array(null, '', 'null'))) or ($i == 5 and ! \Auth::has_access('enums.view_all')) or \Input::param('bSearchable_'.$i, true) == false)
+			if ((isset($filter) and in_array($filter, array(null, '', 'null'))) or ($i == 5 and ! \Auth::has_access('enums.view_all')) or \Input::param('bSearchable_'.$i, false) == false)
 			{
 				continue;
 			}
