@@ -21,6 +21,20 @@
 	</div> -->
 	<table class="datatables table table-striped table-hover" data-source="{{ base_url() }}admin/auth/ajax/list.json">
 		<thead>
+			<tr class="filter">
+				<td><input type="text" class="form-control"></td>
+				<td><input type="text" class="form-control"></td>
+				<td><input type="text" class="form-control"></td>
+				<td><input type="text" class="form-control"></td>
+				<td>
+					<select multiple title="{% trans 'Nothing selected' %}">
+						{% for item in groups %}
+							<option value="{{ item.id }}">{{ item.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+				<td class="hidden-print"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
+			</tr>
 			<tr>
 				<th style="width: 30px">#</th>
 				<th>{% trans 'Username' %}</th>
@@ -37,7 +51,13 @@
 				<td><input type="text" class="form-control"></td>
 				<td><input type="text" class="form-control"></td>
 				<td><input type="text" class="form-control"></td>
-				<td><input type="text" class="form-control"></td>
+				<td>
+					<select multiple title="{% trans 'Nothing selected' %}">
+						{% for item in groups %}
+							<option value="{{ item.id }}">{{ item.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
 				<td class="hidden-print"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
 			</tr>
 		</tfoot>
@@ -50,4 +70,29 @@
 	{% endif %}
 </p>
 
+{% endblock %}
+
+{% block documentready %}
+	$('.filter select').selectpicker();
+
+	var filters = $('.filter');
+
+	filters.each(function() {
+		var f = filters.not(this);
+		var inputs = $(this).find('input');
+		inputs.bind('keypress keyup paste', function() {
+			f.find('input:eq('+inputs.index(this)+')').val($(this).val());
+		});
+
+		var selects = $(this).find('select');
+		selects.change(function() {
+			f.find('select:eq('+selects.index(this)+')').val($(this).val());
+			f.find('select:eq('+selects.index(this)+')').selectpicker('render');
+		});
+	});
+
+	dtInstance = $('.datatables').dataTable();
+	dtColumns = dtInstance.fnSettings().aoColumns;
+	dtColumns[5].bSortable = false;
+	dtColumns[5].bSearchable = false;
 {% endblock %}
