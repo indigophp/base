@@ -1,0 +1,74 @@
+{% extends 'admin/layout.twig' %}
+
+{% block title %}{% trans 'Enums' %}{% endblock %}
+
+{% block content %}
+<h2>{% trans 'Enums' %} <small>{% trans 'Listing enums' %}</small></h2>
+
+<p>
+	{% if auth_has_access('enums.create') %}
+	<a href="{{ base_url() }}admin/enums/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new enum' %}</a>
+	{% endif %}
+</p>
+
+<div class="panel panel-default">
+	<table class="datatables table table-striped table-hover" data-source="{{ base_url() }}admin/ajax/enums.json">
+		<thead>
+			<tr>
+				<th style="width: 75px">#</th>
+				<th>{% trans 'Name' %}</th>
+				<th>{% trans 'Item count' %}</th>
+				<th>{% trans 'Default' %}</th>
+				<th>{% trans 'Active' %}</th>
+				<th>{% trans 'Read only' %}</th>
+				<th class="hidden-print" style="width: 140px;"></th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+		<tfoot>
+			<tr class="filter">
+				<td><input type="text" class="form-control"></td>
+				<td><input type="text" class="form-control"></td>
+				<th style="width: 100px;"><input type="hidden" class="form-control-static">{% trans 'Item count' %}</th>
+				<td><input type="text" class="form-control"></td>
+				<td>
+					<select multiple title="{% trans 'Nothing selected' %}">
+						<option value="0">{% trans 'No' %}</option>
+						<option value="1">{% trans 'Yes' %}</option>
+					</select>
+				</td>
+				{% if auth_has_access('enums.view_all') %}
+					<td>
+						<select multiple title="{% trans 'Nothing selected' %}" id="read_only">
+							<option selected value="0">{% trans 'No' %}</option>
+							<option value="1">{% trans 'Yes' %}</option>
+						</select>
+					</td>
+				{% else %}
+					<td style="width: 200px;"><input type="hidden"></td>
+				{% endif %}
+				<td class="hidden-print"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
+			</tr>
+		</tfoot>
+	</table>
+</div><!-- /.panel -->
+
+<p>
+	{% if auth_has_access('enums.create') %}
+	<a href="{{ base_url() }}admin/enums/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new enum' %}</a>
+	{% endif %}
+</p>
+
+{% endblock %}
+
+{% block documentready %}
+	{{ parent() }}
+
+	dtInstance = $('.datatables').dataTable();
+	oSettings = dtInstance.fnSettings();
+	dtColumns = oSettings.aoColumns;
+	dtColumns[2].bSortable = false;
+	dtColumns[2].bSearchable = false;
+	dtColumns[6].bSortable = false;
+	dtColumns[6].bSearchable = false;
+{% endblock %}

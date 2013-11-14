@@ -1,0 +1,109 @@
+{% extends 'admin/layout.twig' %}
+
+{% set name = model.name %}
+
+{% block title %}{% trans %}Enum {{ name }} {% endtrans %}{% endblock %}
+
+{% block content %}
+
+<h2>{{ model.name }} <small>{% trans 'enum' %}</small></h2>
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-title">{% trans 'Enum details' %}</div>
+	</div>
+	<div class="panel-body">
+		<table class="table table-striped">
+			<tbody>
+				<tr>
+					<th>{% trans 'Name' %}</th>
+					<td>{{ model.name }}</td>
+				</tr>
+				<tr>
+					<th>{% trans 'Description' %}</th>
+					<td>{{ model.description }}</td>
+				</tr>
+				<tr>
+					<th>{% trans 'Item count' %}</th>
+					<td>{{ model.items | length }}</td>
+				</tr>
+				<tr>
+					<th>{% trans 'Default' %}</th>
+					<td>{{ model.default.name | default('<i>' ~ ('None' | trans) ~ '</i>') }}</td>
+				</tr>
+				<tr>
+					<th>{% trans 'Active' %}</th>
+					<td>{% if model.active %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
+				</tr>
+				<tr>
+					<th>{% trans 'Read-only' %}</th>
+					<td>{% if model.read_only %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div><!-- /.panel-body -->
+	<div class="panel-footer">
+		{% if (auth_has_access('enums.edit') and model.read_only == false) or auth_has_access('enums.edit_all') %}
+				<a href="{{ base_url() }}admin/enums/edit/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-edit"></span> {% trans 'Edit' %}</a>
+		{% endif %}
+		{% if (auth_has_access('enums.delete') and model.read_only == false) or auth_has_access('enums.delete_all') %}
+			<a href="{{ base_url() }}admin/enums/delete/{{ model.id }}" class="hidden-print btn btn-danger"><span class="glyphicon glyphicon-remove"></span> {% trans 'Delete' %}</a>
+		{% endif %}
+	</div>
+</div><!-- /.panel -->
+
+<br>
+<p>
+	{% if auth_has_access('enums.create_item') %}
+	<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
+	{% endif %}
+</p>
+
+<div class="panel panel-default">
+	<table class="datatables table table-striped table-hover">
+		<thead>
+			<tr>
+				<th style="width: 75px">#</th>
+				<th>{% trans 'Name' %}</th>
+				<th>{% trans 'Description' %}</th>
+				<th>{% trans 'Slug' %}</th>
+				<th>{% trans 'Active?' %}</th>
+				<th class="hidden-print" style="width: 140px;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in model.items %}
+				<tr>
+					<td>{{ item.item_id }}</td>
+					<td>{{ item.name }}</td>
+					<td>{{ item.description }}</td>
+					<td>{{ item.slug }}</td>
+					<td>{% if item.active %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
+					<td>
+						<div class="hidden-print btn-group btn-group-sm" style="width:100px">
+							{% if auth_has_access('enums.edit_item') %}
+								<a href="{{base_url()}}admin/enums/edit_item/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
+							{% endif %}
+							{% if auth_has_access('enums.delete_item') %}
+								<a href="{{base_url()}}admin/enums/delete_item/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+							{% endif %}
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div><!-- /.panel -->
+
+<p>
+	{% if auth_has_access('enums.create_item') %}
+	<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
+	{% endif %}
+</p>
+
+{% endblock %}
+
+{% block documentready %}
+	dtInstance = $('.datatables').dataTable();
+	dtInstance.fnSettings().oFeatures.bSort = false;
+{% endblock %}

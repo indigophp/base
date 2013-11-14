@@ -1,0 +1,25 @@
+{% extends 'admin/layout.twig' %}
+
+{% block title %}{% trans 'New enum' %}{% endblock %}
+
+{% block content %}
+
+<h2>{% trans 'New enum' %} <small>{% trans 'Create a new enum' %}</small></h2>
+
+{% include 'admin/enums/form.twig' with { 'action': 'create' } %}
+
+{% endblock %}
+
+{% block documentready %}
+	IndigoAdmin.addProxyButton('{% trans 'Save' %}', 'save', '#form-button-save');
+{% endblock %}
+
+{% if val.error_message() %}
+	{% block error_flash %}
+		<ul>
+			{% for item in val.error_message() %}
+				<li>{{ item }}</li>
+			{% endfor %}
+		</ul>
+	{% endblock %}
+{% endif %}
