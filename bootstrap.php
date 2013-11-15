@@ -35,6 +35,10 @@ Autoloader::add_classes(array(
 	'Controller_Welcome'           => __DIR__ . '/classes/controller/welcome.php',
 	'Fuel\\Core\\Controller_Theme' => __DIR__ . '/classes/controller/theme.php',
 	'Twig_Indigo_Extension'        => __DIR__ . '/classes/twig/indigo/extension.php',
+
+	// HTTP Exceptions
+	'Indigo\\Base\\HttpForbiddenException'       => __DIR__ . '/classes/httpexceptions.php',
+	'Indigo\\Base\\HttpUnauthorizedException'    => __DIR__ . '/classes/httpexceptions.php',
 ));
 
 Autoloader::add_classes(array(

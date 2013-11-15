@@ -2,31 +2,13 @@
 
 namespace Admin;
 
-class Controller_Ajax extends \Controller_Rest
+class Controller_Ajax extends Controller_Rest
 {
-
-	public function before($data = null)
-	{
-		parent::before($data);
-		if (\Auth::check())
-		{
-			if ( ! \Auth::has_access('admin.view'))
-			{
-				\Session::set_flash('error', e('You are not authorized to use the administration panel.'));
-				\Response::redirect('/');
-			}
-		}
-		else
-		{
-			\Response::redirect('admin/login?uri=' . urlencode(\Uri::string().'.'.\Input::extension()));
-		}
-	}
-
 	public function action_enums()
 	{
 		if ( ! \Auth::has_access('enums.list'))
 		{
-			return HttpForbiddenException();
+			throw new \HttpForbiddenException();
 		}
 
 		$query = \Model_Enum::query()->related('default')->related('items');

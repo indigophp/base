@@ -2,31 +2,13 @@
 
 namespace Auth;
 
-class Controller_Admin_Ajax extends \Controller_Rest
+class Controller_Admin_Ajax extends \Admin\Controller_Rest
 {
-
-	public function before($data = null)
-	{
-		parent::before($data);
-		if (\Auth::check())
-		{
-			if ( ! \Auth::has_access('admin.view'))
-			{
-				\Session::set_flash('error', e('You are not authorized to use the administration panel.'));
-				\Response::redirect('/');
-			}
-		}
-		else
-		{
-			\Response::redirect('admin/login?uri=' . urlencode(\Uri::string().'.'.\Input::extension()));
-		}
-	}
-
 	public function action_list()
 	{
-		if (!Auth::has_access('users.list'))
+		if ( ! Auth::has_access('users.list'))
 		{
-			return HttpForbiddenException();
+			throw new \HttpForbiddenException();
 		}
 		$query = \Model\Auth_User::query()
 			->where('id', '>', '0');

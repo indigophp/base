@@ -1,13 +1,5 @@
 <?php
 
-class HttpForbiddenException extends \HttpException
-{
-	public function response()
-	{
-		return new \Response('403', 403);
-	}
-}
-
 /**
  * This controller assures.
  */
@@ -25,7 +17,7 @@ class Controller_Assets extends Controller
 		$url = implode('/', $segments) . '.' . Input::extension();
 
 		if(false !== strpos($url, '..')) {
-			throw new HttpForbiddenException();
+			throw new \HttpForbiddenException();
 		}
 
 		$theme_name = \Arr::get($this->theme->active(), 'name');
@@ -48,7 +40,7 @@ class Controller_Assets extends Controller
 			}
 		}
 
-		throw new HttpNotFoundException();
+		throw new \HttpNotFoundException();
 
 	}
 
