@@ -1,8 +1,8 @@
 <?php
 
-namespace Fuel\Core;
+namespace Indigo\Base;
 
-class Controller_Theme extends Controller
+class Controller_Theme extends \Controller
 {
 
 	/**

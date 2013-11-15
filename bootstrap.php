@@ -28,13 +28,16 @@ textdomain('indigoadmin');
 Autoloader::add_core_namespace('Indigo\\Base');
 
 Autoloader::add_classes(array(
-	'Module'                       => __DIR__ . '/classes/module.php',
-	'Controller_Translation'       => __DIR__ . '/classes/controller/translation.php',
-	'Controller_Base'              => __DIR__ . '/classes/controller/base.php',
-	'Controller_Assets'            => __DIR__ . '/classes/controller/assets.php',
-	'Controller_Welcome'           => __DIR__ . '/classes/controller/welcome.php',
-	'Fuel\\Core\\Controller_Theme' => __DIR__ . '/classes/controller/theme.php',
-	'Twig_Indigo_Extension'        => __DIR__ . '/classes/twig/indigo/extension.php',
+	// Core extensions
+	'Module'                => __DIR__ . '/classes/module.php',
+	'Twig_Indigo_Extension' => __DIR__ . '/classes/twig/indigo/extension.php',
+
+	// Controllers
+	'Indigo\\Base\\Controller_Assets'      => __DIR__ . '/classes/controller/assets.php',
+	'Indigo\\Base\\Controller_Base'        => __DIR__ . '/classes/controller/base.php',
+	'Indigo\\Base\\Controller_Theme'       => __DIR__ . '/classes/controller/theme.php',
+	'Indigo\\Base\\Controller_Translation' => __DIR__ . '/classes/controller/translation.php',
+	'Controller_Welcome'                   => __DIR__ . '/classes/controller/welcome.php',
 
 	// HTTP Exceptions
 	'Indigo\\Base\\HttpForbiddenException'       => __DIR__ . '/classes/httpexceptions.php',

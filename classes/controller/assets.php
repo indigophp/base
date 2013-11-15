@@ -1,20 +1,22 @@
 <?php
 
+namespace Indigo\Base;
+
 /**
  * This controller assures.
  */
-class Controller_Assets extends Controller
+class Controller_Assets extends \Controller
 {
 
 	public function action_theme()
 	{
-		$this->theme = Theme::instance();
+		$this->theme = \Theme::instance('indigo');
 		// We need the URL to know what to serve
-		$segments = Uri::segments();
+		$segments = \Uri::segments();
 		array_shift($segments);
 		array_shift($segments);
 
-		$url = implode('/', $segments) . '.' . Input::extension();
+		$url = implode('/', $segments) . '.' . \Input::extension();
 
 		if(false !== strpos($url, '..')) {
 			throw new \HttpForbiddenException();
@@ -27,16 +29,16 @@ class Controller_Assets extends Controller
 			$theme_path
 		);
 
-		foreach (Package::loaded() as $package => $path) {
+		foreach (\Package::loaded() as $package => $path) {
 			$search_paths[] = $path.'themes'.DS.$theme_name.DS.'assets';
 		}
-		foreach (Module::loaded() as $module => $path) {
+		foreach (\Module::loaded() as $module => $path) {
 			$search_paths[] = $path.'themes'.DS.$theme_name.DS.'assets';
 		}
 
 		foreach ($search_paths as $path) {
 			if (file_exists($file_path = $path.DS.$url)) {
-				return new Response(File::read($file_path, true), 200, array('Content-type' => $this->mime_content_type($file_path)));
+				return new \Response(\File::read($file_path, true), 200, array('Content-type' => $this->mime_content_type($file_path)));
 			}
 		}
 
@@ -102,7 +104,7 @@ class Controller_Assets extends Controller
 			'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
 		);
 
-		$ext = Arr::get(File::file_info($filename), 'extension');
+		$ext = \Arr::get(\File::file_info($filename), 'extension');
 		if (array_key_exists($ext, $mime_types)) {
 			return $mime_types[$ext];
 		}
