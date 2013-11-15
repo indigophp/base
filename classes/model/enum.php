@@ -20,8 +20,10 @@ class Model_Enum extends \Orm\Model
 	);
 
 	protected static $_observers = array(
-		'Orm\\Observer_Slug' => array('source' => 'name'),
 		'Orm\\Observer_Typing',
+		'Orm\\Observer_Self' => array(
+			'events' => array('before_insert')
+		)
 	);
 
 	protected static $_properties = array(
@@ -49,9 +51,17 @@ class Model_Enum extends \Orm\Model
 
 	protected static $_table_name = 'enums';
 
+	public function _event_before_insert()
+	{
+		if (empty($this->slug))
+		{
+			$this->slug = \Inflector::friendly_title($this->name, '_', true);
+		}
+	}
+
 	public function add_item($name = null, $default = false, $eav = array())
 	{
-		$model = Model_Enum_Item::forge(array('name' => $name));
+		$model = \Model_Enum_Item::forge(array('name' => $name));
 		$model->set($eav);
 		$model->enum = $this;
 
@@ -62,10 +72,5 @@ class Model_Enum extends \Orm\Model
 			$this->default = $model->id;
 			$this->save();
 		}
-	}
-
-	public static function enum()
-	{
-		return static::query()->get_one();
 	}
 }

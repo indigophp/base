@@ -9,7 +9,7 @@ class Create_enums
 		\DBUtil::create_table('enums', array(
 			'id'          => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
 			'name'        => array('constraint' => 64, 'type' => 'varchar'),
-			'slug'        => array('constraint' => 67, 'type' => 'varchar'),
+			'slug'        => array('constraint' => 64, 'type' => 'varchar'),
 			'description' => array('type' => 'text', 'null' => true),
 			'default_id'  => array('type' => 'int', 'default' => 1, 'unsigned' => true, 'null' => true),
 			'active'      => array('type' => 'tinyint', 'default' => 1),
