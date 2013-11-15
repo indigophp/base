@@ -42,13 +42,14 @@ Autoloader::add_classes(array(
 	// HTTP Exceptions
 	'Indigo\\Base\\HttpForbiddenException'       => __DIR__ . '/classes/httpexceptions.php',
 	'Indigo\\Base\\HttpUnauthorizedException'    => __DIR__ . '/classes/httpexceptions.php',
-));
 
-Autoloader::add_classes(array(
+	// Enum models
 	'Indigo\\Base\\Model_Enum'      => __DIR__ . '/classes/model/enum.php',
 	'Indigo\\Base\\Model_Enum_Item' => __DIR__ . '/classes/model/enum/item.php',
 	'Indigo\\Base\\Model_Enum_Meta' => __DIR__ . '/classes/model/enum/meta.php',
-	'Indigo\\Base\\Menu_Admin'      => __DIR__ . '/classes/menu/admin.php',
+
+	// Menu
+	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
 ));
 
 \Module::load('admin');
