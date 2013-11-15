@@ -18,7 +18,8 @@ class Controller_Assets extends \Controller
 
 		$url = implode('/', $segments) . '.' . \Input::extension();
 
-		if(false !== strpos($url, '..')) {
+		if(false !== strpos($url, '..'))
+		{
 			throw new \HttpForbiddenException();
 		}
 
@@ -29,15 +30,19 @@ class Controller_Assets extends \Controller
 			$theme_path
 		);
 
-		foreach (\Package::loaded() as $package => $path) {
+		foreach (\Package::loaded() as $package => $path)
+		{
 			$search_paths[] = $path.'themes'.DS.$theme_name.DS.'assets';
 		}
-		foreach (\Module::loaded() as $module => $path) {
+		foreach (\Module::loaded() as $module => $path)
+		{
 			$search_paths[] = $path.'themes'.DS.$theme_name.DS.'assets';
 		}
 
-		foreach ($search_paths as $path) {
-			if (file_exists($file_path = $path.DS.$url)) {
+		foreach ($search_paths as $path)
+		{
+			if (file_exists($file_path = $path.DS.$url))
+			{
 				return new \Response(\File::read($file_path, true), 200, array('Content-type' => $this->mime_content_type($file_path)));
 			}
 		}
@@ -105,18 +110,20 @@ class Controller_Assets extends \Controller
 		);
 
 		$ext = \Arr::get(\File::file_info($filename), 'extension');
-		if (array_key_exists($ext, $mime_types)) {
+		if (array_key_exists($ext, $mime_types))
+		{
 			return $mime_types[$ext];
 		}
-		elseif (function_exists('finfo_open')) {
+		elseif (function_exists('finfo_open'))
+		{
 			$finfo = finfo_open(FILEINFO_MIME);
 			$mimetype = finfo_file($finfo, $filename);
 			finfo_close($finfo);
 			return $mimetype;
 		}
-		else {
+		else
+		{
 			return 'application/octet-stream';
 		}
 	}
-
 }
