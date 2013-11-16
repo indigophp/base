@@ -6,6 +6,11 @@ class Controller_Enums extends Controller_Admin
 {
 	public function action_index()
 	{
+		if ( ! \Auth::has_access('enums.view'))
+		{
+			throw new \HttpForbiddenException();
+		}
+
 		$this->template->content = $this->theme->view('admin/enums/list');
 	}
 
