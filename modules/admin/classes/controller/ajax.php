@@ -13,7 +13,10 @@ class Controller_Ajax extends Controller_Rest
 
 		$query = \Model_Enum::query()->related('default')->related('items');
 
-		\Auth::has_access('enums.view_all') or $query->where('read_only', 0);
+		if ( ! \Auth::has_access('enums.all'))
+		{
+			$query->where('read_only', 0);
+		}
 
 		$all_items_count = $query->count();
 
@@ -30,10 +33,17 @@ class Controller_Ajax extends Controller_Rest
 			'read_only',
 		);
 
+		$skip = array(
+			'count'
+		);
+
 		$order_by = array();
 		for ($i = 0; $i < \Input::param('iSortingCols'); $i++)
 		{
-			\Input::param('bSortable_'.$i, false) and $order_by[$columns[\Input::param('iSortCol_'.$i)]] = \Input::param('sSortDir_'.$i);
+			if (\Input::param('bSortable_'.$i, false) and ! in_array($columns[$i], $skip))
+			{
+				$order_by[$columns[\Input::param('iSortCol_'.$i)]] = \Input::param('sSortDir_'.$i);
+			}
 		}
 		$query->order_by($order_by);
 
@@ -41,23 +51,28 @@ class Controller_Ajax extends Controller_Rest
 		{
 			$filter = \Input::param('sSearch_'.$i);
 
-			if ((isset($filter) and in_array($filter, array(null, '', 'null'))) or ($i == 5 and ! \Auth::has_access('enums.view_all')) or \Input::param('bSearchable_'.$i, false) == false)
+			if (
+				(isset($filter) and in_array($filter, array(null, '', 'null'))) or
+				($columns[$i] == 'read_only' and ! \Auth::has_access('enums.all')) or
+				\Input::param('bSearchable_'.$i, false) == false or
+				in_array($columns[$i], $skip)
+			)
 			{
 				continue;
 			}
 
-			switch ($i) {
-				case 4:
-				case 5:
-					$query->where($columns[$i], 'IN', explode(',', $filter));
-					break;
-				default:
-					$query->where($columns[$i], 'LIKE', '%' . $filter . '%');
-					break;
+			if (strpos($filter, ','))
+			{
+				$query->where($columns[$i], 'IN', explode(',', $filter));
+			}
+			else
+			{
+				$query->where($columns[$i], 'LIKE', '%' . $filter . '%');
 			}
 		}
 
 		$enums = $query->get();
+
 		return array(
 			'sEcho' => \Input::param('sEcho'),
 			'iTotalRecords' => $all_items_count,
@@ -72,8 +87,8 @@ class Controller_Ajax extends Controller_Rest
 					gettext($enum->read_only == true ? 'Yes' : 'No'),
 					'<div class="hidden-print btn-group btn-group-sm" style="width:100px">'.
 						(\Auth::has_access('enums.view_details') ? '<a href="'.\Uri::create('admin/enums/details/'.$enum->id).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
-						((\Auth::has_access('enums.edit_all') or (\Auth::has_access('enums.edit') and $enum->read_only == false)) ? '<a href="'.\Uri::create('admin/enums/edit/'.$enum->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
-						((\Auth::has_access('enums.delete_all') or (\Auth::has_access('enums.delete') and $enum->read_only == false)) ? '<a href="'.\Uri::create('admin/enums/delete/'.$enum->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
+						((\Auth::has_access('enums.edit') and ($enum->read_only == false or \Auth::has_access('enums.all'))) ? '<a href="'.\Uri::create('admin/enums/edit/'.$enum->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
+						((\Auth::has_access('enums.all') and ($enum->read_only == false or \Auth::has_access('enums.all'))) ? '<a href="'.\Uri::create('admin/enums/delete/'.$enum->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
 					'</div>'
 				);
 			}, $enums))

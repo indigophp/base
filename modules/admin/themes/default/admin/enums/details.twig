@@ -43,21 +43,21 @@
 		</table>
 	</div><!-- /.panel-body -->
 	<div class="panel-footer">
-		{% if (auth_has_access('enums.edit') and model.read_only == false) or auth_has_access('enums.edit_all') %}
+		{% if auth_has_access('enums.edit') and (model.read_only == false or auth_has_access('enums.all')) %}
 				<a href="{{ base_url() }}admin/enums/edit/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-edit"></span> {% trans 'Edit' %}</a>
 		{% endif %}
-		{% if (auth_has_access('enums.delete') and model.read_only == false) or auth_has_access('enums.delete_all') %}
+		{% if auth_has_access('enums.delete') and (model.read_only == false or auth_has_access('enums.all')) %}
 			<a href="{{ base_url() }}admin/enums/delete/{{ model.id }}" class="hidden-print btn btn-danger"><span class="glyphicon glyphicon-remove"></span> {% trans 'Delete' %}</a>
 		{% endif %}
 	</div>
 </div><!-- /.panel -->
 
 <br>
-<p>
-	{% if auth_has_access('enums.create_item') %}
-	<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
-	{% endif %}
-</p>
+{% if auth_has_access('enums.create_item') and (model.read_only == false or auth_has_access('enums.all')) %}
+	<p>
+		<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
+	</p>
+{% endif %}
 
 <div class="panel panel-default">
 	<table class="datatables table table-striped table-hover">
@@ -95,11 +95,11 @@
 	</table>
 </div><!-- /.panel -->
 
-<p>
-	{% if auth_has_access('enums.create_item') %}
-	<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
-	{% endif %}
-</p>
+{% if auth_has_access('enums.create_item') and (model.read_only == false or auth_has_access('enums.all')) %}
+	<p>
+		<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
+	</p>
+{% endif %}
 
 {% endblock %}
 

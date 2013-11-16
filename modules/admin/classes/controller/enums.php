@@ -35,7 +35,7 @@ class Controller_Enums extends Controller_Admin
 		$val->add('default_id', gettext('Default'));
 		$val->add_field('active', gettext('Active'), 'required|numeric_min[-1]|numeric_max[2]');
 
-		if (\Auth::has_access('enums.create_all'))
+		if (\Auth::has_access('enums.all'))
 		{
 			$val->add_field('read_only', gettext('Read-only'), 'required|numeric_min[-1]|numeric_max[2]');
 		}
@@ -74,7 +74,7 @@ class Controller_Enums extends Controller_Admin
 			->where('id', $id)
 			->order_by('items.sort');
 
-		if ( ! \Auth::has_access('enums.view_all'))
+		if ( ! \Auth::has_access('enums.all'))
 		{
 			$model->where('read_only', 0);
 		}
@@ -90,7 +90,7 @@ class Controller_Enums extends Controller_Admin
 		$this->template->content->set('model', $model, false);
 	}
 
-	protected function getEnum($id = null, $action = 'view')
+	protected function getEnum($id = null)
 	{
 		if (is_null($id))
 		{
@@ -99,7 +99,7 @@ class Controller_Enums extends Controller_Admin
 
 		$model = \Model_Enum::query()->where('id', $id);
 
-		if ( ! \Auth::has_access('enums.' . $action . '_all'))
+		if ( ! \Auth::has_access('enums.all'))
 		{
 			$model->where('read_only', 0);
 		}
@@ -122,7 +122,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back();
 		}
 
-		$model = $this->getEnum($id, 'edit');
+		$model = $this->getEnum($id);
 
 		$this->template->content = $this->theme->view('admin/enums/edit');
 		$this->template->content->set('model', $model, false);
@@ -136,7 +136,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back();
 		}
 
-		$model = $this->getEnum($id, 'edit');
+		$model = $this->getEnum($id);
 
 		$val = \Validation::forge('enums');
 
@@ -169,7 +169,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back();
 		}
 
-		$model = $this->getEnum($id, 'delete');
+		$model = $this->getEnum($id);
 
 		if ($model->delete())
 		{
@@ -192,7 +192,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back('admin/enums');
 		}
 
-		$enum = $this->getEnum($enum_id, 'edit');
+		$enum = $this->getEnum($enum_id);
 
 		$this->template->content = $this->theme->view('admin/enums/create_item');
 		$this->template->content->set('enum', $enum, false);
@@ -206,7 +206,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back('admin/enums');
 		}
 
-		$enum = $this->getEnum($enum_id, 'edit');
+		$enum = $this->getEnum($enum_id);
 
 		$val = \Validation::forge('enums');
 
@@ -230,7 +230,7 @@ class Controller_Enums extends Controller_Admin
 		}
 	}
 
-	protected function getEnumItem($id = null, $action = 'view')
+	protected function getEnumItem($id = null)
 	{
 		if (is_null($id))
 		{
@@ -239,7 +239,7 @@ class Controller_Enums extends Controller_Admin
 
 		$model = \Model_Enum_Item::query()->related('enum')->where('id', $id);
 
-		if ( ! \Auth::has_access('enums.' . $action . '_all'))
+		if ( ! \Auth::has_access('enums.all'))
 		{
 			$model->where('enum.read_only', 0);
 		}
@@ -262,7 +262,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back();
 		}
 
-		$model = $this->getEnumItem($id, 'edit');
+		$model = $this->getEnumItem($id);
 
 		$this->template->content = $this->theme->view('admin/enums/edit_item');
 		$this->template->content->set('model', $model, false);
@@ -277,7 +277,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back();
 		}
 
-		$model = $this->getEnumItem($id, 'edit');
+		$model = $this->getEnumItem($id);
 
 		$val = \Validation::forge('enums');
 
@@ -310,7 +310,7 @@ class Controller_Enums extends Controller_Admin
 			\Response::redirect_back();
 		}
 
-		$model = $this->getEnumItem($id, 'edit');
+		$model = $this->getEnumItem($id);
 
 		$enum_id = $model->enum->id;
 
