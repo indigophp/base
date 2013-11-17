@@ -61,13 +61,15 @@ class Controller_Ajax extends Controller_Rest
 				continue;
 			}
 
-			if (strpos($filter, ','))
-			{
-				$query->where($columns[$i], 'IN', explode(',', $filter));
-			}
-			else
-			{
-				$query->where($columns[$i], 'LIKE', '%' . $filter . '%');
+			switch (\Input::param('sElementType_'.$i, 'text')) {
+				case 'select-multiple':
+					$query->where($columns[$i], 'IN', explode(',', $filter));
+					break;
+				case 'text':
+					$query->where($columns[$i], 'LIKE', '%' . $filter . '%');
+					break;
+				default:
+					break;
 			}
 		}
 
