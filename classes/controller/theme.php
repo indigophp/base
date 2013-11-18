@@ -1,8 +1,8 @@
 <?php
 
-namespace Fuel\Core;
+namespace Indigo\Base;
 
-class Controller_Theme extends Controller
+class Controller_Theme extends \Controller
 {
 
 	/**
@@ -54,7 +54,7 @@ class Controller_Theme extends Controller
 	public function after($response)
 	{
 		// If no response object was returned by the action,
-		if (empty($response) or  ! $response instanceof Response)
+		if (empty($response) or  ! $response instanceof \Response)
 		{
 			// render the defined template
 			$response = \Response::forge($this->theme->render());

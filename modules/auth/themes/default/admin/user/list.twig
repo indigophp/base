@@ -21,6 +21,20 @@
 	</div> -->
 	<table class="datatables table table-striped table-hover" data-source="{{ base_url() }}admin/auth/ajax/list.json">
 		<thead>
+			<tr class="filter">
+				<td><input type="text" class="form-control"></td>
+				<td><input type="text" class="form-control"></td>
+				<td><input type="text" class="form-control"></td>
+				<td><input type="text" class="form-control"></td>
+				<td>
+					<select multiple title="{% trans 'Nothing selected' %}">
+						{% for item in groups %}
+							<option value="{{ item.id }}">{{ item.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+				<td class="hidden-print"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
+			</tr>
 			<tr>
 				<th style="width: 30px">#</th>
 				<th>{% trans 'Username' %}</th>
@@ -32,13 +46,19 @@
 		</thead>
 		<tbody></tbody>
 		<tfoot>
-			<tr>
+			<tr class="filter">
 				<td><input type="text" class="form-control"></td>
 				<td><input type="text" class="form-control"></td>
 				<td><input type="text" class="form-control"></td>
 				<td><input type="text" class="form-control"></td>
-				<td><input type="text" class="form-control"></td>
-				<td class="hidden-print"><button class="btn btn-default">{% trans 'Reset filters' %}</button></td>
+				<td>
+					<select multiple title="{% trans 'Nothing selected' %}">
+						{% for item in groups %}
+							<option value="{{ item.id }}">{{ item.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+				<td class="hidden-print"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
 			</tr>
 		</tfoot>
 	</table>

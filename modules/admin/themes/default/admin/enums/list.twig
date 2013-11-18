@@ -1,0 +1,67 @@
+{% extends 'admin/layout.twig' %}
+
+{% block title %}{% trans 'Enums' %}{% endblock %}
+
+{% block content %}
+<h2>{% trans 'Enums' %} <small>{% trans 'Listing enums' %}</small></h2>
+
+{% if auth_has_access('enums.create') %}
+	<p>
+		<a href="{{ base_url() }}admin/enums/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new enum' %}</a>
+	</p>
+{% endif %}
+
+<div class="panel panel-default">
+	<table class="datatables table table-striped table-hover" data-source="{{ base_url() }}admin/ajax/enums.json">
+		<thead>
+			{% block _filter %}
+				<tr class="filter">
+					<td data-filter="number"><input type="text" class="form-control"></td>
+					<td data-filter="text"><input type="text" class="form-control"></td>
+					<td data-filter="none" style="width: 100px; vertical-align:middle;" class="no-sort">
+						<b>{% trans 'Item count' %}</b>
+					</td>
+					<td data-filter="text"><input type="text" class="form-control"></td>
+					<td data-filter="select">
+						<select multiple title="{% trans 'Nothing selected' %}">
+							<option value="0">{% trans 'No' %}</option>
+							<option value="1">{% trans 'Yes' %}</option>
+						</select>
+					</td>
+					{% if auth_has_access('enums.all') %}
+						<td data-filter="select">
+							<select multiple title="{% trans 'Nothing selected' %}" id="read_only">
+								<option selected value="0">{% trans 'No' %}</option>
+								<option value="1">{% trans 'Yes' %}</option>
+							</select>
+						</td>
+					{% else %}
+						<td data-filter="none" style="width: 200px;"><b>{% trans 'Read-only' %}</b></td>
+					{% endif %}
+					<td data-filter="none" class="hidden-print no-sort"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
+				</tr>
+			{% endblock %}
+			<tr>
+				<th style="width: 75px">#</th>
+				<th>{% trans 'Name' %}</th>
+				<th>{% trans 'Item count' %}</th>
+				<th>{% trans 'Default' %}</th>
+				<th>{% trans 'Active' %}</th>
+				<th>{% trans 'Read only' %}</th>
+				<th class="hidden-print" style="width: 140px;"></th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+		<tfoot>
+			{{ block('_filter') }}
+		</tfoot>
+	</table>
+</div><!-- /.panel -->
+
+{% if auth_has_access('enums.create') %}
+	<p>
+		<a href="{{ base_url() }}admin/enums/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new enum' %}</a>
+	</p>
+{% endif %}
+
+{% endblock %}

@@ -4,22 +4,22 @@ namespace Indigo\Base;
 
 class Model_Enum extends \Orm\Model
 {
-	protected static $_eav = array(
-		'meta' => array(
-			'attribute' => 'key',
-			'value'     => 'value',
-		)
-	);
-
 	protected static $_has_many = array(
-		'meta' => array(
-			'model_to'       => 'Model_Enum_Meta',
+		'items' => array(
+			'model_to'       => 'Model_Enum_Item',
 			'cascade_delete' => true,
 		),
 	);
 
+	protected static $_has_one = array(
+		'default' => array(
+			'key_from' => array('id', 'default_id'),
+			'key_to'   => array('enum_id', 'item_id'),
+			'model_to' => 'Model_Enum_Item',
+		),
+	);
+
 	protected static $_observers = array(
-		'Orm\\Observer_Slug' => array('source' => 'name'),
 		'Orm\\Observer_Typing',
 		'Orm\\Observer_Self' => array(
 			'events' => array('before_insert')
@@ -28,16 +28,12 @@ class Model_Enum extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'enum_id' => array('data_type' => 'int'),
-		'item_id' => array('data_type' => 'int'),
 		'name',
 		'slug',
 		'description',
-		'default' => array(
-			'default'   => 0,
-			'data_type' => 'boolean',
-			'min'       => 0,
-			'max'       => 1,
+		'default_id' => array(
+			'default'   => 1,
+			'data_type' => 'int',
 		),
 		'active' => array(
 			'default'   => 1,
@@ -45,22 +41,36 @@ class Model_Enum extends \Orm\Model
 			'min'       => 0,
 			'max'       => 1,
 		),
-		'read-only' => array(
+		'read_only' => array(
 			'default'   => 0,
 			'data_type' => 'boolean',
 			'min'       => 0,
 			'max'       => 1,
 		),
-		'sort' => array('data_type' => 'int'),
 	);
-
-	protected static $_sort = true;
 
 	protected static $_table_name = 'enums';
 
 	public function _event_before_insert()
 	{
-		$this->item_id = $this->query()->where('enum_id', $this->enum_id)->max('item_id') + 1;
-		static::$_sort === true and $this->sort = $this->query()->where('enum_id', $this->enum_id)->max('sort') + 10;
+		if (empty($this->slug))
+		{
+			$this->slug = \Inflector::friendly_title($this->name, '_', true);
+		}
+	}
+
+	public function add_item($name = null, $default = false, $eav = array())
+	{
+		$model = \Model_Enum_Item::forge(array('name' => $name));
+		$model->set($eav);
+		$model->enum = $this;
+
+		$model->save();
+
+		if ($default === true)
+		{
+			$this->default = $model->id;
+			$this->save();
+		}
 	}
 }

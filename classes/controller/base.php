@@ -1,5 +1,7 @@
 <?php
 
+namespace Indigo\Base;
+
 class Controller_Base extends \Controller_Theme
 {
 
@@ -11,7 +13,7 @@ class Controller_Base extends \Controller_Theme
 		$this->template->set_global('site_name', \Config::get('app.site_name', 'Indigo Admin'));
 
 		// Make logged in user available in all views.
-		$this->current_user = \Model\Auth_User::find_by_username(Auth::get_screen_name());
+		$this->current_user = \Model\Auth_User::find_by_username(\Auth::get_screen_name());
 		$this->template->set_global('current_user', $this->current_user, false);
 
 		if ('twig' == $this->theme->get_info('engine'))
@@ -32,7 +34,7 @@ class Controller_Base extends \Controller_Theme
 				}
 			}
 
-			Config::set('parser.View_Twig.views_paths', $paths);
+			\Config::set('parser.View_Twig.views_paths', $paths);
 		}
 	}
 

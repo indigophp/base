@@ -3,7 +3,7 @@
 define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
 \Config::load('theme', true, true);
-\Config::load('base');
+\Config::load('configpatch');
 \Config::load('base.db', true);
 
 $module_paths = \Config::get('module_paths', array());
@@ -28,19 +28,28 @@ textdomain('indigoadmin');
 Autoloader::add_core_namespace('Indigo\\Base');
 
 Autoloader::add_classes(array(
-	'Module'                       => __DIR__ . '/classes/module.php',
-	'Controller_Translation'       => __DIR__ . '/classes/controller/translation.php',
-	'Controller_Base'              => __DIR__ . '/classes/controller/base.php',
-	'Controller_Assets'            => __DIR__ . '/classes/controller/assets.php',
-	'Controller_Welcome'           => __DIR__ . '/classes/controller/welcome.php',
-	'Fuel\\Core\\Controller_Theme' => __DIR__ . '/classes/controller/theme.php',
-	'Twig_Indigo_Extension'        => __DIR__ . '/classes/twig/indigo/extension.php',
-));
+	// Core extensions
+	'Module'                => __DIR__ . '/classes/module.php',
+	'Twig_Indigo_Extension' => __DIR__ . '/classes/twig/indigo/extension.php',
 
-Autoloader::add_classes(array(
+	// Controllers
+	'Indigo\\Base\\Controller_Assets'      => __DIR__ . '/classes/controller/assets.php',
+	'Indigo\\Base\\Controller_Base'        => __DIR__ . '/classes/controller/base.php',
+	'Indigo\\Base\\Controller_Theme'       => __DIR__ . '/classes/controller/theme.php',
+	'Indigo\\Base\\Controller_Translation' => __DIR__ . '/classes/controller/translation.php',
+	'Controller_Welcome'                   => __DIR__ . '/classes/controller/welcome.php',
+
+	// HTTP Exceptions
+	'Indigo\\Base\\HttpForbiddenException'       => __DIR__ . '/classes/httpexceptions.php',
+	'Indigo\\Base\\HttpUnauthorizedException'    => __DIR__ . '/classes/httpexceptions.php',
+
+	// Enum models
 	'Indigo\\Base\\Model_Enum'      => __DIR__ . '/classes/model/enum.php',
+	'Indigo\\Base\\Model_Enum_Item' => __DIR__ . '/classes/model/enum/item.php',
 	'Indigo\\Base\\Model_Enum_Meta' => __DIR__ . '/classes/model/enum/meta.php',
-	'Indigo\\Base\\Menu_Admin'      => __DIR__ . '/classes/menu/admin.php',
+
+	// Menu
+	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
 ));
 
 \Module::load('admin');
@@ -80,6 +89,10 @@ $menu->add(array(
 			array(
 				'name' => 'Themes',
 				'url' => 'admin/themes',
+			),
+			array(
+				'name' => 'Enums',
+				'url' => 'admin/enums',
 			),
 		)
 	)
