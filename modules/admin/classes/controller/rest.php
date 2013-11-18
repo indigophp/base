@@ -19,5 +19,4 @@ class Controller_Rest extends \Controller_Rest
 			throw new \HttpUnauthorizedException();
 		}
 	}
-
 }

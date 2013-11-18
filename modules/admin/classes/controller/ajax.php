@@ -2,7 +2,7 @@
 
 namespace Admin;
 
-class Controller_Ajax extends Controller_Rest
+class Controller_Ajax extends Controller_Rest_Datatables
 {
 	public function action_enums()
 	{
@@ -18,67 +18,35 @@ class Controller_Ajax extends Controller_Rest
 			$query->where('read_only', 0);
 		}
 
-		$all_items_count = $query->count();
-
-		$query
-			->rows_limit(\Input::param('iDisplayLength', 10))
-			->rows_offset(\Input::param('iDisplayStart', 0));
-
+		// Column definitions
 		$columns = array(
-			'id',
+			'id' => array(
+				'type' => 'number'
+			),
 			'name',
-			'count',
+			'count' => array(
+				'sort' => false,
+				'search' => false
+			),
 			'default.name',
-			'active',
-			'read_only',
+			'active' => array(
+				'type' => 'select-multiple'
+			),
+			'read_only' => array(
+				'search' => \Auth::has_access('enums.all'),
+				'sort' => \Auth::has_access('enums.all'),
+				'type' => 'select-multiple',
+			),
 		);
 
-		$skip = array(
-			'count'
-		);
-
-		$order_by = array();
-		for ($i = 0; $i < \Input::param('iSortingCols'); $i++)
-		{
-			if (\Input::param('bSortable_'.$i, false) and ! in_array($columns[$i], $skip))
-			{
-				$order_by[$columns[\Input::param('iSortCol_'.$i)]] = \Input::param('sSortDir_'.$i);
-			}
-		}
-		$query->order_by($order_by);
-
-		for ($i=0; $i < count($columns); $i++)
-		{
-			$filter = \Input::param('sSearch_'.$i);
-
-			if (
-				(isset($filter) and in_array($filter, array(null, '', 'null'))) or
-				($columns[$i] == 'read_only' and ! \Auth::has_access('enums.all')) or
-				\Input::param('bSearchable_'.$i, false) == false or
-				in_array($columns[$i], $skip)
-			)
-			{
-				continue;
-			}
-
-			switch (\Input::param('sElementType_'.$i, 'text')) {
-				case 'select-multiple':
-					$query->where($columns[$i], 'IN', explode(',', $filter));
-					break;
-				case 'text':
-					$query->where($columns[$i], 'LIKE', '%' . $filter . '%');
-					break;
-				default:
-					break;
-			}
-		}
+		$counts = $this->process_query($query, $columns);
 
 		$enums = $query->get();
 
 		return array(
 			'sEcho' => \Input::param('sEcho'),
-			'iTotalRecords' => $all_items_count,
-			'iTotalDisplayRecords' => count($enums),
+			'iTotalRecords' => $counts[0],
+			'iTotalDisplayRecords' => $counts[1],
 			'aaData' => array_values(array_map(function($enum) {
 				return array(
 					$enum->id,
