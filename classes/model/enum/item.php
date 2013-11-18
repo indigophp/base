@@ -71,7 +71,14 @@ class Model_Enum_Item extends \Orm\Model
 			}
 			elseif (is_string(static::$_enum))
 			{
-				$enum_id = static::enum()->id;
+				if ($enum = static::enum())
+				{
+					$enum_id = $enum->id;
+				}
+				else
+				{
+					$enum_id = null;
+				}
 			}
 
 			$query->where('enum_id', $enum_id);
