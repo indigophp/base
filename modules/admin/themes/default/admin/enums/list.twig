@@ -16,27 +16,29 @@
 		<thead>
 			{% block _filter %}
 				<tr class="filter">
-					<td><input type="text" class="form-control"></td>
-					<td><input type="text" class="form-control"></td>
-					<td style="width: 100px; vertical-align:middle;" class="no-search no-sort"><b>{% trans 'Item count' %}</b></td>
-					<td><input type="text" class="form-control"></td>
-					<td>
+					<td data-filter="number"><input type="text" class="form-control"></td>
+					<td data-filter="text"><input type="text" class="form-control"></td>
+					<td data-filter="none" style="width: 100px; vertical-align:middle;" class="no-sort">
+						<b>{% trans 'Item count' %}</b>
+					</td>
+					<td data-filter="text"><input type="text" class="form-control"></td>
+					<td data-filter="select">
 						<select multiple title="{% trans 'Nothing selected' %}">
 							<option value="0">{% trans 'No' %}</option>
 							<option value="1">{% trans 'Yes' %}</option>
 						</select>
 					</td>
 					{% if auth_has_access('enums.all') %}
-						<td>
+						<td data-filter="select">
 							<select multiple title="{% trans 'Nothing selected' %}" id="read_only">
 								<option selected value="0">{% trans 'No' %}</option>
 								<option value="1">{% trans 'Yes' %}</option>
 							</select>
 						</td>
 					{% else %}
-						<td style="width: 200px;"><input type="hidden" value="0"></td>
+						<td data-filter="none" style="width: 200px;"><b>{% trans 'Read-only' %}</b></td>
 					{% endif %}
-					<td class="hidden-print no-search no-sort"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
+					<td data-filter="none" class="hidden-print no-sort"><button type="reset" class="btn btn-default">{% trans 'Reset filters' %}</button></td>
 				</tr>
 			{% endblock %}
 			<tr>
