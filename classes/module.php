@@ -2,7 +2,6 @@
 
 class Module extends \Fuel\Core\Module
 {
-
 	public static function load($module, $path = null)
 	{
 		$parent = parent::load($module, $path);
@@ -10,9 +9,9 @@ class Module extends \Fuel\Core\Module
 		if ($parent === true)
 		{
 			$path = static::exists($module);
-			if (\Finder::forge(array($path))->locate('', 'bootstrap') !== false)
+			if (is_file($path .= 'bootstrap.php'))
 			{
-				\Fuel::load($path . 'bootstrap.php');
+				\Fuel::load($path);
 			}
 		}
 
