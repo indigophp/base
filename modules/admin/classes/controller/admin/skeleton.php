@@ -9,8 +9,14 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		parent::before($data);
 
 		$translate = $this->translate();
+		$access = $this->access();
 
-		if ( ! \Auth::has_access($this->request->module . '.' . $this->request->action))
+		if ( ! $access = \Arr::get($access, $this->request->action))
+		{
+			$access = $this->request->module . '.' . $this->request->action;
+		}
+
+		if ( ! \Auth::has_access($access))
 		{
 			\Session::set_flash('error', \Arr::get($translate, $this->request->action . '.access', gettext('You are not authorized to do this.')));
 			return \Response::redirect_back('admin/' . $this->request->module);
@@ -26,6 +32,11 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	}
 
 	protected function translate()
+	{
+		return array();
+	}
+
+	protected function access()
 	{
 		return array();
 	}
