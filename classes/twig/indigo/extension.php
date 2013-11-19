@@ -20,6 +20,7 @@ class Twig_Indigo_Extension extends Twig_Extension
 			'gravatar'        => new Twig_Function_Function('Gravatar::forge'),
 			'menu'            => new Twig_Function_Function('Menu::render_menu'),
 			'admin_menu'      => new Twig_Function_Function('Menu_Admin::render_menu'),
+			'request'         => new Twig_Function_Function('Request::active'),
 			'default_img'     => new Twig_Function_Method($this, 'getDefaultImage'),
 		);
 	}
