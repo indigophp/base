@@ -15,6 +15,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			\Session::set_flash('error', \Arr::get($translate, $this->request->action . '.access', gettext('You are not authorized to do this.')));
 			return \Response::redirect_back('admin/' . $this->request->module);
 		}
+
+		\View::set_global('module', $this->request->module);
+		\View::set_global('action', $this->request->action);
 	}
 
 	protected function validation($instance = null)
