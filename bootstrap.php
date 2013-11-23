@@ -58,41 +58,46 @@ Autoloader::add_classes(array(
 
 \Package::load('menu');
 
-$menu = \Menu_Admin::instance('indigo');
+// Disgusting hack. If I don't apply the locale here, the menu part of the translation does
+// not work, because the locale is "C".
+//
+// TODO: do further investigation about how Fuel applies the locale.
+// setlocale(LC_ALL, Config::get('locale'));
 
+$menu = \Menu_Admin::instance('indigo');
 $menu->add(array(
 	array(
-		'name' => 'Dashboard',
+		'name' => gettext('Dashboard'),
 		'url' => 'admin',
 		'icon' => 'glyphicon glyphicon-dashboard',
 		'sort' => 1,
 	),
 	array(
-		'name' => 'Authentication',
+		'name' => gettext('Authentication'),
 		'icon' => 'glyphicon glyphicon-user',
 		'sort' => 10,
 		'children' => array(
 			array(
-				'name' => 'Users',
+				'name' => gettext('Users'),
 				'url' => 'admin/auth',
 			),
 			array(
-				'name' => 'Permissions',
+				'name' => gettext('Permissions'),
 				'url' => 'admin/auth/permissions',
 			),
 		)
 	),
 	array(
-		'name' => 'Settings',
+		'name' => gettext('Settings'),
 		'icon' => 'fa fa-cogs',
 		'sort' => 100,
 		'children' => array(
 			array(
-				'name' => 'Themes',
+				'name' => gettext('Themes'),
 				'url' => 'admin/themes',
 			),
 			array(
-				'name' => 'Enums',
+				'name' => gettext('Enums'),
 				'url' => 'admin/enums',
 			),
 		)
