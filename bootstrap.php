@@ -4,6 +4,7 @@ define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
 \Config::load('theme', true, true);
 \Config::load('configpatch');
+// TODO: ez szar. nem megy tőle a migration, ha nincs még db. sőt, semmi más sem :D
 \Config::load('base.db', true);
 
 if ( ! \Fuel::$is_cli)
