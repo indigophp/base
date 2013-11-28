@@ -4,6 +4,8 @@ namespace Indigo\Base;
 
 class Model_Enum extends \Orm\Model
 {
+	use \Admin\Model_Skeleton;
+
 	protected static $_has_many = array(
 		'items' => array(
 			'model_to'       => 'Model_Enum_Item',
@@ -23,53 +25,118 @@ class Model_Enum extends \Orm\Model
 		'Orm\\Observer_Typing',
 		'Orm\\Observer_Self' => array(
 			'events' => array('before_insert')
-		)
+		),
+		'Orm\\Observer_Slug' => array(
+			'events' => array('before_insert'),
+			'source' => 'name',
+		),
 	);
 
 	protected static $_properties = array(
-		'id',
-		'name',
-		'slug',
-		'description',
+		'id' => array(),
+		'name' => array(
+			'form' => array('type' => 'text'),
+			'list' => array('type' => 'text'),
+		),
+		'slug' => array(),
+		'description' => array(
+			'form' => array('type' => 'textarea'),
+		),
 		'default_id' => array(
 			'default'   => 1,
 			'data_type' => 'int',
+			'details' => false,
+			'form' => array('type' => 'select'),
+		),
+		'default.name' => array(
+			'list' => array('type' => 'text'),
 		),
 		'active' => array(
 			'default'   => 1,
-			'data_type' => 'boolean',
+			'data_type' => 'int',
 			'min'       => 0,
 			'max'       => 1,
+			'form'      => array('type' => 'switch'),
+			'list' => array('type' => 'select'),
 		),
 		'read_only' => array(
 			'default'   => 0,
-			'data_type' => 'boolean',
+			'data_type' => 'int',
 			'min'       => 0,
 			'max'       => 1,
+			'list' => array(
+				'type'    => 'select',
+				'default' => 0
+			),
 		),
 	);
 
 	protected static $_table_name = 'enums';
 
-	public function _event_before_insert()
+	public static function _init()
 	{
-		if (empty($this->slug))
+		static::$_properties = \Arr::merge(static::$_properties, array(
+			'id' => array('label' => gettext('ID')),
+			'name' => array('label' => gettext('Name')),
+			'description' => array('label' => gettext('Description')),
+			'default_id' => array(
+				'label' => gettext('Default'),
+				'form' => array(
+					'options' => function($model) {
+						$model->items;
+						$model = $model->to_array();
+						return \Arr::pluck($model['items'], 'name', 'id');
+					}
+				)
+			),
+			'default.name' => array('label' => gettext('Default')),
+			'active' => array(
+				'label' => gettext('Active'),
+				'form' => array(
+					'options' => array(
+						0 => gettext('No'),
+						1 => gettext('Yes'),
+					),
+				),
+			),
+			'read_only' => array('label' => gettext('Read-only')),
+		));
+
+		if (\Auth::has_access('enum.all'))
 		{
-			$this->slug = \Inflector::friendly_title($this->name, '_', true);
+			\Arr::set(static::$_properties, 'read_only.form', array(
+					'type' => 'switch',
+					'options' => array(
+						0 => gettext('No'),
+						1 => gettext('Yes'),
+					),
+			));
 		}
 	}
 
-	public function add_item($name = null, $default = false, $eav = array())
+	public function add_item($data = array(), $default = false, $save = true)
 	{
-		$model = \Model_Enum_Item::forge(array('name' => $name));
-		$model->set($eav);
-		$model->enum = $this;
-
-		$model->save();
-
-		if ($default === true)
+		if (\Arr::is_multi($data))
 		{
-			$this->default = $model->id;
+			foreach ($data as $default => $item)
+			{
+				$this->add_item($item, $default === 'deafult', false);
+			}
+		}
+		else
+		{
+			$model = \Model_Enum_Item::forge();
+			$model->set($data);
+			$this->items[] = $model;
+
+			if ($default === true)
+			{
+				$this->default = $model;
+			}
+		}
+
+		if ($save === true)
+		{
 			$this->save();
 		}
 	}

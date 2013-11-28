@@ -43,19 +43,19 @@
 		</table>
 	</div><!-- /.panel-body -->
 	<div class="panel-footer">
-		{% if auth_has_access('enums.edit') and (model.read_only == false or auth_has_access('enums.all')) %}
-				<a href="{{ base_url() }}admin/enums/edit/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-edit"></span> {% trans 'Edit' %}</a>
+		{% if auth_has_access('enum.edit') and (model.read_only == false or auth_has_access('enum.all')) %}
+				<a href="{{ base_url() }}admin/enum/edit/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-edit"></span> {% trans 'Edit' %}</a>
 		{% endif %}
-		{% if auth_has_access('enums.delete') and (model.read_only == false or auth_has_access('enums.all')) %}
-			<a href="{{ base_url() }}admin/enums/delete/{{ model.id }}" class="hidden-print btn btn-danger"><span class="glyphicon glyphicon-remove"></span> {% trans 'Delete' %}</a>
+		{% if auth_has_access('enum.delete') and (model.read_only == false or auth_has_access('enum.all')) %}
+			<a href="{{ base_url() }}admin/enum/delete/{{ model.id }}" class="hidden-print btn btn-danger"><span class="glyphicon glyphicon-remove"></span> {% trans 'Delete' %}</a>
 		{% endif %}
 	</div>
 </div><!-- /.panel -->
 
 <br>
-{% if auth_has_access('enums.create_item') and (model.read_only == false or auth_has_access('enums.all')) %}
+{% if auth_has_access('enum_item.create') and (model.read_only == false or auth_has_access('enum.all')) %}
 	<p>
-		<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
+		<a href="{{ base_url() }}admin/enum/item/{{ model.id }}/create/" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
 	</p>
 {% endif %}
 
@@ -81,11 +81,11 @@
 					<td>{% if item.active %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
 					<td>
 						<div class="hidden-print btn-group btn-group-sm" style="width:100px">
-							{% if auth_has_access('enums.edit_item') %}
-								<a href="{{base_url()}}admin/enums/edit_item/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
+							{% if auth_has_access('enum_item.edit') %}
+								<a href="{{base_url()}}admin/enum/item/{{ model.id }}/edit/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
 							{% endif %}
-							{% if auth_has_access('enums.delete_item') %}
-								<a href="{{base_url()}}admin/enums/delete_item/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+							{% if auth_has_access('enum.delete_item') %}
+								<a href="{{base_url()}}admin/enum/item/{{ model.id }}/delete/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
 							{% endif %}
 						</div>
 					</td>
@@ -95,9 +95,9 @@
 	</table>
 </div><!-- /.panel -->
 
-{% if auth_has_access('enums.create_item') and (model.read_only == false or auth_has_access('enums.all')) %}
+{% if auth_has_access('enum_item.create') and (model.read_only == false or auth_has_access('enum.all')) %}
 	<p>
-		<a href="{{ base_url() }}admin/enums/create_item/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
+		<a href="{{ base_url() }}admin/enum/item/create/{{ model.id }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Create new item' %}</a>
 	</p>
 {% endif %}
 
