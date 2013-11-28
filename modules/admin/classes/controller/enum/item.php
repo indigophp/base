@@ -31,12 +31,10 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 
 	protected function name()
 	{
-		if ( ! empty($this->_name))
-		{
-			return $this->_name;
-		}
-
-		return $this->_name = gettext('enum item');
+		return array(
+			ngettext('enum item', 'enum items', 1),
+			ngettext('enum item', 'enum items', 2),
+		);
 	}
 
 	public function query($options = array())
@@ -61,7 +59,7 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 		$query = \Model_Enum::query()
 			->where('id',  $id);
 
-		if ( ! \Auth::has_access('enums.all'))
+		if ( ! \Auth::has_access('enum.all'))
 		{
 			$query->where('read_only', 0);
 		}

@@ -37,6 +37,7 @@ class Model_Enum extends \Orm\Model
 		'name' => array(
 			'form' => array('type' => 'text'),
 			'list' => array('type' => 'text'),
+			'validation' => 'required|trim'
 		),
 		'slug' => array(),
 		'description' => array(

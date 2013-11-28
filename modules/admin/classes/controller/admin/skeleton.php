@@ -106,7 +106,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			return $this->_name;
 		}
 
-		return $this->_name = \Inflector::classify($this->module());
+		return $this->_name = gettext($this->module());
 	}
 
 	/**
@@ -362,37 +362,6 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		return \Response::redirect($url, $method, $code);
 	}
 
-	// protected function flatten(array $array, $parent = null)
-	// {
-	// 	static $return = array();
-
-	// 	foreach ($array as $key => $value)
-	// 	{
-	// 		if (is_array($value))
-	// 		{
-	// 			if (is_null($parent))
-	// 			{
-	// 				$this->flatten($value, $key);
-	// 			}
-	// 			else
-	// 			{
-	// 				$this->flatten($value, $parent . '.' . $key);
-	// 			}
-	// 		}
-	// 		else
-	// 		{
-	// 			if ( ! is_null($parent))
-	// 			{
-	// 				$key = $parent . '.' . $key;
-	// 			}
-
-	// 			$return[$key] = $value;
-	// 		}
-	// 	}
-
-	// 	return $return;
-	// }
-
 	public function action_index()
 	{
 		$model = $this->model();
@@ -440,40 +409,23 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		$model = $this->model();
 		$properties = $model::form();
+		$model = $this->forge();
 
 		$val = $this->val($properties);
 
 		if ($val->run() === true)
 		{
-			$this->forge($val->validated())->save();
+			$model->set($val->validated())->save();
 			\Session::set_flash('success', gettext('Wisecrack successfully updated.'));
 			return $this->redirect($this->uri());
 		}
 		else
 		{
 			$this->template->content = $this->view('admin/skeleton/create');
-			$this->template->content->model = $model;
+			$this->template->content->set('model', $model->set($val->input()), false);
 			$this->template->content->set('val', $val, false);
 			\Session::set_flash('error', gettext('There were some errors.'));
 		}
-
-		// $data = \Arr::subset($_POST, array_keys($properties));
-
-		// try
-		// {
-		// 	$model = $this->forge($data);
-		// 	$model->save();
-		// 	\Session::set_flash('success', gettext('Wisecrack successfully created.'));
-		// 	return \Response::redirect('admin/' . $this->module());
-		// }
-		// catch (\Orm\ValidationFailed $e)
-		// {
-		// 	$val = $e->get_fieldset()->validation();
-		// 	$this->template->content = $this->view('admin/skeleton/create');
-		// 	$this->template->content->model = $model;
-		// 	$this->template->content->set('val', $val, false);
-		// 	\Session::set_flash('error', gettext('There were some errors.'));
-		// }
 
 		return false;
 	}
@@ -495,12 +447,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function post_edit($id = null)
 	{
 		$model = $this->find($id);
-
-		$properties = $model->properties(true);
-
-		$properties = array_filter($properties, function($item) {
-			return \Arr::get($item, 'form.type', false) !== false;
-		});
+		$properties = $model->form();
 
 		$val = $this->val($properties);
 
@@ -513,7 +460,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		else
 		{
 			$this->template->content = $this->view('admin/skeleton/edit');
-			$this->template->content->model = $model;
+			$this->template->content->set('model', $model->set($val->input()), false);
 			$this->template->content->set('val', $val, false);
 			\Session::set_flash('error', gettext('There were some errors.'));
 		}

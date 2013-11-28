@@ -106,44 +106,27 @@ class Model_Enum_Item extends \Orm\Model
 
 	public static function query($options = array())
 	{
-		$query = parent::query($options)
-			->related('enum');
+		$query = parent::query($options);
 
 		if ( ! empty(static::$_enum))
 		{
-			// if (is_numeric(static::$_enum))
-			// {
-			// 	$enum_id = static::$_enum;
-			// }
-			// elseif (is_string(static::$_enum))
-			// {
-			// 	if ($enum = static::enum())
-			// 	{
-			// 		$enum_id = $enum->id;
-			// 	}
-			// 	else
-			// 	{
-			// 		$enum_id = null;
-			// 	}
-			// }
-
-			$query->where('enum.slug', static::$_enum);
+			$query->related('enum')->where('enum.slug', static::$_enum);
 		}
 
 		return $query;
 	}
 
-	// public static function forge($data = array(), $new = true, $view = null, $cache = true)
-	// {
-	// 	$model = parent::forge($data, $new, $view, $cache);
+	public static function forge($data = array(), $new = true, $view = null, $cache = true)
+	{
+		$model = parent::forge($data, $new, $view, $cache);
 
-	// 	if (get_called_class() == 'Model_Enum_Item')
-	// 	{
-	// 		$model->set('enum', static::enum());
-	// 	}
+		if ( ! empty(static::$_enum))
+		{
+			$model->set('enum', static::enum());
+		}
 
-	// 	return $model;
-	// }
+		return $model;
+	}
 
 	public static function enum()
 	{
