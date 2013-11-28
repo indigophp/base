@@ -57,6 +57,15 @@ class Controller_Admin extends \Controller_Base
 				{
 					$current_user = \Model\Auth_User::find_by_username(\Auth::get_screen_name());
 					\Session::set_flash('success', sprintf(gettext('Welcome, %s!'), $current_user->fullname));
+
+					if (isset($current_user->pushover))
+					{
+						$handler = new \Monolog\Handler\PushoverHandler('acQWKWqiRqnVh5TTZ6MhEQP6bynFgv', $current_user->pushover, sprintf(gettext('%s login'), \Config::get('app.site_name', 'Indigo Admin')));
+						$log = new \Monolog\Logger('pushover');
+						$log->pushHandler($handler);
+						$log->emergency(sprintf(gettext('Logged in from %s, with %s'), \Input::ip(), $current_user->email));
+					}
+
 					\Response::redirect(\Input::get('uri') ? : 'admin');
 				}
 				else

@@ -96,6 +96,16 @@
 				</div>
 			</fieldset>
 
+			<fieldset>
+				<legend>{% trans 'Other integrations' %}</legend>
+				<div class="form-group">
+					<label for="inputPushover" class="col-sm-2 control-label">{% trans 'Pushover user key' %}</label>
+					<div class="col-sm-10">
+						<input name="pushover" type="text" value="{{ model.pushover }}" class="form-control" id="inputPushover" placeholder="{% trans 'Pushover user key' %}">
+					</div>
+				</div>
+			</fieldset>
+
 		</div><!-- /.panel-body -->
 		<div class="panel-footer">
 			<button type="submit" class="btn btn-success" id="form-button-save">{% trans 'Save' %}</button>

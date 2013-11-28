@@ -43,7 +43,7 @@ class Translation
 		}
 
 		copy($outDir.'indigoadmin.po', $outDir.'indigoadmin.pot');
-		passthru("find \"".PKGPATH."/base\" \"".$tmpDir."\" -iname \"*.php\" | xargs xgettext --default-domain=indigoadmin -p \"".$outDir."\" --from-code=UTF-8 -n --omit-header -L PHP");
+		passthru("find \"".APPPATH."../\" \"".$tmpDir."\" -iname \"*.php\" | xargs xgettext --default-domain=indigoadmin -p \"".$outDir."\" --from-code=UTF-8 -n --omit-header -L PHP");
 		passthru("msgmerge -U \"".$outDir."/indigoadmin.pot\" \"".$outDir."/indigoadmin.po\"");
 		rename($outDir.'indigoadmin.pot', $outDir.'indigoadmin.po');
 		shell_exec('poedit "' . $outDir.'indigoadmin.po" &');

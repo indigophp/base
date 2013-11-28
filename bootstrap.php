@@ -67,8 +67,13 @@ textdomain('indigoadmin');
 
 \Package::load('menu');
 
-$menu = \Menu_Admin::instance('indigo');
+// Disgusting hack. If I don't apply the locale here, the menu part of the translation does
+// not work, because the locale is "C".
+//
+// TODO: do further investigation about how Fuel applies the locale.
+// setlocale(LC_ALL, Config::get('locale'));
 
+$menu = \Menu_Admin::instance('indigo');
 $menu->add(array(
 	array(
 		'name' => gettext('Dashboard'),
