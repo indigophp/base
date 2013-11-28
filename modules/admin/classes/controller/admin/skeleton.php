@@ -518,23 +518,6 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			\Session::set_flash('error', gettext('There were some errors.'));
 		}
 
-		// $data = \Arr::subset($_POST, array_keys($properties));
-
-		// try
-		// {
-		// 	$model->set($data)->save();
-		// 	\Session::set_flash('success', gettext('Wisecrack successfully updated.'));
-		// 	return \Response::redirect('admin/' . $this->module());
-		// }
-		// catch (\Orm\ValidationFailed $e)
-		// {
-		// 	$val = $e->get_fieldset()->validation();
-		// 	$this->template->content = $this->view('admin/skeleton/edit');
-		// 	$this->template->content->model = $model;
-		// 	$this->template->content->set('val', $val, false);
-		// 	\Session::set_flash('error', gettext('There were some errors.'));
-		// }
-
 		return false;
 	}
 
