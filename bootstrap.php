@@ -77,7 +77,7 @@ $menu = \Menu_Admin::instance('indigo');
 $menu->add(array(
 	array(
 		'name' => gettext('Dashboard'),
-		'url' => 'admin',
+		'url' => \Uri::admin(false),
 		'icon' => 'glyphicon glyphicon-dashboard',
 		'sort' => 1,
 	),
@@ -88,11 +88,11 @@ $menu->add(array(
 		'children' => array(
 			array(
 				'name' => gettext('Users'),
-				'url' => 'admin/auth',
+				'url' => \Uri::admin(false).'auth',
 			),
 			array(
 				'name' => gettext('Permissions'),
-				'url' => 'admin/auth/permissions',
+				'url' => \Uri::admin(false).'auth/permissions',
 			),
 		)
 	),
@@ -103,16 +103,16 @@ $menu->add(array(
 		'children' => array(
 			array(
 				'name' => gettext('Themes'),
-				'url' => 'admin/themes',
+				'url' => \Uri::admin(false).'themes',
 			),
 			array(
 				'name' => gettext('Enums'),
-				'url' => 'admin/enum',
+				'url' => \Uri::admin(false).'enum',
 			),
 		)
 	)
 ));
 
 
-$routes = \Config::load('admin::routes');
+$routes = \Config::load('indigoroutes');
 \Router::add($routes);
