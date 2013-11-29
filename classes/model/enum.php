@@ -33,7 +33,9 @@ class Model_Enum extends \Orm\Model
 	);
 
 	protected static $_properties = array(
-		'id' => array(),
+		'id' => array(
+			'view' => false
+		),
 		'name' => array(
 			'form' => array('type' => 'text'),
 			'list' => array('type' => 'text'),
@@ -79,6 +81,7 @@ class Model_Enum extends \Orm\Model
 		static::$_properties = \Arr::merge(static::$_properties, array(
 			'id' => array('label' => gettext('ID')),
 			'name' => array('label' => gettext('Name')),
+			'slug' => array('label' => gettext('Slug')),
 			'description' => array('label' => gettext('Description')),
 			'default_id' => array(
 				'label' => gettext('Default'),

@@ -72,4 +72,11 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 			ngettext('enum', 'enums', 2),
 		);
 	}
+
+	public function action_view($id = null)
+	{
+		parent::action_view($id);
+
+		$this->theme->content->item = ngettext('enum item', 'enum items', 1);
+	}
 }
