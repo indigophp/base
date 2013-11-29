@@ -8,7 +8,7 @@
 
 <p>
 	{% if auth_has_access('users.create') %}
-	<a href="{{ base_url() }}admin/auth/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Register new user' %}</a>
+	<a href="{{ admin_url() }}auth/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Register new user' %}</a>
 	{% endif %}
 </p>
 
@@ -19,7 +19,7 @@
 			Users
 		</div>
 	</div> -->
-	<table class="datatables table table-striped table-hover" data-source="{{ base_url() }}admin/auth/ajax/list.json">
+	<table class="datatables table table-striped table-hover" data-source="{{ admin_url() }}auth/ajax/list.json">
 		<thead>
 			<tr class="filter">
 				<td><input type="text" class="form-control"></td>
@@ -66,7 +66,7 @@
 
 <p>
 	{% if auth_has_access('users.create') %}
-	<a href="{{ base_url() }}admin/auth/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Register new user' %}</a>
+	<a href="{{ admin_url() }}auth/create" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% trans 'Register new user' %}</a>
 	{% endif %}
 </p>
 

@@ -50,9 +50,9 @@ class Controller_Admin_Ajax extends \Admin\Controller_Rest
 					$user->fullname,
 					$user->group->name,
 					'<div class="hidden-print btn-group btn-group-sm" style="width:100px">'.
-						(Auth::has_access('users.view_details') ? '<a href="'.\Uri::create('admin/auth/details/'.$user->id).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
-						((Auth::has_access('users.edit_other') or (Auth::has_access('users.edit_own') and $user->username == Auth::get_screen_name())) ? '<a href="'.\Uri::create('admin/auth/edit/'.$user->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
-						((Auth::has_access('users.delete') and $user->username != Auth::get_screen_name()) ? '<a href="'.\Uri::create('admin/auth/delete/'.$user->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
+						(Auth::has_access('users.view_details') ? '<a href="'.(\Uri::admin() . 'auth/details/'.$user->id).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
+						((Auth::has_access('users.edit_other') or (Auth::has_access('users.edit_own') and $user->username == Auth::get_screen_name())) ? '<a href="'.(\Uri::admin() . 'auth/edit/'.$user->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
+						((Auth::has_access('users.delete') and $user->username != Auth::get_screen_name()) ? '<a href="'.(\Uri::admin() . 'auth/delete/'.$user->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
 					'</div>'
 				);
 			}, $users))
