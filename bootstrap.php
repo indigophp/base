@@ -11,7 +11,7 @@ if ( ! \Fuel::$is_cli)
 {
 	if (\Config::get('admin_url') === null)
 	{
-		\Config::set('admin_url', \Config::get('base_url') . 'admin/');
+		\Config::set('admin_url', 'admin/');
 	}
 }
 
@@ -112,3 +112,7 @@ $menu->add(array(
 		)
 	)
 ));
+
+
+$routes = \Config::load('admin::routes');
+\Router::add($routes);

@@ -7,8 +7,16 @@ class Uri extends \Fuel\Core\Uri
 	 *
 	 * @return  string
 	 */
-	public static function admin()
+	public static function admin($absolute = true)
 	{
-		return \Config::get('admin_url');
+		static $relative_url;
+		static $absolute_url;
+
+		if (empty($relative_url))
+		{
+			$relative_url = \Config::get('admin_url');
+			$absolute_url = static::base() . $relative_url;
+		}
+		return $absolute ? $absolute_url : $relative_url;
 	}
 }
