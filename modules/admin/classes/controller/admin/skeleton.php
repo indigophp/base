@@ -16,7 +16,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 *
 	 * @var string
 	 */
-	protected $_uri;
+	protected $_url;
 
 	/**
 	 * Name of the module
@@ -39,24 +39,11 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		parent::before($data);
 
 		$translate = $this->translate();
-		$access = $this->access();
+		$this->access();
 
-		$module = $this->module();
-
-		if ( ! $access = \Arr::get($access, $this->request->action))
-		{
-			$access = $module . '.' . $this->request->action;
-		}
-
-		if ( ! \Auth::has_access($access))
-		{
-			\Session::set_flash('error', \Arr::get(static::$translate, $this->request->action . '.access', gettext('You are not authorized to do this.')));
-			return \Response::redirect_back('admin/' . str_replace('_', '/', $module));
-		}
-
-		\View::set_global('module', $module);
+		\View::set_global('module', $this->module());
 		\View::set_global('module_name', $this->name());
-		\View::set_global('uri', $this->uri());
+		\View::set_global('url', $this->url());
 	}
 
 	/**
@@ -76,11 +63,6 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			$module = \Inflector::denamespace($this->request->controller);
 			$module = strtolower(str_replace('Controller_', '', $module));
 
-			// if (strpos($module, '_'))
-			// {
-			// 	throw new \FuelException('Admin Skeleton should only be used at the first level of admin');
-			// }
-
 			return $this->_module = $module;
 		}
 		else
@@ -89,25 +71,17 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		}
 	}
 
-	protected function uri()
+	protected function url()
 	{
-		if ( ! empty($this->_uri))
+		if ( ! empty($this->_url))
 		{
-			return $this->_uri;
+			return $this->_url;
 		}
 
-		return $this->_uri = \Uri::admin() . str_replace('_', '/', $this->module()) . '/';
+		return $this->_url = \Uri::admin() . str_replace('_', '/', $this->module());
 	}
 
-	protected function name()
-	{
-		if ( ! empty($this->_name))
-		{
-			return $this->_name;
-		}
-
-		return $this->_name = gettext($this->module());
-	}
+	abstract protected function name();
 
 	/**
 	 * Parse model name
@@ -144,7 +118,11 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	protected function access()
 	{
-		return array();
+		if ( ! \Auth::has_access($this->module() . '.' . $this->request->action))
+		{
+			\Session::set_flash('error', \Arr::get(static::$translate, $this->request->action . '.access', gettext('You are not authorized to do this.')));
+			return \Response::redirect_back(\Uri::admin(false));
+		}
 	}
 
 	/**
@@ -394,6 +372,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		}
 		else
 		{
+			$this->template->set_global('title', ucfirst($this->name()[1]));
 			$this->template->content = $this->view('admin/skeleton/list');
 			$this->template->content->set('model', $this->forge(), false);
 		}
@@ -401,6 +380,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	public function action_create()
 	{
+		$this->template->set_global('title', ucfirst(strtr(gettext('New %item%'), array('%item%' => $this->name()[0]))));
 		$this->template->content = $this->view('admin/skeleton/create');
 		$this->template->content->set('model', $this->forge(), false);
 	}
@@ -416,11 +396,12 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		if ($val->run() === true)
 		{
 			$model->set($val->validated())->save();
-			\Session::set_flash('success', gettext('Wisecrack successfully updated.'));
-			return $this->redirect($this->uri());
+			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully created.'), array('%item%' => $this->name()[0]))));
+			return $this->redirect($this->url());
 		}
 		else
 		{
+			$this->template->set_global('title', ucfirst(strtr(gettext('New %item%'), array('%item%' => $this->name()[0]))));
 			$this->template->content = $this->view('admin/skeleton/create');
 			$this->template->content->set('model', $model->set($val->input()), false);
 			$this->template->content->set('val', $val, false);
@@ -433,6 +414,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function action_view($id = null)
 	{
 		$model = $this->find($id);
+		$this->template->set_global('title', ucfirst(strtr(gettext('View %item%'), array('%item%' => $this->name()[0]))));
 		$this->template->content = $this->view('admin/skeleton/view');
 		$this->template->content->set('model', $model, false);
 	}
@@ -440,6 +422,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function action_edit($id = null)
 	{
 		$model = $this->find($id);
+		$this->template->set_global('title', ucfirst(strtr(gettext('Edit %item%'), array('%item%' => $this->name()[0]))));
 		$this->template->content = $this->view('admin/skeleton/edit');
 		$this->template->content->set('model', $model, false);
 	}
@@ -454,11 +437,12 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		if ($val->run() === true)
 		{
 			$model->set($val->validated())->save();
-			\Session::set_flash('success', gettext('Wisecrack successfully updated.'));
-			return $this->redirect($this->uri());
+			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully updated.'), array('%item%' => $this->name()[0]))));
+			return $this->redirect($this->url());
 		}
 		else
 		{
+			$this->template->set_global('title', ucfirst(strtr(gettext('Edit %item%'), array('%item%' => $this->name()[0]))));
 			$this->template->content = $this->view('admin/skeleton/edit');
 			$this->template->content->set('model', $model->set($val->input()), false);
 			$this->template->content->set('val', $val, false);
@@ -474,12 +458,12 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		if ($model->delete())
 		{
-			\Session::set_flash('success', gettext('Wisecrack successfully deleted.'));
-			return $this->redirect($this->uri());
+			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully deleted.'), array('%item%' => $this->name()[0]))));
+			return $this->redirect($this->url());
 		}
 		else
 		{
-			\Session::set_flash('error', gettext('Could not delete wisecrack.'));
+			\Session::set_flash('error', ucfirst(strtr(gettext('%item% cannot be deleted.'), array('%item%' => $this->name()[0]))));
 			return \Response::redirect_back();
 		}
 	}

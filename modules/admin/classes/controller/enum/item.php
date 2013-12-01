@@ -33,13 +33,14 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 	{
 		return array(
 			ngettext('enum item', 'enum items', 1),
-			ngettext('enum item', 'enum items', 2),
+			ngettext('enum item', 'enum items', 999),
 		);
 	}
 
 	public function query($options = array())
 	{
-		$query = parent::query();
+		$query = parent::query()
+			->where('enum_id', $this->param('enum_id'));
 
 		if ( ! \Auth::has_access('enum.all'))
 		{
@@ -79,18 +80,24 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 		return $model;
 	}
 
-	protected function uri()
+	protected function url()
 	{
-		if ( ! empty($this->_uri))
+		if ( ! empty($this->_url))
 		{
-			return $this->_uri;
+			return $this->_url;
 		}
 
-		return $this->_uri = \Uri::admin() . 'enum/view/' . $this->param('enum_id');
+		return $this->_url = parent::url() . $this->param('enum_id') . '/';
+
 	}
 
 	public function action_index()
 	{
-		return \Response::redirect(\Uri::admin() . 'enum/view/' . $this->param('enum_id'));
+		return $this->redirect(\Uri::admin() . 'enum/view/' . $this->param('enum_id'));
+	}
+
+	public function action_view($id = null)
+	{
+		return $this->action_index();
 	}
 }

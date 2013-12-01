@@ -8,7 +8,7 @@ class Create_enums
 	{
 		\DBUtil::create_table('enums', array(
 			'id'          => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
-			'name'        => array('constraint' => 64, 'type' => 'varchar'),
+			'name'        => array('constraint' => 61, 'type' => 'varchar'),
 			'slug'        => array('constraint' => 64, 'type' => 'varchar'),
 			'description' => array('type' => 'text', 'null' => true),
 			'default_id'  => array('type' => 'int', 'default' => 1, 'unsigned' => true, 'null' => true),
@@ -19,19 +19,15 @@ class Create_enums
 		\DBUtil::create_index('enums', 'slug', 'index_enums_on_slug', 'UNIQUE');
 
 		\DBUtil::create_table('enum_items', array(
-			'id'          => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
+			'pk'          => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
+			'id'          => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
 			'enum_id'     => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
-			'item_id'     => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
-			'name'        => array('constraint' => 64, 'type' => 'varchar'),
-			'slug'        => array('constraint' => 67, 'type' => 'varchar'),
+			'name'        => array('constraint' => 61, 'type' => 'varchar'),
+			'slug'        => array('constraint' => 64, 'type' => 'varchar'),
 			'description' => array('type' => 'text', 'null' => true),
 			'active'      => array('type' => 'tinyint', 'default' => 1),
 			'sort'        => array('constraint' => 11, 'type' => 'int', 'null' => true),
-		), array('id'));
-
-		\DBUtil::create_index('enum_items', 'slug', 'index_enums_on_slug', 'UNIQUE');
-		\DBUtil::create_index('enum_items', 'item_id', 'index_enum_items_on_item_id', 'INDEX');
-		\DBUtil::create_index('enum_items', array('enum_id', 'item_id'), 'index_enum_items_on_enum_id_item_id', 'UNIQUE');
+		), array('pk'));
 
 		\DBUtil::add_foreign_key('enum_items', array(
 			'constraint' => 'fk_index_enum_items_on_enum_id',

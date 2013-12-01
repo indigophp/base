@@ -16,7 +16,7 @@ class Model_Enum extends \Orm\Model
 	protected static $_has_one = array(
 		'default' => array(
 			'key_from' => array('id', 'default_id'),
-			'key_to'   => array('enum_id', 'item_id'),
+			'key_to'   => array('enum_id', 'id'),
 			'model_to' => 'Model_Enum_Item',
 		),
 	);
@@ -29,6 +29,7 @@ class Model_Enum extends \Orm\Model
 		'Orm\\Observer_Slug' => array(
 			'events' => array('before_insert'),
 			'source' => 'name',
+			'separator' => '_',
 		),
 	);
 
@@ -39,7 +40,7 @@ class Model_Enum extends \Orm\Model
 		'name' => array(
 			'form' => array('type' => 'text'),
 			'list' => array('type' => 'text'),
-			'validation' => 'required|trim'
+			'validation' => 'required|trim',
 		),
 		'slug' => array(),
 		'description' => array(
@@ -48,7 +49,7 @@ class Model_Enum extends \Orm\Model
 		'default_id' => array(
 			'default'   => 1,
 			'data_type' => 'int',
-			'details' => false,
+			'view' => false,
 			'form' => array('type' => 'select'),
 		),
 		'default.name' => array(
@@ -124,7 +125,7 @@ class Model_Enum extends \Orm\Model
 		{
 			foreach ($data as $default => $item)
 			{
-				$this->add_item($item, $default === 'deafult', false);
+				$this->add_item($item, $default === 'default', false);
 			}
 		}
 		else
@@ -132,16 +133,12 @@ class Model_Enum extends \Orm\Model
 			$model = \Model_Enum_Item::forge();
 			$model->set($data);
 			$this->items[] = $model;
-
 			if ($default === true)
 			{
 				$this->default = $model;
 			}
 		}
 
-		if ($save === true)
-		{
-			$this->save();
-		}
+		$save === true and $this->save(true);
 	}
 }

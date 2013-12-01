@@ -79,9 +79,23 @@ trait Model_Skeleton
 	{
 		$properties = static::properties(true);
 
-		return array_filter($properties, function($item) {
+		$properties = array_filter($properties, function($item) {
 			return \Arr::get($item, 'form.type', false) !== false;
 		});
+
+		if ( ! empty(static::$_fieldsets))
+		{
+			$fieldsets = static::$_fieldsets;
+
+			foreach ($fieldsets as $key => $value)
+			{
+				$fieldsets[$key]['properties'] = \Arr::subset($properties, \Arr::get($fieldsets, $key.'.properties', array()), array());
+			}
+
+			return $fieldsets;
+		}
+
+		return $properties;
 	}
 
 	public function options($field)
@@ -112,10 +126,18 @@ trait Model_Skeleton
 					->related('items')
 					->related('items.meta')
 					->where('slug', $options)
-					->get_one()
-					->to_array();
+					->get_one();
 
-				$options = \Arr::pluck($options['items'], 'name', 'id');
+				if (is_null($options))
+				{
+					$options = array();
+				}
+				else
+				{
+					$options = $options->to_array();
+					$options = \Arr::pluck($options['items'], 'name', 'id');
+				}
+
 			}
 		}
 

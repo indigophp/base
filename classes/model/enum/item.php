@@ -28,7 +28,6 @@ class Model_Enum_Item extends \Orm\Model
 	);
 
 	protected static $_observers = array(
-		'Orm\\Observer_Slug' => array('source' => 'name'),
 		'Orm\\Observer_Typing',
 		'Orm\\Observer_Self' => array(
 			'events' => array('before_insert')
@@ -36,11 +35,12 @@ class Model_Enum_Item extends \Orm\Model
 	);
 
 	protected static $_properties = array(
+		'pk' => array(),
 		'id' => array(),
 		'enum_id' => array('data_type' => 'int'),
-		'item_id' => array('data_type' => 'int'),
 		'name' => array(
 			'form' => array('type' => 'text'),
+			'validation' => 'required|trim',
 		),
 		'slug' => array(),
 		'description' => array(
@@ -62,17 +62,19 @@ class Model_Enum_Item extends \Orm\Model
 
 	protected static $_table_name = 'enum_items';
 
+	protected static $_primary_key = array('pk');
+
 	public static function _init()
 	{
 		static::$_properties = \Arr::merge(static::$_properties, array(
+			'pk' => array(
+				'label' => gettext('Item ID')
+			),
 			'id' => array(
 				'label' => gettext('ID')
 			),
 			'enum_id' => array(
 				'label' => gettext('Enum ID')
-			),
-			'item_id' => array(
-				'label' => gettext('Item ID')
 			),
 			'name' => array(
 				'label' => gettext('Name'),
@@ -100,8 +102,9 @@ class Model_Enum_Item extends \Orm\Model
 
 	public function _event_before_insert()
 	{
-		$this->item_id = $this->query()->where('enum_id', $this->enum_id)->max('item_id') + 1;
+		$this->id = $this->query()->where('enum_id', $this->enum_id)->max('id') + 1;
 		static::$_sort === true and $this->sort = $this->query()->where('enum_id', $this->enum_id)->max('sort') + 10;
+		$this->slug = \Inflector::friendly_title($this->name, '_', true);
 	}
 
 	public static function query($options = array())

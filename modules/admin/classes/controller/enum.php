@@ -25,7 +25,8 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 
 	public function query($options = array())
 	{
-		$query = parent::query();
+		$query = parent::query()
+			->related('default');
 
 		if ( ! \Auth::has_access('enum.all'))
 		{
@@ -69,14 +70,17 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 	{
 		return array(
 			ngettext('enum', 'enums', 1),
-			ngettext('enum', 'enums', 2),
+			ngettext('enum', 'enums', 999),
 		);
 	}
 
 	public function action_view($id = null)
 	{
 		parent::action_view($id);
+		$model = $this->template->content->model;
+		$model->active = $model->active ? gettext('Yes') : gettext('No');
+		$model->read_only = $model->read_only ? gettext('Yes') : gettext('No');
 
-		$this->theme->content->item = ngettext('enum item', 'enum items', 1);
+		$this->template->content->thing = ngettext('enum item', 'enum items', 1);
 	}
 }
