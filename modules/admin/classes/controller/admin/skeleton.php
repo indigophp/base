@@ -350,6 +350,8 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 			$properties = $model::lists();
 
+			$query = $this->query($query);
+
 			$count = $this->process_query($query, $properties);
 
 			$models = $query->get();
