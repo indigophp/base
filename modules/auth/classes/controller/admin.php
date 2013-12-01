@@ -64,7 +64,7 @@ class Controller_Admin extends \Admin\Controller_Admin
 			else
 			{
 				\Session::set_flash('success', gettext('User successfully created.'));
-				\Response::redirect('admin/auth');
+				\Response::redirect(\Uri::admin().'auth');
 			}
 		}
 		catch (\SimpleUserUpdateException $e)
@@ -147,7 +147,7 @@ class Controller_Admin extends \Admin\Controller_Admin
 				\Session::set_flash('error', $e->getMessage());
 			}
 
-			\Response::redirect('admin/auth');
+			\Response::redirect(\Uri::admin().'auth');
 		}
 
 		$this->template->content = $this->theme->view('admin/user/edit.twig');

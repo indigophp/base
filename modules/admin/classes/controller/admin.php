@@ -24,7 +24,7 @@ class Controller_Admin extends \Controller_Base
 			}
 			else
 			{
-				\Response::redirect('admin/login?uri=' . urlencode(\Uri::string()));
+				\Response::redirect(\Uri::admin() . 'login?uri=' . urlencode(\Uri::string()));
 			}
 		}
 	}
@@ -32,7 +32,7 @@ class Controller_Admin extends \Controller_Base
 	public function action_login()
 	{
 		// Already logged in
-		\Auth::check() and \Response::redirect(\Input::get('uri') ? : 'admin');
+		\Auth::check() and \Response::redirect(\Input::get('uri') ? : \Uri::admin());
 
 		$val = \Validation::forge();
 
@@ -66,7 +66,7 @@ class Controller_Admin extends \Controller_Base
 						$log->emergency(sprintf(gettext('Logged in from %s, with %s'), \Input::ip(), $current_user->email));
 					}
 
-					\Response::redirect(\Input::get('uri') ? : 'admin');
+					\Response::redirect(\Input::get('uri') ? : \Uri::admin());
 				}
 				else
 				{
@@ -93,7 +93,7 @@ class Controller_Admin extends \Controller_Base
 	public function action_logout()
 	{
 		\Auth::logout();
-		\Response::redirect('admin');
+		\Response::redirect(\Uri::admin());
 	}
 
 	public function action_index()
