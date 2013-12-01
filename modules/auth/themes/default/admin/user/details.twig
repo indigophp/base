@@ -43,7 +43,7 @@
 </div>
 
 {% if auth_has_access('user.edit_other') %}
-	<a href="{{ base_url() }}admin/auth/edit/{{ model.id }}" class="hidden-print btn btn-default">{% trans 'Edit User' %}</a>
+	<a href="{{ admin_url() }}auth/edit/{{ model.id }}" class="hidden-print btn btn-default">{% trans 'Edit User' %}</a>
 {% endif %}
 
 {% endblock %}
