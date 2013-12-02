@@ -7,7 +7,7 @@
 {% block create %}
 	{% if auth_has_access('enum_item.create') and (model.read_only == false or auth_has_access('enum.all')) %}
 		<p>
-			<a href="{{ url }}item/{{ model.id }}/create/" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% filter capitalize %}{% trans %}Create a new {{ item }}{% endtrans %}{% endfilter %}</a>
+			<a href="{{ url }}/item/{{ model.id }}/create/" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% filter capitalize %}{% trans %}Create a new {{ item }}{% endtrans %}{% endfilter %}</a>
 		</p>
 	{% endif %}
 {% endblock %}
@@ -35,10 +35,10 @@
 					<td>
 						<div class="hidden-print btn-group btn-group-sm" style="width:100px">
 							{% if auth_has_access('enum_item.edit') %}
-								<a href="{{ url }}item/{{ model.id }}/edit/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
+								<a href="{{ url }}/item/{{ model.id }}/edit/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
 							{% endif %}
 							{% if auth_has_access('enum.delete_item') %}
-								<a href="{{ url }}item/{{ model.id }}/delete/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+								<a href="{{ url }}/item/{{ model.id }}/delete/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
 							{% endif %}
 						</div>
 					</td>
