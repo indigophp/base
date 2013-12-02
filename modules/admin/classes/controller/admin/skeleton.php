@@ -291,9 +291,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		$data['action'] =
 			'<div class="hidden-print btn-group btn-group-sm" style="width:100px">'.
-				(\Auth::has_access($this->module() . '.view') ? '<a href="'.\Uri::create(\Uri::admin() . $this->module() . '/view/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
-				(\Auth::has_access($this->module() . '.edit') ? '<a href="'.\Uri::create(\Uri::admin() . $this->module() . '/edit/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
-				(\Auth::has_access($this->module() . '.delete') ? '<a href="'.\Uri::create(\Uri::admin() . $this->module() . '/delete/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
+				(\Auth::has_access($this->module() . '.view') ? '<a href="'.\Uri::create($this->url() . '/view/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
+				(\Auth::has_access($this->module() . '.edit') ? '<a href="'.\Uri::create($this->url() . '/edit/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
+				(\Auth::has_access($this->module() . '.delete') ? '<a href="'.\Uri::create($this->url() . '/delete/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
 			'</div>';
 		return array_values($data);
 	}
