@@ -353,13 +353,11 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		$model = $this->model();
 
-		if (\Input::is_ajax())
+		if ( ! \Input::is_ajax())
 		{
-			$query = $model::query();
-
 			$properties = $model::lists();
 
-			$query = $this->query($query);
+			$query = $this->query();
 
 			$count = $this->process_query($query, $properties);
 
