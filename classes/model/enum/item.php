@@ -113,7 +113,9 @@ class Model_Enum_Item extends \Orm\Model
 
 		if ( ! empty(static::$_enum))
 		{
-			$query->related('enum')->where('enum.slug', static::$_enum);
+			// $query->related('enum')->where('enum.slug', static::$_enum);
+			// TODO: this is a bit messy
+			$query->where('enum_id', \Model_Enum::query()->select('id')->where('slug', static::$_enum)->rows_limit(1)->get_query(true));
 		}
 
 		return $query;
