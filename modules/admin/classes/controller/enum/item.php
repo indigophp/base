@@ -87,7 +87,7 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 			return $this->_url;
 		}
 
-		return $this->_url = parent::url() . $this->param('enum_id') . '/';
+		return $this->_url = parent::url() . '/' . $this->param('enum_id') . '/';
 
 	}
 
