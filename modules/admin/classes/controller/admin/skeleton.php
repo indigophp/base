@@ -353,7 +353,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		$model = $this->model();
 
-		if ( ! \Input::is_ajax())
+		if (\Input::is_ajax())
 		{
 			$properties = $model::lists();
 
