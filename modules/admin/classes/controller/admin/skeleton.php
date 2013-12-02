@@ -285,15 +285,24 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	protected function map(\Orm\Model $model, array $properties)
 	{
-		$model = $model->to_array();
-		$data = \Arr::subset($model, array_keys($properties));
+		$data = $model->to_array();
+		$data = \Arr::subset($data, array_keys($properties));
 		$data = \Arr::flatten_assoc($data, '.');
+
+		// Check for options and set value
+		foreach ($properties as $key => $value)
+		{
+			if ($options = $model->options($key))
+			{
+				empty($data) or $data[$key] = $options[$data[$key]];
+			}
+		}
 
 		$data['action'] =
 			'<div class="hidden-print btn-group btn-group-sm" style="width:100px">'.
-				(\Auth::has_access($this->module() . '.view') ? '<a href="'.\Uri::create($this->url() . '/view/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
-				(\Auth::has_access($this->module() . '.edit') ? '<a href="'.\Uri::create($this->url() . '/edit/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
-				(\Auth::has_access($this->module() . '.delete') ? '<a href="'.\Uri::create($this->url() . '/delete/' . $model['id']).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
+				(\Auth::has_access($this->module() . '.view') ? '<a href="'.\Uri::create($this->url() . '/view/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
+				(\Auth::has_access($this->module() . '.edit') ? '<a href="'.\Uri::create($this->url() . '/edit/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
+				(\Auth::has_access($this->module() . '.delete') ? '<a href="'.\Uri::create($this->url() . '/delete/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
 			'</div>';
 		return array_values($data);
 	}

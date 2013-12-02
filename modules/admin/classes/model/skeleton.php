@@ -6,6 +6,8 @@ trait Model_Skeleton
 {
 	protected static $_columns_cached = array();
 
+	protected static $_options_cached = array();
+
 	public static function properties($relations = false)
 	{
 		$properties = parent::properties();
@@ -75,7 +77,7 @@ trait Model_Skeleton
 		});
 	}
 
-	public static function form()
+	public static function form($fieldset = false)
 	{
 		$properties = static::properties(true);
 
@@ -83,7 +85,7 @@ trait Model_Skeleton
 			return \Arr::get($item, 'form.type', false) !== false;
 		});
 
-		if ( ! empty(static::$_fieldsets))
+		if ( ! empty(static::$_fieldsets) and $fieldset === true)
 		{
 			$fieldsets = static::$_fieldsets;
 
@@ -100,6 +102,13 @@ trait Model_Skeleton
 
 	public function options($field)
 	{
+		$class = get_called_class();
+
+		if (array_key_exists($class, static::$_options_cached) and array_key_exists($field, static::$_options_cached[$class]))
+		{
+			return static::$_options_cached[$class][$field];
+		}
+
 		$column = static::column($field, array());
 		$column = \Arr::merge(\Arr::get($column, 'form', array()), \Arr::get($column, 'list', array()));
 
@@ -141,6 +150,6 @@ trait Model_Skeleton
 			}
 		}
 
-		return $options;
+		return static::$_options_cached[$class][$field] = $options;
 	}
 }
