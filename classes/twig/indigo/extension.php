@@ -29,14 +29,14 @@ class Twig_Indigo_Extension extends Twig_Extension
 
 	public function getFilters()
 	{
-
 		return array(
-			'md5'       => new Twig_Filter_Function('md5'),
-			'pluralize' => new Twig_Filter_Function('Inflector::pluralize'),
-			'bytes'     => new Twig_Filter_Function('Num::format_bytes'),
-			'qty'       => new Twig_Filter_Function('Num::quantity'),
-			'bool'      => new Twig_Filter_Function([$this, 'bool']),
-			'attr'      => new Twig_Filter_Function('array_to_attr'),
+			'md5'         => new Twig_Filter_Function('md5'),
+			'pluralize'   => new Twig_Filter_Function('Inflector::pluralize'),
+			'bytes'       => new Twig_Filter_Function('Num::format_bytes'),
+			'qty'         => new Twig_Filter_Function('Num::quantity'),
+			'bool'        => new Twig_Filter_Function([$this, 'bool']),
+			'attr'        => new Twig_Filter_Function('array_to_attr'),
+			'date_format' => new Twig_Filter_Function([$this, 'dateFormat']),
 		);
 	}
 
@@ -51,6 +51,20 @@ class Twig_Indigo_Extension extends Twig_Extension
 	public function getDefaultImage(\Auth\Model\Auth_User $model)
 	{
 		return urlencode(Uri::create('assets/theme/img/icons/' . ($model->group_id == 6 ? 'admin' : ($model->group_id == 1 ? 'banned' : 'user') ) . '.png'));
+	}
+
+	public function dateFormat($timestamp, $pattern_key = 'local', $timezone = null)
+	{
+		if (is_numeric($timestamp))
+		{
+			$date = \Date::forge($timestamp);
+		}
+		else
+		{
+			$date = \Date::create_from_string($timestamp);
+		}
+
+		return $date->format($pattern_key, $timezone);
 	}
 
 	public function bool($value)

@@ -442,7 +442,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		{
 			$model->set($val->validated())->save();
 			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully created.'), array('%item%' => $this->name()[0]))));
-			return $this->redirect($this->url());
+			return $this->redirect($this->url() . '/view/' . $model->id);
 		}
 		else
 		{

@@ -59,9 +59,9 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 	{
 		$data = parent::map($model, $properties);
 
-		empty($data[1]) and $data[1] = gettext('<i>None</i>');
-		$data[2] = $data[2] ? gettext('Yes') : gettext('No');
-		$data[3] = $data[3] ? gettext('Yes') : gettext('No');
+		empty($data['default_id']) and $data['default_id'] = gettext('<i>None</i>');
+		$data['active'] = $data['active'] ? gettext('Yes') : gettext('No');
+		$data['read_only'] = $data['read_only'] ? gettext('Yes') : gettext('No');
 
 		return $data;
 	}
