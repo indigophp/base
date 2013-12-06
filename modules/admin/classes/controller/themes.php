@@ -54,7 +54,7 @@ class Controller_Themes extends Controller_Admin
 	{
 		$themes = array_unique($this->theme->all());
 
-		return array_map(
+		return array_filter(array_map(
 			function ($theme_name) use ($type)
 			{
 				$info = $this->theme->load_info($theme_name);
@@ -62,9 +62,9 @@ class Controller_Themes extends Controller_Admin
 				$info['is_active'] = $theme_name == \Config::get('base.theme.' . $type);
 				return in_array($type, \Arr::get($info, 'supports', array())) ? $info : null;
 			},
-		$themes);
+		$themes));
 
-		return array_unique($this->theme->all());
+		// return array_unique($this->theme->all());
 	}
 
 }
