@@ -42,6 +42,8 @@ Autoloader::add_classes(array(
 	'Indigo\\Base\\Model_Enum_Item' => __DIR__ . '/classes/model/enum/item.php',
 	'Indigo\\Base\\Model_Enum_Meta' => __DIR__ . '/classes/model/enum/meta.php',
 
+	'Indigo\\Base\\Model_Tracker_Modifier'      => __DIR__ . '/classes/model/tracker/modifier.php',
+
 	// Menu
 	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
 ));
