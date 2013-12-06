@@ -53,6 +53,7 @@
 {% endblock %}
 
 {% block documentready %}
+	{{ parent() }}
 	dtInstance = $('.datatables').dataTable();
 	dtInstance.fnSettings().oFeatures.bSort = false;
 {% endblock %}
