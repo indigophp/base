@@ -298,13 +298,42 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			}
 		}
 
-		$data['action'] =
-			'<div class="hidden-print btn-group btn-group-sm" style="width:100px">'.
-				(\Auth::has_access($this->module() . '.view') ? '<a href="'.\Uri::create($this->url() . '/view/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
-				(\Auth::has_access($this->module() . '.edit') ? '<a href="'.\Uri::create($this->url() . '/edit/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
-				(\Auth::has_access($this->module() . '.delete') ? '<a href="'.\Uri::create($this->url() . '/delete/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
-			'</div>';
-		return array_values($data);
+		$actions = array();
+
+		if (\Auth::has_access($this->module() . '.view'))
+		{
+			array_push($actions, array(
+				'url' => \Uri::create($this->url() . '/view/' . $model->id),
+				'icon' => 'glyphicon glyphicon-eye-open',
+			));
+		}
+
+		if (\Auth::has_access($this->module() . '.edit'))
+		{
+			array_push($actions, array(
+				'url' => \Uri::create($this->url() . '/edit/' . $model->id),
+				'icon' => 'glyphicon glyphicon-edit',
+			));
+		}
+
+		if (\Auth::has_access($this->module() . '.delete'))
+		{
+			array_push($actions, array(
+				'url' => \Uri::create($this->url() . '/delete/' . $model->id),
+				'icon' => 'glyphicon glyphicon-remove text-danger',
+			));
+		}
+
+		$data['action'] = $this->view('admin/skeleton/list/action')->set('actions', $actions, false);
+
+
+		// $data['action'] =
+		// 	'<div class="hidden-print btn-group btn-group-sm" style="width:100px">'.
+		// 		(\Auth::has_access($this->module() . '.view') ? '<a href="'.'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
+		// 		(\Auth::has_access($this->module() . '.edit') ? '<a href="'.\Uri::create($this->url() . '/edit/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
+		// 		(\Auth::has_access($this->module() . '.delete') ? '<a href="'.\Uri::create($this->url() . '/delete/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
+		// 	'</div>';
+		return $data;
 	}
 
 	/**
@@ -368,7 +397,14 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 				'iTotalRecords' => $count,
 				'iTotalDisplayRecords' => \DB::count_last_query(),
 				'aaData' => array_values(array_map(function($model) use($properties) {
-					return $this->map($model, $properties);
+					$model = $this->map($model, $properties);
+
+					if (array_key_exists('action', $model) and $model['action'] instanceof \View)
+					{
+						$model['action'] = $model['action']->render();
+					}
+
+					return array_values($model);
 				}, $models))
 			);
 

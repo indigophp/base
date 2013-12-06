@@ -37,8 +37,8 @@
 							{% if auth_has_access('enum_item.edit') %}
 								<a href="{{ url }}/item/{{ model.id }}/edit/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
 							{% endif %}
-							{% if auth_has_access('enum.delete_item') %}
-								<a href="{{ url }}/item/{{ model.id }}/delete/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+							{% if auth_has_access('enum_item.delete') %}
+								<a href="{{ url }}/item/{{ model.id }}/delete/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>
 							{% endif %}
 						</div>
 					</td>
