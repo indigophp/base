@@ -4,7 +4,6 @@ namespace Indigo\Base;
 
 class Controller_Base extends \Controller_Theme
 {
-
 	public function before($data = null)
 	{
 		parent::before($data);
@@ -18,7 +17,6 @@ class Controller_Base extends \Controller_Theme
 
 		if ('twig' == $this->theme->get_info('engine'))
 		{
-
 			$paths = array();
 
 			$theme_name = \Arr::get($this->theme->active(), 'name');
@@ -58,5 +56,4 @@ class Controller_Base extends \Controller_Theme
 			\Config::set('parser.View_Twig.views_paths', $paths);
 		}
 	}
-
 }
