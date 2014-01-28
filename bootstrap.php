@@ -43,6 +43,8 @@ Autoloader::add_classes(array(
 	'Indigo\\Base\\Model_Enum_Meta' => __DIR__ . '/classes/model/enum/meta.php',
 
 	'Indigo\\Base\\Model_Tracker_Modifier'      => __DIR__ . '/classes/model/tracker/modifier.php',
+	'Indigo\\Base\\Observer_Tracker'          => __DIR__ . '/classes/observer/tracker.php',
+	'Indigo\\Base\\Observer_Formatter'          => __DIR__ . '/classes/observer/formatter.php',
 
 	// Menu
 	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
@@ -118,6 +120,7 @@ $menu->add(array(
 	)
 ));
 
-
-$routes = \Config::load('indigoroutes');
-\Router::add($routes);
+\Event::register('app_created', function() {
+	$routes = \Config::load('indigoroutes');
+	\Router::add($routes);
+});
