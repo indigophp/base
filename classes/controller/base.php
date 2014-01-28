@@ -41,15 +41,15 @@ class Controller_Base extends \Controller_Theme
 
 			foreach ($this->theme->get_parent_themes($theme_name) as $theme)
 			{
-				foreach ($this->theme->get_paths() as $path)
-				{
-					$paths[] = $path . $theme['name'];
-				}
-
 				if ($use_modules and $module)
 				{
 					$paths[] = $theme['path'] . $path_prefix;
 					$paths[] = $module_path.$theme['name'].DS;
+				}
+
+				foreach ($this->theme->get_paths() as $path)
+				{
+					$paths[] = $path . $theme['name'];
 				}
 			}
 
