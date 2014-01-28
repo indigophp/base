@@ -20,7 +20,7 @@ trait Model_Skeleton
 
 			foreach ($properties as $key => $value)
 			{
-				if (strpos($key, '.') !== false or \Arr::get($value, 'eav', false) === true)
+				if (strpos($key, '.') !== false or \Arr::get($value, 'eav', false) !== false)
 				{
 					unset($properties[$key]);
 				}
@@ -186,9 +186,10 @@ trait Model_Skeleton
 		{
 			switch ($property_data['data_type']) {
 				case 'time_unix':
+				case 'time_mysql':
 					if ( ! $value instanceof \Date and ! is_numeric($value))
 					{
-						$value = \Date::create_from_string($value, \Arr::get($property_data, 'data_format', 'mysql'));
+						// $value = \Date::create_from_string($value, \Arr::get($property_data, 'data_format', 'mysql'));
 					}
 					break;
 			}
@@ -196,4 +197,31 @@ trait Model_Skeleton
 		return $value;
 	}
 
+	public static function get_eav()
+	{
+		$eav = array();
+
+		// get eav relations
+		if (property_exists(get_called_class(), '_eav'))
+		{
+			// loop through the defined EAV containers
+			foreach (static::$_eav as $rel => $settings)
+			{
+				// normalize the container definition, could be string or array
+				if (is_string($settings))
+				{
+					$rel = $settings;
+					$settings = array();
+				}
+
+				// determine attribute and value column names
+				$eav[$rel] = array(
+					'attribute' => \Arr::get($settings, 'attribute', 'attribute'),
+					'value'     => \Arr::get($settings, 'value', 'value'),
+				);
+			}
+		}
+
+		return $eav;
+	}
 }

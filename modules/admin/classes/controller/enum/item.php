@@ -6,27 +6,24 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 {
 	protected $_enum;
 
+	protected $_model = 'Model_Enum_Item';
+
 	public static function _init()
 	{
 		static::$translate = array(
 			'create' => array(
-				'access' => gettext('You are not authorized to paste wisecracks.')
+				'access' => gettext('You are not authorized to paste enum items.')
 			),
 			'details' => array(
-				'access' => gettext('You are not authorized to view wisecracks.')
+				'access' => gettext('You are not authorized to view enum items.')
 			),
 			'edit' => array(
-				'access' => gettext('You are not authorized to edit wisecracks.')
+				'access' => gettext('You are not authorized to edit enum items.')
 			),
 			'delete' => array(
-				'access' => gettext('You are not authorized to delete wisecracks.')
+				'access' => gettext('You are not authorized to delete enum items.')
 			)
 		);
-	}
-
-	protected function model()
-	{
-		return 'Model_Enum_Item';
 	}
 
 	protected function name()
@@ -39,10 +36,22 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 
 	public function query($options = array())
 	{
-		$query = parent::query()
-			->where('enum_id', $this->param('enum_id'));
+		$query = parent::query();
 
-		if ( ! \Auth::has_access('enum.all'))
+		$enum_id = $this->param('enum_id');
+
+		if (is_numeric($enum_id))
+		{
+			$query->where('enum_id', $enum_id);
+		}
+		else
+		{
+			$query->related('enum')
+				->where('enum.slug', $enum_id);
+		}
+			// ->where('enum_id', \Model_Enum::query()->select('id')->where('slug', $this->param('enum_id'))->rows_limit(1)->get_query(true));
+
+		if ( ! \Auth::has_access('enum.enum[all]'))
 		{
 			$query->where('enum.read_only', 0);
 		}
@@ -57,10 +66,18 @@ class Controller_Enum_Item extends \Admin\Controller_Admin_Skeleton
 			return $this->_enum;
 		}
 
-		$query = \Model_Enum::query()
-			->where('id',  $id);
+		$query = \Model_Enum::query();
 
-		if ( ! \Auth::has_access('enum.all'))
+		if (is_numeric($id))
+		{
+			$query->where('id', $id);
+		}
+		else
+		{
+			$query->where('slug', $id);
+		}
+
+		if ( ! \Auth::has_access('enum.enum[all]'))
 		{
 			$query->where('read_only', 0);
 		}

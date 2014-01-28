@@ -22,7 +22,7 @@ trait Model_Tracker_Modifier
 	{
 		if ($user_id = \Auth::get_user_id())
 		{
-			$this->user_id = $user_id[1];
+			// $this->user_id = $user_id[1];
 		}
 
 		return parent::save($cascade, $use_transaction);

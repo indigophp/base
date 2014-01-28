@@ -4,6 +4,8 @@ namespace Admin;
 
 class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 {
+	protected $_model = 'Model_Enum';
+
 	public static function _init()
 	{
 		static::$translate = array(
@@ -23,22 +25,22 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 
 	}
 
+	public function has_access($access)
+	{
+		return \Auth::has_access('enum.enum[' . $access . ']');
+	}
+
 	public function query($options = array())
 	{
 		$query = parent::query()
 			->related('default');
 
-		if ( ! \Auth::has_access('enum.all'))
+		if ( ! $this->has_access('all'))
 		{
 			$query->where('read_only', 0);
 		}
 
 		return $query;
-	}
-
-	protected function model()
-	{
-		return 'Model_Enum';
 	}
 
 	protected function view($view, $data = array(), $auto_filter = null)

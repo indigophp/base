@@ -95,7 +95,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			return $this->_model;
 		}
 
-		return $this->_model = '\\' . ucfirst($this->request->module) . '\\' . 'Model_' . \Inflector::classify($this->module());
+		return $this->_model = ucfirst($this->request->module) . '\\' . 'Model_' . \Inflector::classify($this->module());
 	}
 
 	/**
@@ -116,13 +116,27 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		return array();
 	}
 
-	protected function access()
+	/**
+	 * Check whether user has acces to view page
+	 */
+	protected function access($access = null)
 	{
-		if ( ! \Auth::has_access($this->module() . '.' . $this->request->action))
+		if ( ! $this->has_access($this->request->action))
 		{
 			\Session::set_flash('error', \Arr::get(static::$translate, $this->request->action . '.access', gettext('You are not authorized to do this.')));
 			return \Response::redirect_back(\Uri::admin(false));
 		}
+	}
+
+	/**
+	 * Check whether user has access to something
+	 *
+	 * @param  string  $access Resource
+	 * @return boolean
+	 */
+	protected function has_access($access)
+	{
+		return \Auth::has_access($this->module() . '.' . $access);
 	}
 
 	/**
@@ -147,7 +161,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	protected function find($id = null)
 	{
 		$query = $this->query();
-		$query->where('id',  $id);
+		$query->where('id',  $id)->rows_limit(1);
 
 		if (is_null($id) or is_null($model = $query->get_one()))
 		{
@@ -210,6 +224,11 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			}
 
 			$value = \Arr::merge($defaults, $value);
+
+			if ($eav = \Arr::get($value, 'eav', false))
+			{
+				$query->related($rel . '.' . $eav);
+			}
 
 			if (\Input::param('bSortable_'.$i, true) and \Arr::get($value, 'list.sort', true) and array_key_exists($i,  $sort))
 			{
@@ -285,7 +304,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	protected function map(\Orm\Model $model, array $properties)
 	{
-		$data = $model->to_array();
+		$data = $model->to_array(false, false, true);
 		$data = \Arr::subset($data, array_keys($properties));
 		$data = \Arr::flatten_assoc($data, '.');
 
@@ -300,7 +319,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		$actions = array();
 
-		if (\Auth::has_access($this->module() . '.view'))
+		if ($this->has_access('view'))
 		{
 			array_push($actions, array(
 				'url' => \Uri::create($this->url() . '/view/' . $model->id),
@@ -308,7 +327,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			));
 		}
 
-		if (\Auth::has_access($this->module() . '.edit'))
+		if ($this->has_access('edit'))
 		{
 			array_push($actions, array(
 				'url' => \Uri::create($this->url() . '/edit/' . $model->id),
@@ -316,7 +335,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			));
 		}
 
-		if (\Auth::has_access($this->module() . '.delete'))
+		if ($this->has_access('delete'))
 		{
 			array_push($actions, array(
 				'url' => \Uri::create($this->url() . '/delete/' . $model->id),
@@ -331,6 +350,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	/**
 	 * Return validation object
+	 *
 	 * @param  array $fields
 	 * @return \Fuel\Core\Validation
 	 */
