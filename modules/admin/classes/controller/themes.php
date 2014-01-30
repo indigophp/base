@@ -31,7 +31,7 @@ class Controller_Themes extends Controller_Admin
 		}
 
 		\Config::set('base.theme.' . $type, $name);
-		\Config::save('base.db', 'base');
+		\Config::save('base', 'base');
 
 		\Session::set_flash('success', gettext('Theme successfully changed.'));
 		\Response::redirect_back('admin/themes');
@@ -47,6 +47,7 @@ class Controller_Themes extends Controller_Admin
 		{
 			$image = \File::read(BASEPATH.'themes'.DS.'default'.DS.'default.png', true);
 		}
+
 		return \Response::forge($image, 200, array('Content-type' => 'image/png'));
 	}
 
@@ -63,8 +64,6 @@ class Controller_Themes extends Controller_Admin
 				return in_array($type, \Arr::get($info, 'supports', array())) ? $info : null;
 			},
 		$themes));
-
-		// return array_unique($this->theme->all());
 	}
 
 }
