@@ -53,10 +53,6 @@ Autoloader::add_classes(array(
 	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
 ));
 
-$module_paths = \Config::get('module_paths', array());
-$module_paths[] = BASEPATH.'modules'.DS;
-\Config::set('module_paths', $module_paths);
-
 // Adding the possible theme paths to the config of Theme.
 $theme_paths = array();
 $theme_paths[] = BASEPATH.'themes';
