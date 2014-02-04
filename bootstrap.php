@@ -28,8 +28,7 @@ Autoloader::add_core_namespace('Indigo\\Base');
 
 Autoloader::add_classes(array(
 	// Core extensions
-	'Module'                => __DIR__ . '/classes/module.php',
-	'Uri'                   => __DIR__ . '/classes/uri.php',
+	'Indigo\\Base\\Uri'     => __DIR__ . '/classes/uri.php',
 	'Twig_Indigo_Extension' => __DIR__ . '/classes/twig/indigo/extension.php',
 
 	// Controllers
@@ -48,8 +47,6 @@ Autoloader::add_classes(array(
 	'Indigo\\Base\\Model_Enum_Item' => __DIR__ . '/classes/model/enum/item.php',
 	'Indigo\\Base\\Model_Enum_Meta' => __DIR__ . '/classes/model/enum/meta.php',
 
-	'Indigo\\Base\\Model_Tracker_Modifier'      => __DIR__ . '/classes/model/tracker/modifier.php',
-	'Indigo\\Base\\Observer_Tracker'          => __DIR__ . '/classes/observer/tracker.php',
 	'Indigo\\Base\\Observer_Formatter'          => __DIR__ . '/classes/observer/formatter.php',
 
 	// Menu

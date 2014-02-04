@@ -22,8 +22,9 @@
 
 
 return array(
+	'site_name' => 'Indigo Admin',
 	'theme' => array(
 		'frontend' => 'default',
-		'admin'  => 'default',
+		'backend'  => 'default',
 	),
 );

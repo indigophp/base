@@ -1,4 +1,15 @@
 <?php
+/**
+ * Part of the Indigo framework.
+ *
+ * @package    Indigo
+ * @subpackage Base
+ * @version    1.0
+ * @author     Indigo Development Team
+ * @license    MIT License
+ * @copyright  2013 - 2014 Indigo Development Team
+ * @link       https://indigophp.com
+ */
 
 namespace Indigo\Base;
 
@@ -9,7 +20,7 @@ class Controller_Base extends \Controller_Theme
 		parent::before($data);
 
 		// Making the site name available in all views.
-		$this->template->set_global('site_name', \Config::get('app.site_name', 'Indigo Admin'));
+		$this->template->set_global('site_name', \Config::get('base.site_name', 'Indigo Admin'));
 
 		// Make logged in user available in all views.
 		$this->current_user = \Model\Auth_User::find_by_username(\Auth::get_screen_name());
