@@ -6,16 +6,6 @@ define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 \Config::load('patch');
 \Config::load('base', true);
 
-
-// Check config table existence
-// if(\DBUtil::table_exists(\Config::get('config.table_name', 'config')))
-// {
-// 	\Config::load('base.db', true);
-// }
-
-// This has to be loaded in order to have temporal working
-\Config::load('orm', true);
-
 if ( ! \Fuel::$is_cli)
 {
 	if (\Config::get('admin_url') === null)
