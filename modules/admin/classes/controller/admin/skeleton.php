@@ -287,12 +287,14 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		// Order query
 		$query->order_by($order_by);
 
+		$partial_items_count = $query->count();
+
 		// Limit query
 		$query
-			->rows_limit(\Input::param('iDisplayLength', 10))
-			->rows_offset(\Input::param('iDisplayStart', 0));
+			->limit(\Input::param('iDisplayLength', 10))
+			->offset(\Input::param('iDisplayStart', 0));
 
-		return $all_items_count;
+		return array($all_items_count, $partial_items_count);
 	}
 
 	/**
@@ -407,8 +409,8 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 			$data = array(
 				'sEcho' => \Input::param('sEcho'),
-				'iTotalRecords' => $count,
-				'iTotalDisplayRecords' => \DB::count_last_query(),
+				'iTotalRecords' => $count[0],
+				'iTotalDisplayRecords' => $count[1],
 				'aaData' => array_values(array_map(function($model) use($properties) {
 					$model = $this->map($model, $properties);
 
