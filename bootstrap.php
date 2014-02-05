@@ -19,6 +19,7 @@ Autoloader::add_core_namespace('Indigo\\Base');
 Autoloader::add_classes(array(
 	// Core extensions
 	'Indigo\\Base\\Uri'     => __DIR__ . '/classes/uri.php',
+	'Indigo\\Orm\\Observer_Typing'     => __DIR__ . '/classes/observer/typing.php',
 	'Twig_Indigo_Extension' => __DIR__ . '/classes/twig/indigo/extension.php',
 
 	// Controllers
