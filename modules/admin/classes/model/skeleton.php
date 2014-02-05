@@ -35,7 +35,7 @@ trait Model_Skeleton
 		}
 		else
 		{
-			return static::$_properties_cached[$class];
+			return $properties;
 		}
 	}
 
