@@ -393,11 +393,21 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		return \Response::redirect($url, $method, $code);
 	}
 
+	protected function is_ajax()
+	{
+		if (\Fuel::$env == \Fuel::DEVELOPMENT)
+		{
+			return \Input::extension();
+		}
+
+		return \Input::is_ajax();
+	}
+
 	public function action_index()
 	{
 		$model = $this->model();
 
-		if (\Input::is_ajax())
+		if ($this->is_ajax())
 		{
 			$properties = $model::lists();
 
@@ -519,7 +529,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		if ($model->delete())
 		{
 			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully deleted.'), array('%item%' => $this->name()[0]))));
-			return $this->redirect($this->url());
+			return \Response::redirect_back();
 		}
 		else
 		{

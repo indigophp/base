@@ -144,7 +144,7 @@ trait Model_Skeleton
 				else
 				{
 					$options = $options->to_array();
-					$options = \Arr::pluck($options['items'], 'name', 'id');
+					$options = \Arr::pluck($options['items'], 'name', 'item_id');
 				}
 
 			}

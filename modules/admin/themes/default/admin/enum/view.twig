@@ -2,12 +2,11 @@
 
 {% block content %}
 {{ parent() }}
-{% set item = thing %}
 <br>
 {% block create %}
-	{% if auth_has_access('enum_item.create') and (model.read_only == false or auth_has_access('enum.all')) %}
+	{% if auth_has_access('enum.item[create]') and (model.read_only == false or auth_has_access('enum.enum[all]')) %}
 		<p>
-			<a href="{{ url }}/item/{{ model.id }}/create/" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% filter capitalize %}{% trans %}Create a new {{ item }}{% endtrans %}{% endfilter %}</a>
+			<a href="{{ url }}/item/create/{{ model.slug }}" class="hidden-print btn btn-success"><span class="glyphicon glyphicon-plus"></span> {% filter capitalize %}{% trans %}Create a new enum item{% endtrans %}{% endfilter %}</a>
 		</p>
 	{% endif %}
 {% endblock %}
@@ -26,8 +25,8 @@
 		</thead>
 		<tbody>
 			{% for item in model.items %}
-				<tr>
-					<td>{{ item.id }}</td>
+				<tr id="{{ item.id }}" data-position="{{ item.sort }}">
+					<td>{{ item.item_id }}</td>
 					<td>{{ item.name }}</td>
 					<td>{{ item.description }}</td>
 					<td>{{ item.slug }}</td>
@@ -35,10 +34,10 @@
 					<td>
 						<div class="hidden-print btn-group btn-group-sm" style="width:100px">
 							{% if auth_has_access('enum_item.edit') %}
-								<a href="{{ url }}/item/{{ model.slug }}/edit/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
+								<a href="{{ url }}/item/edit/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
 							{% endif %}
 							{% if auth_has_access('enum_item.delete') %}
-								<a href="{{ url }}/item/{{ model.slug }}/delete/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>
+								<a href="{{ url }}/item/delete/{{ item.id }}" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>
 							{% endif %}
 						</div>
 					</td>
@@ -52,8 +51,21 @@
 
 {% endblock %}
 
+{% block javascript %}
+{{ parent() }}
+<script src="{{ base_url() }}assets/theme/js/jquery.dataTables.rowReordering.js"></script>
+<script src="//code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+{% endblock %}
+
 {% block documentready %}
 	{{ parent() }}
 	dtInstance = $('.datatables').dataTable();
 	dtInstance.fnSettings().oFeatures.bSort = false;
+	dtInstance.rowReordering({
+		"sURL": "{{ admin_url() }}enum/item/reorder.json",
+		"sRequestType": "GET",
+		"iIndexColumn": "position",
+		"iStartPosition": 10,
+		"iStep": 10
+	});
 {% endblock %}

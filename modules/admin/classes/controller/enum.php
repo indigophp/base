@@ -61,9 +61,7 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 	{
 		$data = parent::map($model, $properties);
 
-		empty($data['default_id']) and $data['default_id'] = gettext('<i>None</i>');
-		$data['active'] = $data['active'] ? gettext('Yes') : gettext('No');
-		$data['read_only'] = $data['read_only'] ? gettext('Yes') : gettext('No');
+		empty($data['default.name']) and $data['default.name'] = gettext('<i>None</i>');
 
 		return $data;
 	}
@@ -80,9 +78,15 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 	{
 		parent::action_view($id);
 		$model = $this->template->content->model;
-		$model->active = $model->active ? gettext('Yes') : gettext('No');
-		$model->read_only = $model->read_only ? gettext('Yes') : gettext('No');
+		$model->active = $model->active == 1 ? gettext('Yes') : gettext('No');
+		$model->read_only = $model->read_only == 1 ? gettext('Yes') : gettext('No');
 
-		$this->template->content->thing = ngettext('enum item', 'enum items', 1);
+		is_array($model->items) and usort($model->items, function($a, $b) {
+			return ($a['sort'] < $b['sort']) ? -1 : 1;
+		});
+
+		// $this->template->content->items = \Model_Enum_Item::query()
+		// 	->where('enum_id', $model->id)
+		// 	->order_by('sort')
 	}
 }
