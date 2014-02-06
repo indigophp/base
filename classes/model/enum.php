@@ -16,7 +16,7 @@ class Model_Enum extends \Orm\Model
 	protected static $_has_one = array(
 		'default' => array(
 			'key_from' => array('id', 'default_id'),
-			'key_to'   => array('enum_id', 'id'),
+			'key_to'   => array('enum_id', 'item_id'),
 			'model_to' => 'Model_Enum_Item',
 		),
 	);
@@ -61,7 +61,7 @@ class Model_Enum extends \Orm\Model
 			'min'       => 0,
 			'max'       => 1,
 			'form'      => array('type' => 'switch'),
-			'list' => array('type' => 'select'),
+			'list'      => array('type' => 'select'),
 		),
 		'read_only' => array(
 			'default'   => 0,
@@ -107,7 +107,7 @@ class Model_Enum extends \Orm\Model
 			'read_only' => array('label' => gettext('Read-only')),
 		));
 
-		if (\Auth::has_access('enum.all'))
+		if (\Auth::has_access('enum.enum[all]'))
 		{
 			\Arr::set(static::$_properties, 'read_only.form', array(
 					'type' => 'switch',
@@ -133,10 +133,7 @@ class Model_Enum extends \Orm\Model
 			$model = \Model_Enum_Item::forge();
 			$model->set($data);
 			$this->items[] = $model;
-			if ($default === true)
-			{
-				$this->default = $model;
-			}
+			$default === true and $this->default = $model;
 		}
 
 		$save === true and $this->save(true);

@@ -95,7 +95,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			return $this->_model;
 		}
 
-		return $this->_model = '\\' . ucfirst($this->request->module) . '\\' . 'Model_' . \Inflector::classify($this->module());
+		return $this->_model = ucfirst($this->request->module) . '\\' . 'Model_' . \Inflector::classify($this->module());
 	}
 
 	/**
@@ -116,13 +116,27 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		return array();
 	}
 
-	protected function access()
+	/**
+	 * Check whether user has acces to view page
+	 */
+	protected function access($access = null)
 	{
-		if ( ! \Auth::has_access($this->module() . '.' . $this->request->action))
+		if ( ! $this->has_access($this->request->action))
 		{
 			\Session::set_flash('error', \Arr::get(static::$translate, $this->request->action . '.access', gettext('You are not authorized to do this.')));
 			return \Response::redirect_back(\Uri::admin(false));
 		}
+	}
+
+	/**
+	 * Check whether user has access to something
+	 *
+	 * @param  string  $access Resource
+	 * @return boolean
+	 */
+	protected function has_access($access)
+	{
+		return \Auth::has_access($this->module() . '.' . $access);
 	}
 
 	/**
@@ -147,7 +161,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	protected function find($id = null)
 	{
 		$query = $this->query();
-		$query->where('id',  $id);
+		$query->where('id',  $id)->rows_limit(1);
 
 		if (is_null($id) or is_null($model = $query->get_one()))
 		{
@@ -211,6 +225,11 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 			$value = \Arr::merge($defaults, $value);
 
+			if ($eav = \Arr::get($value, 'eav', false))
+			{
+				$query->related($rel . '.' . $eav);
+			}
+
 			if (\Input::param('bSortable_'.$i, true) and \Arr::get($value, 'list.sort', true) and array_key_exists($i,  $sort))
 			{
 				$order_by[$key] = $sort[$i];
@@ -268,12 +287,14 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		// Order query
 		$query->order_by($order_by);
 
+		$partial_items_count = $query->count();
+
 		// Limit query
 		$query
-			->rows_limit(\Input::param('iDisplayLength', 10))
-			->rows_offset(\Input::param('iDisplayStart', 0));
+			->limit(\Input::param('iDisplayLength', 10))
+			->offset(\Input::param('iDisplayStart', 0));
 
-		return $all_items_count;
+		return array($all_items_count, $partial_items_count);
 	}
 
 	/**
@@ -285,7 +306,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	protected function map(\Orm\Model $model, array $properties)
 	{
-		$data = $model->to_array();
+		$data = $model->to_array(false, false, true);
 		$data = \Arr::subset($data, array_keys($properties));
 		$data = \Arr::flatten_assoc($data, '.');
 
@@ -300,7 +321,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		$actions = array();
 
-		if (\Auth::has_access($this->module() . '.view'))
+		if ($this->has_access('view'))
 		{
 			array_push($actions, array(
 				'url' => \Uri::create($this->url() . '/view/' . $model->id),
@@ -308,7 +329,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			));
 		}
 
-		if (\Auth::has_access($this->module() . '.edit'))
+		if ($this->has_access('edit'))
 		{
 			array_push($actions, array(
 				'url' => \Uri::create($this->url() . '/edit/' . $model->id),
@@ -316,7 +337,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			));
 		}
 
-		if (\Auth::has_access($this->module() . '.delete'))
+		if ($this->has_access('delete'))
 		{
 			array_push($actions, array(
 				'url' => \Uri::create($this->url() . '/delete/' . $model->id),
@@ -326,18 +347,12 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		$data['action'] = $this->view('admin/skeleton/list/action')->set('actions', $actions, false);
 
-
-		// $data['action'] =
-		// 	'<div class="hidden-print btn-group btn-group-sm" style="width:100px">'.
-		// 		(\Auth::has_access($this->module() . '.view') ? '<a href="'.'" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span></a>' : '').
-		// 		(\Auth::has_access($this->module() . '.edit') ? '<a href="'.\Uri::create($this->url() . '/edit/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>' : '').
-		// 		(\Auth::has_access($this->module() . '.delete') ? '<a href="'.\Uri::create($this->url() . '/delete/' . $model->id).'" class="btn btn-default"><span class="glyphicon glyphicon-remove" style="color:#f55;"></span></a>' : '').
-		// 	'</div>';
 		return $data;
 	}
 
 	/**
 	 * Return validation object
+	 *
 	 * @param  array $fields
 	 * @return \Fuel\Core\Validation
 	 */
@@ -378,11 +393,21 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		return \Response::redirect($url, $method, $code);
 	}
 
+	protected function is_ajax()
+	{
+		if (\Fuel::$env == \Fuel::DEVELOPMENT)
+		{
+			return \Input::extension();
+		}
+
+		return \Input::is_ajax();
+	}
+
 	public function action_index()
 	{
 		$model = $this->model();
 
-		if (\Input::is_ajax())
+		if ($this->is_ajax())
 		{
 			$properties = $model::lists();
 
@@ -394,8 +419,8 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 			$data = array(
 				'sEcho' => \Input::param('sEcho'),
-				'iTotalRecords' => $count,
-				'iTotalDisplayRecords' => \DB::count_last_query(),
+				'iTotalRecords' => $count[0],
+				'iTotalDisplayRecords' => $count[1],
 				'aaData' => array_values(array_map(function($model) use($properties) {
 					$model = $this->map($model, $properties);
 
@@ -504,7 +529,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		if ($model->delete())
 		{
 			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully deleted.'), array('%item%' => $this->name()[0]))));
-			return $this->redirect($this->url());
+			return \Response::redirect_back();
 		}
 		else
 		{

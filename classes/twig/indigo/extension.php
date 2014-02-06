@@ -16,14 +16,16 @@ class Twig_Indigo_Extension extends Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			'auth_has_access' => new Twig_Function_Function('Auth::has_access'),
-			'gravatar'        => new Twig_Function_Function('Gravatar::forge'),
-			'menu'            => new Twig_Function_Function('Menu::render_menu'),
-			'admin_menu'      => new Twig_Function_Function('Menu_Admin::render_menu'),
-			'request'         => new Twig_Function_Function('Request::active'),
-			'admin_url'       => new Twig_Function_Function('Uri::admin'),
-			'current_url'     => new Twig_Function_Function('Uri::current'),
-			'default_img'     => new Twig_Function_Method($this, 'getDefaultImage'),
+			'gravatar'             => new Twig_Function_Function('Gravatar::forge'),
+			'menu'                 => new Twig_Function_Function('Menu::render_menu'),
+			'admin_menu'           => new Twig_Function_Function('Menu_Admin::render_menu'),
+			'request'              => new Twig_Function_Function('Request::active'),
+			'admin_url'            => new Twig_Function_Function('Uri::admin'),
+			'default_img'          => new Twig_Function_Method($this, 'getDefaultImage'),
+			'auth_get_screen_name' => new Twig_Function_Function('Auth::get_screen_name'),
+			'auth_get_meta'        => new Twig_Function_Function('Auth::get_profile_fields'),
+			'date'                 => new Twig_Function_Function('Date::forge'),
+			'time_elapsed'         => new Twig_Function_Method($this, 'time_elapsed'),
 		);
 	}
 
@@ -102,6 +104,28 @@ class Twig_Indigo_Extension extends Twig_Extension
 		}
 
 		return $date->format($pattern_key, $timezone);
+	}
+
+	public function time_elapsed($timestamp)
+	{
+		if (empty($timestamp)) {
+			return null;
+		}
+
+		$time = new DateTime();
+		$time->setTimestamp($timestamp);
+		$diff = $time->diff(new DateTime());
+
+		$elapsed = '';
+
+		if ($diff->days > 0)
+		{
+			$elapsed .= str_replace('%d', $diff->days, ngettext("%d day", "%d days", $diff->days)) . ', ';
+		}
+
+		$elapsed .= $diff->format('%H:%I:%S');
+
+		return $elapsed;
 	}
 
 	public function bool($value)

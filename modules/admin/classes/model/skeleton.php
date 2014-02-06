@@ -20,7 +20,7 @@ trait Model_Skeleton
 
 			foreach ($properties as $key => $value)
 			{
-				if (strpos($key, '.') !== false or \Arr::get($value, 'eav', false) === true)
+				if (strpos($key, '.') !== false or \Arr::get($value, 'eav', false) !== false)
 				{
 					unset($properties[$key]);
 				}
@@ -35,7 +35,7 @@ trait Model_Skeleton
 		}
 		else
 		{
-			return static::$_properties_cached[$class];
+			return $properties;
 		}
 	}
 
@@ -144,7 +144,7 @@ trait Model_Skeleton
 				else
 				{
 					$options = $options->to_array();
-					$options = \Arr::pluck($options['items'], 'name', 'id');
+					$options = \Arr::pluck($options['items'], 'name', 'item_id');
 				}
 
 			}
@@ -152,47 +152,4 @@ trait Model_Skeleton
 
 		return static::$_options_cached[$class][$field] = $options;
 	}
-
-    /**
-     * {@inheritdoc}
-     *
-     * In difference with the built-in set of the ORM's Model,
-     * this method tries to take typing into account with string
-     * values. (for example from '2013-12-03' creates a Date
-     * object representing this date)
-     *
-     */
-	public function set($property, $value = null)
-	{
-		if (is_array($property))
-		{
-			foreach ($property as $prop => $value) {
-				$property[$prop] = $this->typing_map($prop, $value);
-			}
-		}
-		else
-		{
-			$value = $this->typing_map($property, $value);
-		}
-		return parent::set($property, $value);
-	}
-
-	public function typing_map($property, $value)
-	{
-		$property_data = $this->property($property, array());
-		if (isset($property_data['data_type']))
-		{
-			switch ($property_data['data_type']) {
-				case 'time_mysql':
-				case 'time_unix':
-					if ( ! $value instanceof \Date and ! is_numeric($value))
-					{
-						$value = \Date::create_from_string($value, \Arr::get($property_data, 'data_format', 'mysql'));
-					}
-					break;
-			}
-		}
-		return $value;
-	}
-
 }

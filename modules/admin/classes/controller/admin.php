@@ -4,7 +4,6 @@ namespace Admin;
 
 class Controller_Admin extends \Controller_Base
 {
-
 	public $template = 'admin/template';
 
 	public $theme_type = 'admin';
@@ -12,7 +11,8 @@ class Controller_Admin extends \Controller_Base
 	public function before($data = null)
 	{
 		parent::before($data);
-		if (\Request::active()->controller !== 'Admin\Controller_Admin' or ! in_array(\Request::active()->action, array('login', 'logout')))
+
+		if (get_called_class() !== get_class() or ! in_array($this->request->action, array('login', 'logout')))
 		{
 			if (\Auth::check())
 			{
@@ -38,34 +38,19 @@ class Controller_Admin extends \Controller_Base
 
 		if (\Input::method() == 'POST')
 		{
-			$val->add('username', gettext('E-mail, or username'))
+			$val->add(\Config::get('auth.username_post_key', 'username'), gettext('E-mail, or username'))
 				->add_rule('required');
-			$val->add('password', gettext('Password'))
+			$val->add(\Config::get('auth.password_post_key', 'password'), gettext('Password'))
 				->add_rule('required');
-
-			$monolog = new \Monolog\Logger('firephp');
-			$stream = new \Monolog\Handler\FirePHPHandler();
-			$monolog->pushHandler($stream);
-
 
 			if ($val->run())
 			{
 				$auth = \Auth::instance();
 
-				// check the credentials. This assumes that you have the previous table created
-				if (\Auth::check() or $auth->login())
+				if ($auth->login())
 				{
 					$current_user = \Model\Auth_User::find_by_username(\Auth::get_screen_name());
-					\Session::set_flash('success', sprintf(gettext('Welcome, %s!'), $current_user->fullname));
-
-					if (isset($current_user->pushover))
-					{
-						$handler = new \Monolog\Handler\PushoverHandler('acQWKWqiRqnVh5TTZ6MhEQP6bynFgv', $current_user->pushover, sprintf(gettext('%s login'), \Config::get('app.site_name', 'Indigo Admin')));
-						$log = new \Monolog\Logger('pushover');
-						$log->pushHandler($handler);
-						$log->emergency(sprintf(gettext('Logged in from %s, with %s'), \Input::ip(), $current_user->email));
-					}
-
+					\Session::set_flash('success', strtr(gettext('Welcome, %fullname%!'), '%fullname%', $current_user->fullname));
 					\Response::redirect(\Input::get('uri') ? : \Uri::admin());
 				}
 				else
@@ -76,7 +61,6 @@ class Controller_Admin extends \Controller_Base
 			else
 			{
 				\Session::set_flash('error', implode('<br>', $val->error()));
-			// $monolog->log('WARNING', 'This is a test message');
 			}
 		}
 

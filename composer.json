@@ -1,0 +1,26 @@
+{
+    "name": "indigophp/indigo-base",
+    "type": "fuel-package",
+    "description": "IndigoPHP base package",
+    "keywords": ["indigo", "base", "admin", "auth"],
+    "homepage": "https://indigophp.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Márk Sági-Kazár",
+            "email": "mark.sagikazar@gmail.com"
+        },
+        {
+            "name": "Tamás Barta",
+            "email": "barta.tamas.d@gmail.com"
+        }
+    ],
+    "require": {
+        "composer/installers": "~1.0",
+        "indigophp/fuel-core": "dev-develop",
+        "indigophp/fuel-menu": "dev-develop"
+    },
+    "extra": {
+        "installer-name": "base"
+    }
+}

@@ -30,13 +30,13 @@ class Model_Enum_Item extends \Orm\Model
 	protected static $_observers = array(
 		'Orm\\Observer_Typing',
 		'Orm\\Observer_Self' => array(
-			'events' => array('before_insert')
+			'events' => array('before_insert', 'before_update')
 		)
 	);
 
 	protected static $_properties = array(
-		'pk' => array(),
 		'id' => array(),
+		'item_id' => array(),
 		'enum_id' => array('data_type' => 'int'),
 		'name' => array(
 			'form' => array('type' => 'text'),
@@ -48,7 +48,7 @@ class Model_Enum_Item extends \Orm\Model
 		),
 		'active' => array(
 			'default'   => 1,
-			'data_type' => 'boolean',
+			'data_type' => 'int',
 			'min'       => 0,
 			'max'       => 1,
 			'form'      => array(
@@ -62,16 +62,16 @@ class Model_Enum_Item extends \Orm\Model
 
 	protected static $_table_name = 'enum_items';
 
-	protected static $_primary_key = array('pk');
+	protected static $_primary_key = array('id');
 
 	public static function _init()
 	{
 		static::$_properties = \Arr::merge(static::$_properties, array(
-			'pk' => array(
-				'label' => gettext('Item ID')
-			),
 			'id' => array(
 				'label' => gettext('ID')
+			),
+			'item_id' => array(
+				'label' => gettext('Item ID')
 			),
 			'enum_id' => array(
 				'label' => gettext('Enum ID')
@@ -102,42 +102,45 @@ class Model_Enum_Item extends \Orm\Model
 
 	public function _event_before_insert()
 	{
-		$this->id = $this->query()->where('enum_id', $this->enum_id)->max('id') + 1;
+		$this->item_id = $this->query()->where('enum_id', $this->enum_id)->max('item_id') + 1;
 		static::$_sort === true and $this->sort = $this->query()->where('enum_id', $this->enum_id)->max('sort') + 10;
-		$this->slug = \Inflector::friendly_title($this->name, '_', true);
+		$this->slug = $this->_get_slug();
 	}
 
-	public static function query($options = array())
+	public function _event_before_update()
 	{
-		$query = parent::query($options);
+		$slug = \Inflector::friendly_title($this->name, '_', true);
 
-		if ( ! empty(static::$_enum))
-		{
-			// $query->related('enum')->where('enum.slug', static::$_enum);
-			// TODO: this is a bit messy
-			$query->where('enum_id', \Model_Enum::query()->select('id')->where('slug', static::$_enum)->rows_limit(1)->get_query(true));
-		}
-
-		return $query;
+		// update it if it's different from the current one
+		$this->slug === $slug or $this->slug = $this->_get_slug();
 	}
 
-	public static function forge($data = array(), $new = true, $view = null, $cache = true)
+	protected function _get_slug()
 	{
-		$model = parent::forge($data, $new, $view, $cache);
+		$slug = \Inflector::friendly_title($this->name, '_', true);
 
-		if ( ! empty(static::$_enum))
+		$same = $this->query()
+			->where('slug', 'LIKE', $slug.'%')
+			->where('enum_id', $this->enum_id)
+			->get();
+
+		// make sure our slug is unique
+		if ( ! empty($same))
 		{
-			$model->set('enum', static::enum());
+			$max = -1;
+
+			foreach ($same as $record)
+			{
+				if (preg_match('/^'.$slug.'(?:_([0-9]+))?$/', $record->slug, $matches))
+				{
+					$index = isset($matches[1]) ? (int) $matches[1] : 0;
+					$max < $index and $max = $index;
+				}
+			}
+
+			$max < 0 or $slug .= '_'.($max + 1);
 		}
 
-		return $model;
-	}
-
-	public static function enum()
-	{
-		if ( ! empty(static::$_enum))
-		{
-			return \Model_Enum::find_by_slug(static::$_enum);
-		}
+		return $slug;
 	}
 }

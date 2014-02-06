@@ -8,7 +8,6 @@ class Model_Enum_Meta extends \Orm\Model
 		'item' => array(
 			'key_from' => 'item_id',
 			'model_to' => 'Model_Enum_Item',
-			'key_to'   => 'pk',
 		)
 	);
 

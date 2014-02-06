@@ -1,15 +1,32 @@
 <?php
+/**
+ * Part of the Indigo framework.
+ *
+ * @package    Indigo
+ * @subpackage Base
+ * @version    1.0
+ * @author     Indigo Development Team
+ * @license    MIT License
+ * @copyright  2013 - 2014 Indigo Development Team
+ * @link       https://indigophp.com
+ */
 
 namespace Indigo\Base;
 
 class Controller_Theme extends \Controller
 {
-
 	/**
-	* @var string page template
-	*/
+	 * Page template
+	 *
+	 * @var string
+	 */
 	public $template = 'template';
 
+	/**
+	 * Theme type (eg. frontend or backend)
+	 *
+	 * @var string
+	 */
 	public $theme_type = 'frontend';
 
 	/**
@@ -29,7 +46,7 @@ class Controller_Theme extends \Controller
 		if ( ! $this->theme->find(\Config::get('base.theme.' . $this->theme_type)))
 		{
 			\Config::set('base.theme.' . $this->theme_type, 'default');
-			\Config::save('base.db', 'base');
+			\Config::save('base', 'base');
 		}
 
 		$this->theme->active(\Config::get('base.theme.' . $this->theme_type, 'default'));
@@ -38,11 +55,12 @@ class Controller_Theme extends \Controller
 		{
 			$this->theme->set_config('view_ext', '.' . $engine);
 		}
+
 		if ( ! empty($this->template) and is_string($this->template))
 		{
-			// Load the template
 			$this->template = $this->theme->set_template($this->template);
 		}
+
 		$this->template->set_global('asset', $this->theme->asset, false);
 
 		return parent::before($data);
