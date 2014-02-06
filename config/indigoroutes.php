@@ -3,9 +3,6 @@
 $admin_url = \Uri::admin(false);
 
 return array(
-
-	
-
 	$admin_url.'login'                    => 'admin/login',
 	$admin_url.'login/(.*?)'              => 'admin/login/$1',
 	$admin_url.'logout'                   => 'admin/logout',

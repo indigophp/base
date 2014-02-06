@@ -154,8 +154,6 @@ trait Model_Skeleton
 	}
 
     /**
-     * Set
-     *
      * {@inheritdoc}
      *
      * In difference with the built-in set of the ORM's Model,
@@ -185,6 +183,7 @@ trait Model_Skeleton
 		if (isset($property_data['data_type']))
 		{
 			switch ($property_data['data_type']) {
+				case 'time_mysql':
 				case 'time_unix':
 					if ( ! $value instanceof \Date and ! is_numeric($value))
 					{

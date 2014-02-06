@@ -30,13 +30,22 @@ class Twig_Indigo_Extension extends Twig_Extension
 	public function getFilters()
 	{
 		return array(
-			'md5'         => new Twig_Filter_Function('md5'),
-			'pluralize'   => new Twig_Filter_Function('Inflector::pluralize'),
-			'bytes'       => new Twig_Filter_Function('Num::format_bytes'),
-			'qty'         => new Twig_Filter_Function('Num::quantity'),
-			'bool'        => new Twig_Filter_Function([$this, 'bool']),
-			'attr'        => new Twig_Filter_Function('array_to_attr'),
-			'date_format' => new Twig_Filter_Function([$this, 'dateFormat']),
+			'md5'                 => new Twig_Filter_Function('md5'),
+			'html'                => new Twig_Filter_Function('html_entity_decode'),
+			'pluralize'           => new Twig_Filter_Function('Inflector::pluralize'),
+			'bytes'               => new Twig_Filter_Function('Num::format_bytes'),
+			'qty'                 => new Twig_Filter_Function('Num::quantity'),
+			'bool'                => new Twig_Filter_Method  ($this, 'bool'),
+			'attr'                => new Twig_Filter_Function('array_to_attr'),
+			'date_format'         => new Twig_Filter_Method  ($this, 'dateFormat'),
+			'truncate_html'       => new Twig_Filter_Method  ($this, 'printTruncated'),
+			'eval'                => new Twig_Filter_Method  ($this, 'evaluate', array(
+				'needs_environment' => true,
+				'needs_context'     => true,
+				'is_safe'           => array(
+					'evaluate' => true
+				)
+			))
 		);
 	}
 
@@ -45,6 +54,34 @@ class Twig_Indigo_Extension extends Twig_Extension
 		return array(
 			'bool' => new Twig_Test_Function('is_bool')
 		);
+	}
+
+	/**
+	 * This function will evaluate $string through the $environment, and return its results.
+	 *
+	 * @param array $context
+	 * @param string $string
+	 */
+	public function evaluate( \Twig_Environment $environment, $context, $string ) {
+		$loader = $environment->getLoader( );
+
+		$parsed = $this->parseString( $environment, $context, $string );
+
+		$environment->setLoader( $loader );
+		return $parsed;
+	}
+
+	/**
+	 * Sets the parser for the environment to Twig_Loader_String, and parsed the string $string.
+	 *
+	 * @param \Twig_Environment $environment
+	 * @param array $context
+	 * @param string $string
+	 * @return string
+	 */
+	protected function parseString( \Twig_Environment $environment, $context, $string ) {
+		$environment->setLoader( new \Twig_Loader_String( ) );
+		return $environment->render( $string, $context );
 	}
 
 	// base_url() ~ 'assets/theme/img/icons/' ~ (model.group_id == 6 ? 'admin' : model.group_id == 1 ? 'user_cancel' : 'user') ~ '.png' | url_encode
@@ -71,4 +108,93 @@ class Twig_Indigo_Extension extends Twig_Extension
 	{
 		return is_bool($value) ? ($value ? 'true' : 'false') : $value;
 	}
+
+	/**
+	 * Truncate function with closing HTML tags from http://stackoverflow.com/a/1193598/518076
+	 * @param  number  $maxLength The character length. Does not include the HTML tags.
+	 * @param  string  $html      The HTML to be stripped
+	 * @param  boolean $isUtf8    False if not UTF-8, but an ASCII compatible single-byte encoding is used
+	 * @return string             The HTML truncated
+	 */
+	function printTruncated($html, $maxLength, $isUtf8=true)
+	{
+		$return = '';
+		$printedLength = 0;
+		$position = 0;
+		$tags = array();
+
+		// For UTF-8, we need to count multibyte sequences as one character.
+		$re = $isUtf8
+			? '{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;|[\x80-\xFF][\x80-\xBF]*}'
+			: '{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}';
+
+		while ($printedLength < $maxLength && preg_match($re, $html, $match, PREG_OFFSET_CAPTURE, $position))
+		{
+			list($tag, $tagPosition) = $match[0];
+
+
+			// Print text leading up to the tag.
+			$str = substr($html, $position, $tagPosition - $position);
+			if ($printedLength + strlen($str) > $maxLength)
+			{
+				$return .= (substr($str, 0, $maxLength - $printedLength));
+				$printedLength = $maxLength;
+				break;
+			}
+
+			$return .= ($str);
+			$printedLength += strlen($str);
+			if ($printedLength >= $maxLength) break;
+
+			if ($tag[0] == '&' || ord($tag) >= 0x80)
+			{
+				// Pass the entity or UTF-8 multibyte sequence through unchanged.
+				$return .= ($tag);
+				$printedLength++;
+			}
+			else
+			{
+				// Handle the tag.
+				$tagName = $match[1][0];
+				if ($tag[1] == '/')
+				{
+					// This is a closing tag.
+
+					$openingTag = array_pop($tags);
+					assert($openingTag == $tagName); // check that tags are properly nested.
+
+					$return .= ($tag);
+				}
+				else if ($tag[strlen($tag) - 2] == '/')
+				{
+					// Self-closing tag.
+					$return .= ($tag);
+				}
+				else
+				{
+					// Opening tag.
+					$return .= ($tag);
+					$tags[] = $tagName;
+				}
+			}
+
+			// Continue after the tag.
+			$position = $tagPosition + strlen($tag);
+		}
+
+		// Print any remaining text.
+		if ($printedLength < $maxLength && $position < strlen($html))
+		{
+			$return .= '...';
+			$return .= (substr($html, $position, $maxLength - $printedLength));
+		}
+
+		// Close any open tags.
+		while (!empty($tags))
+		{
+			$return .= '</'.array_pop($tags).'>';
+		}
+		return $return;
+	}
+
 }
