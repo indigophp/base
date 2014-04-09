@@ -6,6 +6,8 @@ class Model_Enum_Item extends \Orm\Model
 {
 	use \Admin\Model_Skeleton;
 
+	protected static $_enum;
+
 	protected static $_belongs_to = array(
 		'enum' => array(
 			'model_to' => 'Model_Enum',

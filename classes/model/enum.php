@@ -8,8 +8,7 @@ class Model_Enum extends \Orm\Model
 
 	protected static $_has_many = array(
 		'items' => array(
-			'model_to'       => 'Model_Enum_Item',
-			'cascade_delete' => true,
+			'model_to' => 'Model_Enum_Item',
 		),
 	);
 
@@ -27,9 +26,10 @@ class Model_Enum extends \Orm\Model
 			'events' => array('before_insert')
 		),
 		'Orm\\Observer_Slug' => array(
-			'events' => array('before_insert'),
-			'source' => 'name',
+			'events'    => array('before_insert'),
+			'source'    => 'name',
 			'separator' => '_',
+			'overwrite' => false,
 		),
 	);
 
