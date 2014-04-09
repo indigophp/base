@@ -459,15 +459,15 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function post_create()
 	{
 		$model = $this->model();
-		$properties = $model::form();
 		$model = $this->forge();
+		$post = \Input::post();
 
-		$val = $this->val($properties);
+		$validator = $this->validation($model);
+		$result = $validator->run($post);
 
-		if ($val->run() === true)
+		if ($result->isValid())
 		{
-			$model->set($val->validated())->save();
-
+			$model->set($result->validated())->save();
 			\Session::set_flash('success', ucfirst(
 				\Str::trans(gettext('%item% successfully created.'), '%item%', $this->name()[0])
 			));
@@ -476,12 +476,16 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		}
 		else
 		{
-			$this->template->set_global('title', ucfirst(
-				\Str::trans(gettext('New %item%'), '%item%', $this->name()[0])
-			));
+			$properties = $model->form();
+			$properties = array_keys($properties);
+			$post = \Arr::filter_keys($post, $properties);
+
+			$tr = array('%item%' => $this->name()[0]);
+
+			$this->template->set_global('title', ucfirst(strtr(gettext('New %item%'), $tr)));
 			$this->template->content = $this->view('admin/skeleton/create');
-			$this->template->content->set('model', $model->set($val->input()), false);
-			$this->template->content->set('val', $val, false);
+			$this->template->content->set('model', $model->set($post), false);
+			$this->template->content->set('validation', $result, false);
 			\Session::set_flash('error', gettext('There were some errors.'));
 		}
 
