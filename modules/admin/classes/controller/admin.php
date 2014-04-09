@@ -50,7 +50,7 @@ class Controller_Admin extends \Controller_Base
 				if ($auth->login())
 				{
 					$current_user = \Model\Auth_User::find_by_username(\Auth::get_screen_name());
-					\Session::set_flash('success', strtr(gettext('Welcome, %fullname%!'), '%fullname%', $current_user->fullname));
+					\Session::set_flash('success', strtr(gettext('Welcome, %fullname%!'), array('%fullname%' => $current_user->fullname)));
 					\Response::redirect(\Input::get('uri') ? : \Uri::admin());
 				}
 				else
