@@ -42,6 +42,7 @@ Autoloader::add_classes(array(
 
 	// Menu
 	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
+	'Fuel\\Migrations\\Migration_Enum' => __DIR__ . '/migrations/enum.php',
 ));
 
 // Adding the possible theme paths to the config of Theme.
