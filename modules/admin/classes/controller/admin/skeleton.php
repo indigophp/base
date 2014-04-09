@@ -313,9 +313,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		// Check for options and set value
 		foreach ($properties as $key => $value)
 		{
-			if ($options = $model->options($key))
+			if ( ! empty($data) and $options = \Arr::get($value, 'list.options', false))
 			{
-				empty($data) or $data[$key] = $options[$data[$key]];
+				$data[$key] = $options[$data[$key]];
 			}
 		}
 

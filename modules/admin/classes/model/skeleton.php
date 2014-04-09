@@ -6,14 +6,18 @@ trait Model_Skeleton
 {
 	protected static $_columns_cached = array();
 
+	protected static $_list_cached = array();
+
+	protected static $_form_cached = array();
+
 	protected static $_options_cached = array();
 
-	public static function properties($relations = false)
+	public static function properties($columns = false)
 	{
 		$properties = parent::properties();
 		$class = get_called_class();
 
-		// If already determined
+		// If not already determined
 		if ( ! array_key_exists($class, static::$_columns_cached))
 		{
 			static::$_columns_cached[$class] = $properties;
@@ -29,7 +33,7 @@ trait Model_Skeleton
 			static::$_properties_cached[$class] = $properties;
 		}
 
-		if ($relations === true)
+		if ($columns === true)
 		{
 			return static::$_columns_cached[$class];
 		}
@@ -50,13 +54,9 @@ trait Model_Skeleton
 	{
 		$class = get_called_class();
 
-		// If already determined
-		if ( ! array_key_exists($class, static::$_columns_cached))
-		{
-			static::properties(true);
-		}
+		$properties = static::properties(true);
 
-		return \Arr::get(static::$_columns_cached[$class], $key, $default);
+		return \Arr::get($properties, $key, $default);
 	}
 
 	public static function view()
@@ -70,20 +70,61 @@ trait Model_Skeleton
 
 	public static function lists()
 	{
+		$class = get_called_class();
+
+		// If already determined
+		if (array_key_exists($class, static::$_list_cached))
+		{
+			return static::$_list_cached[$class];
+		}
+
 		$properties = static::properties(true);
 
-		return array_filter($properties, function($item) {
-			return \Arr::get($item, 'list.type', false) !== false;
-		});
+		foreach ($properties as $key => &$property)
+		{
+			if (\Arr::get($property, 'list.type', false) === false)
+			{
+				unset($properties[$key]);
+				continue;
+			}
+
+			$property['list'] = \Arr::merge(
+				\Arr::get($property, 'form', array()),
+				\Arr::get($property, 'list')
+			);
+
+			$property['list']['options'] = static::options($property['list']);
+		}
+
+		return static::$_list_cached[$class] = $properties;
 	}
 
 	public static function form($fieldset = false)
 	{
-		$properties = static::properties(true);
+		$class = get_called_class();
 
-		$properties = array_filter($properties, function($item) {
-			return \Arr::get($item, 'form.type', false) !== false;
-		});
+		// If already determined
+		if (array_key_exists($class, static::$_form_cached))
+		{
+			$properties = static::$_form_cached[$class];
+		}
+		else
+		{
+			$properties = static::properties(true);
+
+			foreach ($properties as $key => &$property)
+			{
+				if (\Arr::get($property, 'form.type', false) === false)
+				{
+					unset($properties[$key]);
+					continue;
+				}
+
+				$property['form']['options'] = static::options($property['form']);
+			}
+
+			static::$_form_cached[$class] = $properties;
+		}
 
 		if ( ! empty(static::$_fieldsets) and $fieldset === true)
 		{
@@ -100,56 +141,37 @@ trait Model_Skeleton
 		return $properties;
 	}
 
-	public function options($field)
+	public static function options($field)
 	{
-		$class = get_called_class();
-
-		if (array_key_exists($class, static::$_options_cached) and array_key_exists($field, static::$_options_cached[$class]))
-		{
-			return static::$_options_cached[$class][$field];
-		}
-
-		$column = static::column($field, array());
-		$column = \Arr::merge(\Arr::get($column, 'form', array()), \Arr::get($column, 'list', array()));
-
 		// Get options and parse it if it is a Closure
-		$options = array_key_exists('options', $column) ? $column['options'] : null;
+		$options = \Arr::get($field, 'options');
 
 		if ($options instanceof \Closure)
 		{
-			$options = $options($this);
+			$options = \Fuel::value($options);
 		}
 
 		// We have a string
 		if (is_string($options))
 		{
-			// Is it comma delimited or the name of an enum?
-			if (strpos($options, ','))
+			$options = \Model_Enum::query()
+				->related('default')
+				->related('items')
+				->related('items.meta')
+				->where('slug', $options)
+				->get_one();
+
+			if (is_null($options))
 			{
-				$options = explode(',', $options);
+				$options = array();
 			}
 			else
 			{
-				$options = \Model_Enum::query()
-					->related('default')
-					->related('items')
-					->related('items.meta')
-					->where('slug', $options)
-					->get_one();
-
-				if (is_null($options))
-				{
-					$options = array();
-				}
-				else
-				{
-					$options = $options->to_array();
-					$options = \Arr::pluck($options['items'], 'name', 'item_id');
-				}
-
+				$options = $options->to_array();
+				$options = \Arr::pluck($options['items'], 'name', 'item_id');
 			}
 		}
 
-		return static::$_options_cached[$class][$field] = $options;
+		return $options;
 	}
 }

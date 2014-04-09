@@ -221,6 +221,7 @@ abstract class Controller_Admin_Config extends Controller_Admin
 	{
 		$config = $this->load();
 		$config = \Arr::flatten_assoc($config, '.');
+		$config = \Arr::filter_keys($config, array_keys($this->_properties));
 
 		$fieldsets = $this->fieldsets($config);
 
@@ -234,6 +235,7 @@ abstract class Controller_Admin_Config extends Controller_Admin
 	{
 		$config = $this->load();
 		$config = \Arr::flatten_assoc($config, '.');
+		$config = \Arr::filter_keys($config, array_keys($this->_properties));
 
 		$fieldsets = $this->fieldsets($config);
 
