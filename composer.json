@@ -19,8 +19,8 @@
         "composer/installers": "~1.0",
         "indigophp/fuel-core": "dev-develop",
         "indigophp/fuel-menu": "dev-develop",
-        "fuelphp/validation": "dev-master",
-        "fuelphp/fieldset": "dev-master"
+        "fuelphp/fieldset": "dev-master",
+        "fuelphp/validation": "dev-master"
     },
     "extra": {
         "installer-name": "base"
