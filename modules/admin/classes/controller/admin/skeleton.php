@@ -2,6 +2,10 @@
 
 namespace Admin;
 
+use Fuel\Validation\Validator;
+use Fuel\Validation\RuleProvider\FromArray;
+use Orm\Model;
+
 abstract class Controller_Admin_Skeleton extends Controller_Admin
 {
 	/**
@@ -353,39 +357,34 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	/**
 	 * Return validation object
 	 *
-	 * @param  array $fields
-	 * @return \Fuel\Core\Validation
+	 * @param  \Orm\Model $model
+	 * @return \Fuel\Validation\Validator
 	 */
-	protected function val(array $fields = null)
+	protected function validation(Model $model = null)
 	{
-		$val = \Validation::forge($this->module());
+		$validator = new Validator;
 
-		if (empty($fields))
+		if ($model === null)
 		{
-			return $val;
+			return $validator;
 		}
 
-		foreach ($fields as $name => $params)
+		foreach ($model->form() as $fieldName => $fieldParams)
 		{
-			if (is_int($name))
-			{
-				$name = $params;
-				$params = array();
-			}
+			$label = \Arr::get($fieldParams, 'label', gettext('Unidentified Property'));
 
-			$label = \Arr::get($params, 'label', gettext('Unidentified Property'));
+			$validator->addField($fieldName, $label);
 
-			if ($rules = \Arr::get($params, 'validation'))
+			$rules = \Arr::get($fieldParams, 'validation', array());
+
+			foreach ($rules as $rule => $params)
 			{
-				$val->add_field($name, $label, $rules);
-			}
-			else
-			{
-				$val->add($name, $label);
+				$ruleInstance = $validator->createRuleInstance($rule, $params);
+				$validator->addRule($fieldName, $ruleInstance);
 			}
 		}
 
-		return $val;
+		return $validator;
 	}
 
 	protected function redirect($url = '', $method = 'location', $code = 302)
