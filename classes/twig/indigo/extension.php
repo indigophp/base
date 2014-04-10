@@ -1,5 +1,8 @@
 <?php
 
+use Fuel\Fieldset\Element;
+use Fuel\Fieldset\Fieldset;
+
 class Twig_Indigo_Extension extends Twig_Extension
 {
 
@@ -26,6 +29,7 @@ class Twig_Indigo_Extension extends Twig_Extension
 			'auth_get_meta'        => new Twig_Function_Function('Auth::get_profile_fields'),
 			'date'                 => new Twig_Function_Function('Date::forge'),
 			'time_elapsed'         => new Twig_Function_Method($this, 'time_elapsed'),
+			'getFormElementType'   => new Twig_Function_Method($this, 'getFormElementType'),
 		);
 	}
 
@@ -54,8 +58,19 @@ class Twig_Indigo_Extension extends Twig_Extension
 	public function getTests()
 	{
 		return array(
-			'bool' => new Twig_Test_Function('is_bool')
+			'bool' => new Twig_Test_Function('is_bool'),
+			'fieldset' => new Twig_Test_Method($this, 'isFieldset')
 		);
+	}
+
+	public function isFieldset($fieldset)
+	{
+		return $fieldset instanceof Fieldset;
+	}
+
+	public function getFormElementType(Element $element)
+	{
+		return strtolower(\Inflector::denamespace(get_class($element)));
 	}
 
 	/**

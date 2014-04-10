@@ -2,9 +2,14 @@
 
 namespace Admin;
 
+use Orm\Model;
 use Fuel\Validation\Validator;
 use Fuel\Validation\RuleProvider\FromArray;
-use Orm\Model;
+use Fuel\Fieldset\Form;
+use Fuel\Fieldset\Fieldset;
+use Fuel\Fieldset\Input\Optgroup;
+use Fuel\Fieldset\Input\Option;
+use Fuel\Common\Arr;
 
 abstract class Controller_Admin_Skeleton extends Controller_Admin
 {
@@ -35,6 +40,10 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 * @var string
 	 */
 	protected $_model;
+
+	protected $fieldMap = [
+		'text' => 'Fuel\\Fieldset\\Input\\Text'
+	];
 
 	protected static $translate = array();
 
@@ -355,7 +364,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	}
 
 	/**
-	 * Return validation object
+	 * Return Validator object
 	 *
 	 * @param  \Orm\Model $model
 	 * @return \Fuel\Validation\Validator
@@ -371,20 +380,94 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		foreach ($model->form() as $fieldName => $fieldParams)
 		{
-			$label = \Arr::get($fieldParams, 'label', gettext('Unidentified Property'));
-
-			$validator->addField($fieldName, $label);
-
-			$rules = \Arr::get($fieldParams, 'validation', array());
-
-			foreach ($rules as $rule => $params)
+			if ($rules = \Arr::get($fieldParams, 'validation'))
 			{
-				$ruleInstance = $validator->createRuleInstance($rule, $params);
-				$validator->addRule($fieldName, $ruleInstance);
+				$label = \Arr::get($fieldParams, 'label', gettext('Unidentified Property'));
+
+				$validator->addField($fieldName, $label);
+
+				foreach ($rules as $rule => $params)
+				{
+					if (is_int($rule))
+					{
+						$rule = $params;
+						$params = array();
+					}
+
+					$ruleInstance = $validator->createRuleInstance($rule, $params);
+					$validator->addRule($fieldName, $ruleInstance);
+				}
 			}
 		}
 
 		return $validator;
+	}
+
+	/**
+	 * Return Form object
+	 *
+	 * @param  \Orm\Model $model
+	 * @return \Fuel\Fieldset\Form
+	 */
+	protected function form(Model $model = null)
+	{
+		$form = new Form;
+
+		if ($model === null)
+		{
+			return $form;
+		}
+
+		foreach ($model->fieldset() as $fieldset => $legend)
+		{
+			$form[$fieldset] = new Fieldset;
+			$form[$fieldset]->setLegend($legend);
+		}
+
+		foreach ($model->form() as $fieldName => $fieldParams)
+		{
+			if ($type = \Arr::get($fieldParams, 'form.type'))
+			{
+				$class = \Arr::get($this->fieldMap, $type, 'Fuel\\Fieldset\\Input\\Text');
+				$label = \Arr::get($fieldParams, 'label', gettext('Unidentified Property'));
+				$attributes = \Arr::get($fieldParams, 'form.attributes', array());
+				$default = \Arr::get($fieldParams, 'default');
+
+				$element = new $class($fieldName, $attributes, $default);
+				$element->setLabel($label);
+
+				if ($type == 'select' and Arr::has($fieldParams, 'form.options'))
+				{
+					$options = $model->options($fieldName);
+
+					foreach ($options as $option => $value)
+					{
+						if (is_array($value))
+						{
+							$option = array(
+								'_content' => $value,
+							);
+
+							$element[] = Optgroup::fromArray($option);
+							continue;
+						}
+
+						$element[] = new Option($option, $value);
+					}
+				}
+
+				if ($fieldset = \Arr::get($fieldParams, 'form.fieldset') and isset($form[$fieldset]))
+				{
+					$form[$fieldset][] = $element;
+				}
+				else
+				{
+					$form[] = $element;
+				}
+			}
+		}
+
+		return $form;
 	}
 
 	protected function redirect($url = '', $method = 'location', $code = 302)
@@ -449,11 +532,15 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	public function action_create()
 	{
+		$model = $this->forge();
+		$form = $this->form($model);
+
 		$this->template->set_global('title', ucfirst(
 			\Str::trans(gettext('New %item%'), '%item%', $this->name()[0])
 		));
+
 		$this->template->content = $this->view('admin/skeleton/create');
-		$this->template->content->set('model', $this->forge(), false);
+		$this->template->content->set('form', $form, false);
 	}
 
 	public function post_create()
@@ -476,16 +563,15 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		}
 		else
 		{
-			$properties = $model->form();
-			$properties = array_keys($properties);
-			$post = \Arr::filter_keys($post, $properties);
+			$form = $this->form($model);
+			$form->repopulate();
 
 			$tr = array('%item%' => $this->name()[0]);
 
 			$this->template->set_global('title', ucfirst(strtr(gettext('New %item%'), $tr)));
 			$this->template->content = $this->view('admin/skeleton/create');
-			$this->template->content->set('model', $model->set($post), false);
-			$this->template->content->set('validation', $result, false);
+			$this->template->content->set('errors', $result->getErrors(), false);
+			$this->template->content->set('form', $form, false);
 			\Session::set_flash('error', gettext('There were some errors.'));
 		}
 

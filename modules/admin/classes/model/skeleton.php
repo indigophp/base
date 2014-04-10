@@ -126,19 +126,12 @@ trait Model_Skeleton
 			static::$_form_cached[$class] = $properties;
 		}
 
-		if ( ! empty(static::$_fieldsets) and $fieldset === true)
-		{
-			$fieldsets = static::$_fieldsets;
-
-			foreach ($fieldsets as $key => $value)
-			{
-				$fieldsets[$key]['properties'] = \Arr::subset($properties, \Arr::get($fieldsets, $key.'.properties', array()), array());
-			}
-
-			return $fieldsets;
-		}
-
 		return $properties;
+	}
+
+	public static function fieldset()
+	{
+		return isset(static::$_fieldsets) ? static::$_fieldsets : array();
 	}
 
 	public static function options($field)
