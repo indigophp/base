@@ -19,7 +19,7 @@ class Controller_Auth extends \Controller_Base
 	{
 		$uri = \Input::get('uri');
 
-		return \Response::redirect(isset($uri) ? : '/user');
+		return \Response::redirect(isset($uri) ? $uri : '/user');
 	}
 
 	public function action_login()
