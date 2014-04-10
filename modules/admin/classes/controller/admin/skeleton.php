@@ -450,7 +450,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	public function action_create()
 	{
-		$this->template->set_global('title', ucfirst(strtr(gettext('New %item%'), array('%item%' => $this->name()[0]))));
+		$this->template->set_global('title', ucfirst(
+			\Str::trans(gettext('New %item%'), '%item%', $this->name()[0])
+		));
 		$this->template->content = $this->view('admin/skeleton/create');
 		$this->template->content->set('model', $this->forge(), false);
 	}
@@ -466,12 +468,18 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		if ($val->run() === true)
 		{
 			$model->set($val->validated())->save();
-			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully created.'), array('%item%' => $this->name()[0]))));
+
+			\Session::set_flash('success', ucfirst(
+				\Str::trans(gettext('%item% successfully created.'), '%item%', $this->name()[0])
+			));
+
 			return $this->redirect($this->url() . '/view/' . $model->id);
 		}
 		else
 		{
-			$this->template->set_global('title', ucfirst(strtr(gettext('New %item%'), array('%item%' => $this->name()[0]))));
+			$this->template->set_global('title', ucfirst(
+				\Str::trans(gettext('New %item%'), '%item%', $this->name()[0])
+			));
 			$this->template->content = $this->view('admin/skeleton/create');
 			$this->template->content->set('model', $model->set($val->input()), false);
 			$this->template->content->set('val', $val, false);
@@ -484,7 +492,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function action_view($id = null)
 	{
 		$model = $this->find($id);
-		$this->template->set_global('title', ucfirst(strtr(gettext('View %item%'), array('%item%' => $this->name()[0]))));
+		$this->template->set_global('title', ucfirst(
+			\Str::trans(gettext('View %item%'), '%item%', $this->name()[0])
+		));
 		$this->template->content = $this->view('admin/skeleton/view');
 		$this->template->content->set('model', $model, false);
 	}
@@ -492,7 +502,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function action_edit($id = null)
 	{
 		$model = $this->find($id);
-		$this->template->set_global('title', ucfirst(strtr(gettext('Edit %item%'), array('%item%' => $this->name()[0]))));
+		$this->template->set_global('title', ucfirst(
+			\Str::trans(gettext('Edit %item%'), '%item%', $this->name()[0])
+		));
 		$this->template->content = $this->view('admin/skeleton/edit');
 		$this->template->content->set('model', $model, false);
 	}
@@ -507,12 +519,16 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		if ($val->run() === true)
 		{
 			$model->set($val->validated())->save();
-			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully updated.'), array('%item%' => $this->name()[0]))));
+			\Session::set_flash('success', ucfirst(
+				\Str::trans(gettext('%item% successfully updated.'), '%item%', $this->name()[0])
+			));
 			return $this->redirect($this->url());
 		}
 		else
 		{
-			$this->template->set_global('title', ucfirst(strtr(gettext('Edit %item%'), array('%item%' => $this->name()[0]))));
+			$this->template->set_global('title', ucfirst(
+				\Str::trans(gettext('Edit %item%'), '%item%', $this->name()[0])
+			));
 			$this->template->content = $this->view('admin/skeleton/edit');
 			$this->template->content->set('model', $model->set($val->input()), false);
 			$this->template->content->set('val', $val, false);
@@ -528,12 +544,16 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		if ($model->delete())
 		{
-			\Session::set_flash('success', ucfirst(strtr(gettext('%item% successfully deleted.'), array('%item%' => $this->name()[0]))));
+			\Session::set_flash('success', ucfirst(
+				\Str::trans(gettext('%item% successfully deleted.'), '%item%', $this->name()[0])
+			));
 			return \Response::redirect_back();
 		}
 		else
 		{
-			\Session::set_flash('error', ucfirst(strtr(gettext('%item% cannot be deleted.'), array('%item%' => $this->name()[0]))));
+			\Session::set_flash('success', ucfirst(
+				\Str::trans(gettext('%item% cannot be deleted.'), '%item%', $this->name()[0])
+			));
 			return \Response::redirect_back();
 		}
 	}
