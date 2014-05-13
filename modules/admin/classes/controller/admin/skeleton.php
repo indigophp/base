@@ -14,7 +14,7 @@ use Fuel\Common\Arr;
 abstract class Controller_Admin_Skeleton extends Controller_Admin
 {
 	/**
-	 * Parsed module name
+	 * Module name
 	 *
 	 * @var string
 	 */
@@ -26,13 +26,6 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 * @var string
 	 */
 	protected $_url;
-
-	/**
-	 * Name of the module
-	 *
-	 * @var string
-	 */
-	protected $_name;
 
 	/**
 	 * Parsed model name
@@ -54,34 +47,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		$translate = $this->translate();
 		$this->access();
 
-		\View::set_global('module', $this->module());
-		\View::set_global('module_name', $this->name());
+		\View::set_global('module', $this->_module);
+		\View::set_global('module_name', $this->_module);
 		\View::set_global('url', $this->url());
-	}
-
-	/**
-	 * Parse module name
-	 *
-	 * @return string
-	 */
-	protected function module()
-	{
-		if ( ! empty($this->_module))
-		{
-			return $this->_module;
-		}
-
-		if ($this->request->module == 'admin')
-		{
-			$module = \Inflector::denamespace($this->request->controller);
-			$module = strtolower(str_replace('Controller_', '', $module));
-
-			return $this->_module = $module;
-		}
-		else
-		{
-			return $this->_module = $this->request->module;
-		}
 	}
 
 	protected function url()
@@ -91,24 +59,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			return $this->_url;
 		}
 
-		return $this->_url = \Uri::admin() . str_replace('_', '/', $this->module());
-	}
-
-	abstract protected function name();
-
-	/**
-	 * Parse model name
-	 *
-	 * @return string
-	 */
-	protected function model()
-	{
-		if ( ! empty($this->_model))
-		{
-			return $this->_model;
-		}
-
-		return $this->_model = ucfirst($this->request->module) . '\\' . 'Model_' . \Inflector::classify($this->module());
+		return $this->_url = \Uri::admin() . str_replace('_', '/', $this->_module);
 	}
 
 	/**
@@ -149,7 +100,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	protected function has_access($access)
 	{
-		return \Auth::has_access($this->module() . '.' . $access);
+		return \Auth::has_access($this->_module . '.' . $access);
 	}
 
 	/**
@@ -160,7 +111,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	protected function query($options = array())
 	{
-		$model = $this->model();
+		$model = $this->_model;
 
 		return $model::query($options);
 	}
@@ -186,9 +137,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	protected function forge($data = array(), $new = true, $view = null, $cache = true)
 	{
-		$model = $this->model();
-		$model = $model::forge($data, $new, $view, $cache);
-		return $model;
+		$model = $this->_model;
+
+		return $model::forge($data, $new, $view, $cache);
 	}
 
 	/**
@@ -363,113 +314,6 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		return $data;
 	}
 
-	/**
-	 * Return Validator object
-	 *
-	 * @param  \Orm\Model $model
-	 * @return \Fuel\Validation\Validator
-	 */
-	protected function validation(Model $model = null)
-	{
-		$validator = new Validator;
-
-		if ($model === null)
-		{
-			return $validator;
-		}
-
-		foreach ($model->form() as $fieldName => $fieldParams)
-		{
-			if ($rules = \Arr::get($fieldParams, 'validation'))
-			{
-				$label = \Arr::get($fieldParams, 'label', gettext('Unidentified Property'));
-
-				$validator->addField($fieldName, $label);
-
-				foreach ($rules as $rule => $params)
-				{
-					if (is_int($rule))
-					{
-						$rule = $params;
-						$params = array();
-					}
-
-					$ruleInstance = $validator->createRuleInstance($rule, $params);
-					$validator->addRule($fieldName, $ruleInstance);
-				}
-			}
-		}
-
-		return $validator;
-	}
-
-	/**
-	 * Return Form object
-	 *
-	 * @param  \Orm\Model $model
-	 * @return \Fuel\Fieldset\Form
-	 */
-	protected function form(Model $model = null)
-	{
-		$form = new Form;
-
-		if ($model === null)
-		{
-			return $form;
-		}
-
-		foreach ($model->fieldset() as $fieldset => $legend)
-		{
-			$form[$fieldset] = new Fieldset;
-			$form[$fieldset]->setLegend($legend);
-		}
-
-		foreach ($model->form() as $fieldName => $fieldParams)
-		{
-			if ($type = \Arr::get($fieldParams, 'form.type'))
-			{
-				$class = \Arr::get($this->fieldMap, $type, 'Fuel\\Fieldset\\Input\\Text');
-				$label = \Arr::get($fieldParams, 'label', gettext('Unidentified Property'));
-				$attributes = \Arr::get($fieldParams, 'form.attributes', array());
-				$default = \Arr::get($fieldParams, 'default');
-
-				$element = new $class($fieldName, $attributes, $default);
-				$element->setLabel($label);
-
-				if ($type == 'select' and Arr::has($fieldParams, 'form.options'))
-				{
-					$options = $model->options($fieldName);
-
-					foreach ($options as $option => $value)
-					{
-						if (is_array($value))
-						{
-							$option = array(
-								'_content' => $value,
-							);
-
-							$element[] = Optgroup::fromArray($option);
-							continue;
-						}
-
-						$element[] = new Option($option, $value);
-					}
-				}
-
-				if ($fieldset = \Arr::get($fieldParams, 'form.fieldset') and isset($form[$fieldset]))
-				{
-					$form[$fieldset][] = $element;
-				}
-				else
-				{
-					$form[] = $element;
-				}
-			}
-		}
-
-		return $form;
-	}
-
 	protected function redirect($url = '', $method = 'location', $code = 302)
 	{
 		return \Response::redirect($url, $method, $code);
@@ -487,11 +331,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	public function action_index()
 	{
-		$model = $this->model();
-
 		if ($this->is_ajax())
 		{
-			$properties = $model::lists();
+			// $properties = $this->_model::lists();
 
 			$query = $this->query();
 
@@ -530,13 +372,26 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		}
 	}
 
+	public function form()
+	{
+		$form = new Form;
+
+		return call_user_func(array($this->_model, 'populateForm'), $form);
+	}
+
+	public function validation()
+	{
+		$validator = new Validator;
+
+		return call_user_func(array($this->_model, 'populateValidator'), $validator);
+	}
+
 	public function action_create()
 	{
-		$model = $this->forge();
-		$form = $this->form($model);
+		$form = $this->form();
 
 		$this->template->set_global('title', ucfirst(
-			\Str::trans(gettext('New %item%'), '%item%', $this->name()[0])
+			\Str::trans(gettext('New %item%'), '%item%', 'FIX THIS')
 		));
 
 		$this->template->content = $this->view('admin/skeleton/create');
@@ -545,33 +400,28 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 	public function post_create()
 	{
-		$model = $this->model();
-		$model = $this->forge();
 		$post = \Input::post();
 
-		$validator = $this->validation($model);
+		$validator = $this->validation();
 		$result = $validator->run($post);
 
 		if ($result->isValid())
 		{
+			$model = $this->forge();
 			$model->set($result->validated())->save();
+
 			\Session::set_flash('success', ucfirst(
-				\Str::trans(gettext('%item% successfully created.'), '%item%', $this->name()[0])
+				\Str::trans(gettext('%item% successfully created.'), '%item%', 'FIX THIS')
 			));
 
 			return $this->redirect($this->url() . '/view/' . $model->id);
 		}
 		else
 		{
-			$form = $this->form($model);
-			$form->repopulate();
+			$this->action_create();
+			$this->template->content->form->repopulate();
 
-			$tr = array('%item%' => $this->name()[0]);
-
-			$this->template->set_global('title', ucfirst(strtr(gettext('New %item%'), $tr)));
-			$this->template->content = $this->view('admin/skeleton/create');
 			$this->template->content->set('errors', $result->getErrors(), false);
-			$this->template->content->set('form', $form, false);
 			\Session::set_flash('error', gettext('There were some errors.'));
 		}
 
@@ -581,8 +431,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function action_view($id = null)
 	{
 		$model = $this->find($id);
+
 		$this->template->set_global('title', ucfirst(
-			\Str::trans(gettext('View %item%'), '%item%', $this->name()[0])
+			\Str::trans(gettext('View %item%'), '%item%', 'FIX THIS')
 		));
 		$this->template->content = $this->view('admin/skeleton/view');
 		$this->template->content->set('model', $model, false);
@@ -591,36 +442,44 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function action_edit($id = null)
 	{
 		$model = $this->find($id);
+		$form = $this->form();
+		$form->populate($model);
+
 		$this->template->set_global('title', ucfirst(
-			\Str::trans(gettext('Edit %item%'), '%item%', $this->name()[0])
+			\Str::trans(gettext('Edit %item%'), '%item%', 'FIX THIS')
 		));
 		$this->template->content = $this->view('admin/skeleton/edit');
-		$this->template->content->set('model', $model, false);
+		$this->template->content->set('form', $form, false);
 	}
 
 	public function post_edit($id = null)
 	{
 		$model = $this->find($id);
-		$properties = $model->form();
+		$post = \Input::post();
 
-		$val = $this->val($properties);
+		$validator = $this->validation();
+		$result = $validator->run($post);
 
-		if ($val->run() === true)
+		if ($result->isValid())
 		{
-			$model->set($val->validated())->save();
+			$model->set($result->validated())->save();
+
 			\Session::set_flash('success', ucfirst(
-				\Str::trans(gettext('%item% successfully updated.'), '%item%', $this->name()[0])
+				\Str::trans(gettext('%item% successfully updated.'), '%item%', 'FIX THIS')
 			));
 			return $this->redirect($this->url());
 		}
 		else
 		{
+			$form = $this->form();
+			$form->repopulate();
+
 			$this->template->set_global('title', ucfirst(
-				\Str::trans(gettext('Edit %item%'), '%item%', $this->name()[0])
+				\Str::trans(gettext('Edit %item%'), '%item%', 'FIX THIS')
 			));
 			$this->template->content = $this->view('admin/skeleton/edit');
-			$this->template->content->set('model', $model->set($val->input()), false);
-			$this->template->content->set('val', $val, false);
+			$this->template->content->set('errors', $result->getErrors(), false);
+			$this->template->content->set('form', $form, false);
 			\Session::set_flash('error', gettext('There were some errors.'));
 		}
 
@@ -633,17 +492,15 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		if ($model->delete())
 		{
-			\Session::set_flash('success', ucfirst(
-				\Str::trans(gettext('%item% successfully deleted.'), '%item%', $this->name()[0])
-			));
-			return \Response::redirect_back();
+			$message = \Str::trans(gettext('%item% successfully deleted.'), '%item%', 'FIX THIS');
 		}
 		else
 		{
-			\Session::set_flash('success', ucfirst(
-				\Str::trans(gettext('%item% cannot be deleted.'), '%item%', $this->name()[0])
-			));
-			return \Response::redirect_back();
+			$message = \Str::trans(gettext('%item% cannot be deleted.'), '%item%', 'FIX THIS');
 		}
+
+		\Session::set_flash('success', ucfirst($message));
+
+		return \Response::redirect_back();
 	}
 }

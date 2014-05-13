@@ -22,6 +22,15 @@
         "fuelphp/fieldset": "dev-master",
         "fuelphp/validation": "dev-master"
     },
+    "autoload": {
+        "psr-0": {
+            "Fuel\\Fieldset\\": "lib/",
+            "Fuel\\Validation\\": "lib/"
+        },
+        "psr-4": {
+            "Indigo\\Base\\": "src/"
+        }
+    },
     "extra": {
         "installer-name": "base"
     },

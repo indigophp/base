@@ -68,7 +68,10 @@ class Twig_Indigo_Extension extends Twig_Extension
 		return $fieldset instanceof Fieldset;
 	}
 
-	public function getFormElementType(Element $element)
+	/*
+	No general interface for now
+	 */
+	public function getFormElementType($element)
 	{
 		return strtolower(\Inflector::denamespace(get_class($element)));
 	}
