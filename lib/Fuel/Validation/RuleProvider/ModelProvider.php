@@ -22,6 +22,18 @@ use Fuel\Validation\RuleProvider\FromArray;
 trait ModelProvider
 {
 	/**
+	 * Forge a new Validator instance
+	 *
+	 * @return Validator
+	 */
+	public static function forgeValidator()
+	{
+		$validator = new Validator;
+
+		return static::populateValidator($validator);
+	}
+
+	/**
 	 * Should populate the given validator with the needed rules.
 	 *
 	 * @param  Validator $validator

@@ -33,6 +33,18 @@ trait ModelProvider
 	protected static $_fieldsets_cached = array();
 
 	/**
+	 * Forge a new Form instance
+	 *
+	 * @return Form
+	 */
+	public static function forgeForm()
+	{
+		$form = new Form;
+
+		return static::populateForm($form);
+	}
+
+	/**
 	 * Should populate the given form with the needed fields.
 	 *
 	 * @param  Form $form

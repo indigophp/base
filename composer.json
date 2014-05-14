@@ -20,12 +20,14 @@
         "indigophp/fuel-core": "dev-develop",
         "indigophp/fuel-menu": "dev-develop",
         "fuelphp/fieldset": "dev-master",
-        "fuelphp/validation": "dev-master"
+        "fuelphp/validation": "dev-master",
+        "league/fractal": "~0.7.0"
     },
     "autoload": {
         "psr-0": {
             "Fuel\\Fieldset\\": "lib/",
-            "Fuel\\Validation\\": "lib/"
+            "Fuel\\Validation\\": "lib/",
+            "League\\Fractal\\": "lib/"
         },
         "psr-4": {
             "Indigo\\Base\\": "src/"

@@ -10,8 +10,6 @@ trait Model_Skeleton
 
 	protected static $_form_cached = array();
 
-	protected static $_options_cached = array();
-
 	public static function properties($columns = false)
 	{
 		$properties = parent::properties();
@@ -92,8 +90,6 @@ trait Model_Skeleton
 				\Arr::get($property, 'form', array()),
 				\Arr::get($property, 'list')
 			);
-
-			$property['list']['options'] = static::options($property['list']);
 		}
 
 		return static::$_list_cached[$class] = $properties;
@@ -127,44 +123,5 @@ trait Model_Skeleton
 		}
 
 		return $properties;
-	}
-
-	public static function fieldset()
-	{
-		return isset(static::$_fieldsets) ? static::$_fieldsets : array();
-	}
-
-	public static function options($field)
-	{
-		// Get options and parse it if it is a Closure
-		$options = \Arr::get($field, 'options');
-
-		if ($options instanceof \Closure)
-		{
-			$options = \Fuel::value($options);
-		}
-
-		// We have a string
-		if (is_string($options))
-		{
-			$options = \Model_Enum::query()
-				->related('default')
-				->related('items')
-				->related('items.meta')
-				->where('slug', $options)
-				->get_one();
-
-			if (is_null($options))
-			{
-				$options = array();
-			}
-			else
-			{
-				$options = $options->to_array();
-				$options = \Arr::pluck($options['items'], 'name', 'item_id');
-			}
-		}
-
-		return $options;
 	}
 }
