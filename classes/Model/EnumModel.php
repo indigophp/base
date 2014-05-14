@@ -1,10 +1,26 @@
 <?php
 
-namespace Indigo\Base;
+/*
+ * This file is part of the Indigo Base package.
+ *
+ * (c) Indigo Development Team
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-class Model_Enum extends \Orm\Model
+namespace Indigo\Base\Model;
+
+use Orm\Model;
+
+/**
+ * Enum Model
+ *
+ * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
+ */
+class EnumModel extends Model
 {
-	use \Admin\Model_Skeleton;
+	use \Indigo\Base\Model\SkeletonTrait;
 
 	protected static $_has_many = array(
 		'items' => array(

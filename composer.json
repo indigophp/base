@@ -17,6 +17,7 @@
     ],
     "require": {
         "composer/installers": "~1.0",
+        "fuelphp/alias": "dev-master",
         "indigophp/fuel-core": "dev-develop",
         "indigophp/fuel-menu": "dev-develop",
         "fuelphp/fieldset": "dev-master",
@@ -27,11 +28,15 @@
         "psr-0": {
             "Fuel\\Fieldset\\": "lib/",
             "Fuel\\Validation\\": "lib/",
-            "League\\Fractal\\": "lib/"
+            "League\\Fractal\\": "lib/",
+            "Twig\\Extension\\": "lib/"
         },
         "psr-4": {
-            "Indigo\\Base\\": "src/"
-        }
+            "Indigo\\Base\\": "classes/"
+        },
+        "files": [
+            "autoload.php"
+        ]
     },
     "extra": {
         "installer-name": "base"

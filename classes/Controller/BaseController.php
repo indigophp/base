@@ -1,19 +1,22 @@
 <?php
-/**
- * Part of the Indigo framework.
+
+/*
+ * This file is part of the Indigo Base package.
  *
- * @package    Indigo
- * @subpackage Base
- * @version    1.0
- * @author     Indigo Development Team
- * @license    MIT License
- * @copyright  2013 - 2014 Indigo Development Team
- * @link       https://indigophp.com
+ * (c) Indigo Development Team
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-namespace Indigo\Base;
+namespace Indigo\Base\Controller;
 
-class Controller_Base extends \Controller_Theme
+/**
+ * Base Controller
+ *
+ * @author Tamás Barta <barta.tamas.d@gmail.com>
+ */
+class BaseController extends \Controller_Theme
 {
 	public function before($data = null)
 	{

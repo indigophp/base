@@ -21,25 +21,6 @@ Autoloader::add_classes(array(
 	'Indigo\\Base\\Uri'            => __DIR__ . '/classes/uri.php',
 	'Indigo\\Base\\Str'            => __DIR__ . '/classes/str.php',
 	'Indigo\\Orm\\Observer_Typing' => __DIR__ . '/classes/observer/typing.php',
-	'Twig_Indigo_Extension'        => __DIR__ . '/classes/twig/indigo/extension.php',
-
-	// Controllers
-	'Indigo\\Base\\Controller_Assets'      => __DIR__ . '/classes/controller/assets.php',
-	'Indigo\\Base\\Controller_Base'        => __DIR__ . '/classes/controller/base.php',
-	'Indigo\\Base\\Controller_Theme'       => __DIR__ . '/classes/controller/theme.php',
-	'Indigo\\Base\\Controller_Translation' => __DIR__ . '/classes/controller/translation.php',
-	'Controller_Welcome'                   => __DIR__ . '/classes/controller/welcome.php',
-
-	// HTTP Exceptions
-	'Indigo\\Base\\HttpForbiddenException'       => __DIR__ . '/classes/httpexceptions.php',
-	'Indigo\\Base\\HttpUnauthorizedException'    => __DIR__ . '/classes/httpexceptions.php',
-
-	// Enum models
-	'Indigo\\Base\\Model_Enum'      => __DIR__ . '/classes/model/enum.php',
-	'Indigo\\Base\\Model_Enum_Item' => __DIR__ . '/classes/model/enum/item.php',
-	'Indigo\\Base\\Model_Enum_Meta' => __DIR__ . '/classes/model/enum/meta.php',
-
-	'Indigo\\Base\\Observer_Formatter'          => __DIR__ . '/classes/observer/formatter.php',
 
 	// Menu
 	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',

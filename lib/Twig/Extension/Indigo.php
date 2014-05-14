@@ -1,9 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Indigo Base package.
+ *
+ * (c) Indigo Development Team
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Twig\Extension;
+
 use Fuel\Fieldset\Element;
 use Fuel\Fieldset\Fieldset;
+use Twig_Extension;
 
-class Twig_Indigo_Extension extends Twig_Extension
+class Indigo extends Twig_Extension
 {
 
 	/**
@@ -16,36 +28,42 @@ class Twig_Indigo_Extension extends Twig_Extension
 		return 'indigo';
 	}
 
+	/**
+	 * {@inheritdocs}
+	 */
 	public function getFunctions()
 	{
 		return array(
-			'gravatar'             => new Twig_Function_Function('Gravatar::forge'),
-			'menu'                 => new Twig_Function_Function('Menu::render_menu'),
-			'admin_menu'           => new Twig_Function_Function('Menu_Admin::render_menu'),
-			'request'              => new Twig_Function_Function('Request::active'),
-			'admin_url'            => new Twig_Function_Function('Uri::admin'),
-			'default_img'          => new Twig_Function_Method($this, 'getDefaultImage'),
-			'auth_get_screen_name' => new Twig_Function_Function('Auth::get_screen_name'),
-			'auth_get_meta'        => new Twig_Function_Function('Auth::get_profile_fields'),
-			'date'                 => new Twig_Function_Function('Date::forge'),
-			'time_elapsed'         => new Twig_Function_Method($this, 'time_elapsed'),
-			'getFormElementType'   => new Twig_Function_Method($this, 'getFormElementType'),
+			'gravatar'             => new \Twig_Function_Function('Gravatar::forge'),
+			'menu'                 => new \Twig_Function_Function('Menu::render_menu'),
+			'admin_menu'           => new \Twig_Function_Function('Menu_Admin::render_menu'),
+			'request'              => new \Twig_Function_Function('Request::active'),
+			'admin_url'            => new \Twig_Function_Function('Uri::admin'),
+			'default_img'          => new \Twig_Function_Method($this, 'getDefaultImage'),
+			'auth_get_screen_name' => new \Twig_Function_Function('Auth::get_screen_name'),
+			'auth_get_meta'        => new \Twig_Function_Function('Auth::get_profile_fields'),
+			'date'                 => new \Twig_Function_Function('Date::forge'),
+			'time_elapsed'         => new \Twig_Function_Method($this, 'time_elapsed'),
+			'getFormElementType'   => new \Twig_Function_Method($this, 'getFormElementType'),
 		);
 	}
 
+	/**
+	 * {@inheritdocs}
+	 */
 	public function getFilters()
 	{
 		return array(
-			'md5'                 => new Twig_Filter_Function('md5'),
-			'html'                => new Twig_Filter_Function('html_entity_decode'),
-			'pluralize'           => new Twig_Filter_Function('Inflector::pluralize'),
-			'bytes'               => new Twig_Filter_Function('Num::format_bytes'),
-			'qty'                 => new Twig_Filter_Function('Num::quantity'),
-			'bool'                => new Twig_Filter_Method  ($this, 'bool'),
-			'attr'                => new Twig_Filter_Function('array_to_attr'),
-			'date_format'         => new Twig_Filter_Method  ($this, 'dateFormat'),
-			'truncate_html'       => new Twig_Filter_Method  ($this, 'printTruncated'),
-			'eval'                => new Twig_Filter_Method  ($this, 'evaluate', array(
+			'md5'                 => new \Twig_Filter_Function('md5'),
+			'html'                => new \Twig_Filter_Function('html_entity_decode'),
+			'pluralize'           => new \Twig_Filter_Function('Inflector::pluralize'),
+			'bytes'               => new \Twig_Filter_Function('Num::format_bytes'),
+			'qty'                 => new \Twig_Filter_Function('Num::quantity'),
+			'bool'                => new \Twig_Filter_Method  ($this, 'bool'),
+			'attr'                => new \Twig_Filter_Function('array_to_attr'),
+			'date_format'         => new \Twig_Filter_Method  ($this, 'dateFormat'),
+			'truncate_html'       => new \Twig_Filter_Method  ($this, 'printTruncated'),
+			'eval'                => new \Twig_Filter_Method  ($this, 'evaluate', array(
 				'needs_environment' => true,
 				'needs_context'     => true,
 				'is_safe'           => array(
@@ -55,14 +73,23 @@ class Twig_Indigo_Extension extends Twig_Extension
 		);
 	}
 
+	/**
+	 * {@inheritdocs}
+	 */
 	public function getTests()
 	{
 		return array(
-			'bool' => new Twig_Test_Function('is_bool'),
-			'fieldset' => new Twig_Test_Method($this, 'isFieldset')
+			'bool'     => new \Twig_Test_Function('is_bool'),
+			'fieldset' => new \Twig_Test_Method($this, 'isFieldset')
 		);
 	}
 
+	/**
+	 * Check whether given object is instance of Fieldset
+	 *
+	 * @param  mixed  $fieldset
+	 * @return boolean
+	 */
 	public function isFieldset($fieldset)
 	{
 		return $fieldset instanceof Fieldset;
@@ -124,15 +151,21 @@ class Twig_Indigo_Extension extends Twig_Extension
 		return $date->format($pattern_key, $timezone);
 	}
 
+	/**
+	 * Return time elapsed from timestamp
+	 *
+	 * @param  int $timestamp
+	 * @return int
+	 */
 	public function time_elapsed($timestamp)
 	{
 		if (empty($timestamp)) {
 			return null;
 		}
 
-		$time = new DateTime();
+		$time = new \DateTime();
 		$time->setTimestamp($timestamp);
-		$diff = $time->diff(new DateTime());
+		$diff = $time->diff(new \DateTime());
 
 		$elapsed = '';
 
@@ -146,6 +179,12 @@ class Twig_Indigo_Extension extends Twig_Extension
 		return $elapsed;
 	}
 
+	/**
+	 * Check if value is bool and return string representation
+	 *
+	 * @param  mixed $value
+	 * @return mixed
+	 */
 	public function bool($value)
 	{
 		return is_bool($value) ? ($value ? 'true' : 'false') : $value;

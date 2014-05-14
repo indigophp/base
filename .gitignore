@@ -1,3 +1,4 @@
-composer.lock
-/vendor
 /fuel
+autoload_cache.php
+/vendor
+composer.lock

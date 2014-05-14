@@ -43,7 +43,7 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 		return $query;
 	}
 
-	protected function view($view, $data = array(), $auto_filter = null)
+	public function view($view, $data = array(), $auto_filter = null)
 	{
 		switch ($this->request->action)
 		{

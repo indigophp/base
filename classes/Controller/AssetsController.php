@@ -1,11 +1,24 @@
 <?php
 
-namespace Indigo\Base;
+/*
+ * This file is part of the Indigo Base package.
+ *
+ * (c) Indigo Development Team
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Indigo\Base\Controller;
 
 /**
+ * Assets Controller
+ *
  * This controller assures.
+ *
+ * @author Tamás Barta <barta.tamas.d@gmail.com>
  */
-class Controller_Assets extends \Controller
+class AssetsController extends \Controller
 {
 
 	public function action_theme()
