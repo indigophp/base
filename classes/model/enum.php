@@ -138,4 +138,26 @@ class Model_Enum extends \Orm\Model
 
 		$save === true and $this->save(true);
 	}
+
+	public static function get_enum_options($enum)
+	{
+		$options = static::query()
+			->related('default')
+			->related('items')
+			->related('items.meta')
+			->where('slug', $enum)
+			->get_one();
+
+		if (is_null($options))
+		{
+			$options = array();
+		}
+		else
+		{
+			$options = $options->to_array();
+			$options = \Arr::pluck($options['items'], 'name', 'item_id');
+		}
+
+		return $options;
+	}
 }
