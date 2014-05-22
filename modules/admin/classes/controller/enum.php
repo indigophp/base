@@ -4,26 +4,14 @@ namespace Admin;
 
 class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 {
-	protected $_model = 'Model_Enum';
+	protected $module = 'enum';
 
-	public static function _init()
-	{
-		static::$translate = array(
-			'create' => array(
-				'access' => gettext('You are not authorized to paste wisecracks.')
-			),
-			'details' => array(
-				'access' => gettext('You are not authorized to view wisecracks.')
-			),
-			'edit' => array(
-				'access' => gettext('You are not authorized to edit wisecracks.')
-			),
-			'delete' => array(
-				'access' => gettext('You are not authorized to delete wisecracks.')
-			)
-		);
+	protected $model = 'Indigo\\Base\\Model\\EnumModel';
 
-	}
+	protected $name = array(
+		'enum',
+		'enums',
+	);
 
 	public function has_access($access)
 	{
@@ -66,27 +54,13 @@ class Controller_Enum extends \Admin\Controller_Admin_Skeleton
 		return $data;
 	}
 
-	protected function name()
-	{
-		return array(
-			ngettext('enum', 'enums', 1),
-			ngettext('enum', 'enums', 999),
-		);
-	}
-
 	public function action_view($id = null)
 	{
 		parent::action_view($id);
 		$model = $this->template->content->model;
-		$model->active = $model->active == 1 ? gettext('Yes') : gettext('No');
-		$model->read_only = $model->read_only == 1 ? gettext('Yes') : gettext('No');
 
 		is_array($model->items) and usort($model->items, function($a, $b) {
 			return ($a['sort'] < $b['sort']) ? -1 : 1;
 		});
-
-		// $this->template->content->items = \Model_Enum_Item::query()
-		// 	->where('enum_id', $model->id)
-		// 	->order_by('sort')
 	}
 }

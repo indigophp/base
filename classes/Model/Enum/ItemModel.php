@@ -26,7 +26,7 @@ class ItemModel extends Model
 
 	protected static $_belongs_to = array(
 		'enum' => array(
-			'model_to' => 'Model_Enum',
+			'model_to' => 'Indigo\\Base\\Model\\EnumModel',
 		)
 	);
 

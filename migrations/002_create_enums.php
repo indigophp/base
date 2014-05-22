@@ -19,15 +19,15 @@ class Create_enums
 		\DBUtil::create_index('enums', 'slug', 'index_enums_on_slug', 'UNIQUE');
 
 		\DBUtil::create_table('enum_items', array(
-			'pk'          => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
-			'id'          => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
+			'id'          => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
+			'item_id'     => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
 			'enum_id'     => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
 			'name'        => array('constraint' => 61, 'type' => 'varchar'),
 			'slug'        => array('constraint' => 64, 'type' => 'varchar'),
 			'description' => array('type' => 'text', 'null' => true),
 			'active'      => array('type' => 'tinyint', 'default' => 1),
 			'sort'        => array('constraint' => 11, 'type' => 'int', 'null' => true),
-		), array('pk'));
+		), array('id'));
 
 		\DBUtil::add_foreign_key('enum_items', array(
 			'constraint' => 'fk_index_enum_items_on_enum_id',

@@ -24,7 +24,8 @@ class EnumModel extends Model
 
 	protected static $_has_many = array(
 		'items' => array(
-			'model_to' => 'Model_Enum_Item',
+			'model_to' => 'Indigo\\Base\\Model\\Enum\\ItemModel',
+			'key_to'   => 'enum_id',
 		),
 	);
 
@@ -32,7 +33,7 @@ class EnumModel extends Model
 		'default' => array(
 			'key_from' => array('id', 'default_id'),
 			'key_to'   => array('enum_id', 'item_id'),
-			'model_to' => 'Model_Enum_Item',
+			'model_to' => 'Indigo\\Base\\Model\\Enum\\ItemModel',
 		),
 	);
 
@@ -51,35 +52,46 @@ class EnumModel extends Model
 
 	protected static $_properties = array(
 		'id' => array(
-			'view' => false
+			'label' => 'ID',
+			'view' => false,
 		),
 		'name' => array(
+			'label' => 'Name',
 			'form' => array('type' => 'text'),
 			'list' => array('type' => 'text'),
-			'validation' => 'required|trim',
+			'validation' => array('required'),
 		),
-		'slug' => array(),
+		'slug' => array('label' => 'Slug'),
 		'description' => array(
+			'label' => 'Description',
 			'form' => array('type' => 'textarea'),
 		),
 		'default_id' => array(
+			'label' => 'Default',
 			'default'   => 1,
 			'data_type' => 'int',
 			'view' => false,
 			'form' => array('type' => 'select'),
 		),
 		'default.name' => array(
+			'label' => 'Default',
 			'list' => array('type' => 'text'),
 		),
 		'active' => array(
+			'label'     => 'Active',
 			'default'   => 1,
 			'data_type' => 'int',
 			'min'       => 0,
 			'max'       => 1,
-			'form'      => array('type' => 'switch'),
+			'form'      => array(
+				'type'     => 'checkbox',
+				'template' => 'switch',
+				'options'  => array('No', 'Yes'),
+			),
 			'list'      => array('type' => 'select'),
 		),
 		'read_only' => array(
+			'label'     => 'Read-only',
 			'default'   => 0,
 			'data_type' => 'int',
 			'min'       => 0,
@@ -95,41 +107,26 @@ class EnumModel extends Model
 
 	public static function _init()
 	{
-		static::$_properties = \Arr::merge(static::$_properties, array(
-			'id' => array('label' => gettext('ID')),
-			'name' => array('label' => gettext('Name')),
-			'slug' => array('label' => gettext('Slug')),
-			'description' => array('label' => gettext('Description')),
-			'default_id' => array(
-				'label' => gettext('Default'),
-				'form' => array(
-					'options' => function($model) {
-						$model->items;
-						$model = $model->to_array();
-						return \Arr::pluck($model['items'], 'name', 'id');
-					}
-				)
-			),
-			'default.name' => array('label' => gettext('Default')),
-			'active' => array(
-				'label' => gettext('Active'),
-				'form' => array(
-					'options' => array(
-						0 => gettext('No'),
-						1 => gettext('Yes'),
-					),
-				),
-			),
-			'read_only' => array('label' => gettext('Read-only')),
-		));
+		// static::$_properties = \Arr::merge(static::$_properties, array(
+		// 	'default_id' => array(
+		// 		'form' => array(
+		// 			'options' => function($model) {
+		// 				$model->items;
+		// 				$model = $model->to_array();
+		// 				return \Arr::pluck($model['items'], 'name', 'id');
+		// 			}
+		// 		)
+		// 	),
+		// ));
 
 		if (\Auth::has_access('enum.enum[all]'))
 		{
 			\Arr::set(static::$_properties, 'read_only.form', array(
-					'type' => 'switch',
+					'type' => 'checkbox',
+					'template' => 'switch',
 					'options' => array(
-						0 => gettext('No'),
-						1 => gettext('Yes'),
+						gettext('No'),
+						gettext('Yes'),
 					),
 			));
 		}
