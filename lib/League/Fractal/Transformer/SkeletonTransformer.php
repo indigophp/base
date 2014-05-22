@@ -52,39 +52,47 @@ class SkeletonTransformer extends TransformerAbstract
 
 		if ($this->actions)
 		{
-			$actions = array();
-
-			if ($this->controller->has_access('view'))
-			{
-				array_push($actions, array(
-					'url' => Uri::create($this->controller->_url. '/view/' . $model->id),
-					'icon' => 'glyphicon glyphicon-eye-open',
-				));
-			}
-
-			if ($this->controller->has_access('edit'))
-			{
-				array_push($actions, array(
-					'url' => Uri::create($this->controller->_url. '/edit/' . $model->id),
-					'icon' => 'glyphicon glyphicon-edit',
-				));
-			}
-
-			if ($this->controller->has_access('delete'))
-			{
-				array_push($actions, array(
-					'url' => Uri::create($this->controller->_url. '/delete/' . $model->id),
-					'icon' => 'glyphicon glyphicon-remove text-danger',
-				));
-			}
-
-			$data['action'] = $this->controller->view('admin/skeleton/list/action')
-				->set('actions', $actions, false)
-				->render();
+			$data['action'] = $this->actions();
 		}
-
 
 		return array_values($data);
 	}
 
+	/**
+	 * Return actions
+	 *
+	 * @return string Rendered View
+	 */
+	protected function actions()
+	{
+		$actions = array();
+
+		if ($this->controller->has_access('view'))
+		{
+			array_push($actions, array(
+				'url' => Uri::create($this->controller->_url. '/view/' . $model->id),
+				'icon' => 'glyphicon glyphicon-eye-open',
+			));
+		}
+
+		if ($this->controller->has_access('edit'))
+		{
+			array_push($actions, array(
+				'url' => Uri::create($this->controller->_url. '/edit/' . $model->id),
+				'icon' => 'glyphicon glyphicon-edit',
+			));
+		}
+
+		if ($this->controller->has_access('delete'))
+		{
+			array_push($actions, array(
+				'url' => Uri::create($this->controller->_url. '/delete/' . $model->id),
+				'icon' => 'glyphicon glyphicon-remove text-danger',
+			));
+		}
+
+		return $this->controller->view('admin/skeleton/list/action')
+				->set('actions', $actions, false)
+				->render();
+	}
 }
