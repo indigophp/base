@@ -152,7 +152,7 @@ trait SkeletonTrait
 
 			// Merge with form as defaults
 			$property['list'] = \Arr::merge(
-				\Arr::get($property, 'form', array()),
+				\Arr::filter_keys(\Arr::get($property, 'form', array()), array('template'), true),
 				\Arr::get($property, 'list')
 			);
 		}
@@ -255,9 +255,18 @@ trait SkeletonTrait
 		}
 
 		// Loop through and add all the fields
-		foreach (static::properties(true) as $field => $config)
+		foreach (static::form() as $field => $config)
 		{
-			static::generateInput($field, $config, $form);
+			$instance = static::generateInput($field, $config);
+
+			if ($fieldset = \Arr::get($config, 'form.fieldset', false) and isset($form[$fieldset]))
+			{
+				$form[$fieldset][$field] = $instance;
+			}
+			else
+			{
+				$form[$field] = $instance;
+			}
 		}
 
 		return $form;
@@ -266,14 +275,15 @@ trait SkeletonTrait
 	/**
 	 * Processes the given field and add it to the form.
 	 *
-	 * @param string $field          Name of the field to add
-	 * @param array  $propertyConfig Array of any config to be added to the field
-	 * @param Form   $form           Form object to add fields to
+	 * @param  string $field          Name of the field to add
+	 * @param  array  $propertyConfig Array of any config to be added to the field
+	 * @param  string $prefix         Whether to generate input from form or list
+	 * @return Input  Form input
 	 */
-	protected static function generateInput($field, $propertyConfig, Form $form)
+	protected static function generateInput($field, $propertyConfig, $prefix = 'form')
 	{
 		// If type = false then do not add.
-		$type = \Arr::get($propertyConfig, 'form.type', 'text');
+		$type = \Arr::get($propertyConfig, $prefix.'.type', 'text');
 
 		if ($type === false)
 		{
@@ -284,10 +294,10 @@ trait SkeletonTrait
 		$config = array(
 			'name'       => $field,
 			'label'      => \Arr::get($propertyConfig, 'label', $field),
-			'attributes' => \Arr::get($propertyConfig, 'form.attributes', array()),
+			'attributes' => \Arr::get($propertyConfig, $prefix.'.attributes', array()),
 		);
 
-		$content = \Arr::get($propertyConfig, 'form.options', false);
+		$content = \Arr::get($propertyConfig, $prefix.'.options', false);
 
 		if ($content !== false)
 		{
@@ -325,13 +335,29 @@ trait SkeletonTrait
 
 		$instance = static::$builder->generateInput($type, $config);
 
-		if ($fieldset = \Arr::get($propertyConfig, 'form.fieldset', false) and isset($form[$fieldset]))
+		if ($template = \Arr::get($propertyConfig, $prefix.'.template', false))
 		{
-			$form[$fieldset][$field] = $instance;
-
-			return;
+			$instance->setMeta('template', $template);
 		}
 
-		$form[$field] = $instance;
+		return $instance;
+	}
+
+	public static function generateFilters()
+	{
+		if (static::$builder === null)
+		{
+			static::$builder = new Basic;
+		}
+
+		$form = array();
+
+		// Loop through and add all the fields
+		foreach (static::lists() as $field => $config)
+		{
+			$form[] = static::generateInput($field, $config, 'list');
+		}
+
+		return $form;
 	}
 }

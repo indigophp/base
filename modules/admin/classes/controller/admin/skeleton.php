@@ -16,21 +16,21 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 *
 	 * @var string
 	 */
-	protected $_module;
+	protected $module;
 
 	/**
 	 * Parsed url of module
 	 *
 	 * @var string
 	 */
-	public $_url;
+	public $url;
 
 	/**
 	 * Parsed model name
 	 *
 	 * @var string
 	 */
-	protected $_model;
+	protected $model;
 
 	public function before($data = null)
 	{
@@ -38,15 +38,15 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		$this->access();
 
-		if (empty($this->_url))
+		if (empty($this->url))
 		{
-			$this->_url = \Uri::admin() . str_replace('_', '/', $this->_module);
+			$this->url = \Uri::admin() . str_replace('_', '/', $this->module);
 		}
 
-		\View::set_global('module', $this->_module);
+		\View::set_global('module', $this->module);
 		\View::set_global('item', $this->name());
 		\View::set_global('items', $this->name(999));
-		\View::set_global('url', $this->_url);
+		\View::set_global('url', $this->url);
 	}
 
 	/**
@@ -86,7 +86,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 					gettext('You are not authorized to %action% %items%.'),
 					array(
 						'%action%' => $this->request->action,
-						'%items%'  => ngettext($this->name[0], $this->name[1], 999),
+						'%items%'  => $this->name(999),
 					)
 				)
 			);
@@ -103,7 +103,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	public function has_access($access)
 	{
-		return \Auth::has_access($this->_module . '.' . $access);
+		return \Auth::has_access($this->module . '.' . $access);
 	}
 
 	/**
@@ -114,7 +114,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	protected function query($options = array())
 	{
-		return call_user_func(array($this->_model, 'query'), $options);
+		return call_user_func(array($this->model, 'query'), $options);
 	}
 
 	/**
@@ -147,7 +147,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	protected function forge($data = array(), $new = true, $view = null, $cache = true)
 	{
-		return call_user_func(array($this->_model, 'forge'), $data, $new, $view, $cache);
+		return call_user_func(array($this->model, 'forge'), $data, $new, $view, $cache);
 	}
 
 	/**
@@ -157,7 +157,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	public function form()
 	{
-		return call_user_func(array($this->_model, 'forgeForm'));
+		return call_user_func(array($this->model, 'forgeForm'));
 	}
 
 	/**
@@ -167,7 +167,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 */
 	public function validation()
 	{
-		return call_user_func(array($this->_model, 'forgeValidator'));
+		return call_user_func(array($this->model, 'forgeValidator'));
 	}
 
 	/**
@@ -179,6 +179,16 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function transformer($actions = true)
 	{
 		return new Fractal\Transformer\SkeletonTransformer($this, $actions);
+	}
+
+	/**
+	 * Get filters for list
+	 *
+	 * @return array
+	 */
+	public function filters()
+	{
+		return call_user_func(array($this->model, 'generateFilters'));
 	}
 
 	/**
@@ -332,7 +342,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		if ($ext = $this->is_ajax())
 		{
-			$properties = call_user_func(array($this->_model, 'lists'));
+			$properties = call_user_func(array($this->model, 'lists'));
 
 			$query = $this->query();
 
@@ -363,7 +373,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			$this->template->set_global('title', ucfirst($this->name(999)));
 
 			$this->template->content = $this->view('admin/skeleton/list');
-			$this->template->content->set('model', $this->forge(), false);
+			$this->template->content->set('filters', $this->filters(), false);
 		}
 	}
 
@@ -440,7 +450,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 					\Str::trans(gettext('%item% successfully updated.'), '%item%', $this->name())
 				));
 
-				return $this->redirect($this->_url);
+				return $this->redirect($this->url);
 			}
 			else
 			{
