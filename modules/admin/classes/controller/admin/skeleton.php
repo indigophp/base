@@ -398,7 +398,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 					\Str::trans(gettext('%item% successfully created.'), '%item%', $this->name())
 				));
 
-				return $this->redirect($this->url() . '/view/' . $model->id);
+				return $this->redirect($this->url . '/view/' . $model->id);
 			}
 			else
 			{

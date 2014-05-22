@@ -231,7 +231,7 @@ trait SkeletonTrait
 	public static function populateValidator(Validator $validator)
 	{
 		$generator = new FromArray(true, 'validation');
-		return $generator->setData(static::properties())->populateValidator($validator);
+		return $generator->setData(static::form())->populateValidator($validator);
 	}
 
 	/**
