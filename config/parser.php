@@ -4,6 +4,7 @@ return array(
 	'View_Twig' => array(
 		'extensions' => array(
 			'Twig\\Extension\\Indigo',
+			'Twig\\Extension\\Fieldset',
 			'Twig_Extensions_Extension_I18n',
 		),
 		'environment' => array(

@@ -44,7 +44,6 @@ class Indigo extends Twig_Extension
 			'auth_get_meta'        => new \Twig_Function_Function('Auth::get_profile_fields'),
 			'date'                 => new \Twig_Function_Function('Date::forge'),
 			'time_elapsed'         => new \Twig_Function_Method($this, 'time_elapsed'),
-			'getFormElementType'   => new \Twig_Function_Method($this, 'getFormElementType'),
 		);
 	}
 
@@ -59,11 +58,10 @@ class Indigo extends Twig_Extension
 			'pluralize'           => new \Twig_Filter_Function('Inflector::pluralize'),
 			'bytes'               => new \Twig_Filter_Function('Num::format_bytes'),
 			'qty'                 => new \Twig_Filter_Function('Num::quantity'),
-			'bool'                => new \Twig_Filter_Method  ($this, 'bool'),
-			'attr'                => new \Twig_Filter_Function('array_to_attr'),
-			'date_format'         => new \Twig_Filter_Method  ($this, 'dateFormat'),
-			'truncate_html'       => new \Twig_Filter_Method  ($this, 'printTruncated'),
-			'eval'                => new \Twig_Filter_Method  ($this, 'evaluate', array(
+			'bool'                => new \Twig_Filter_Method($this, 'bool'),
+			'date_format'         => new \Twig_Filter_Method($this, 'dateFormat'),
+			'truncate_html'       => new \Twig_Filter_Method($this, 'printTruncated'),
+			'eval'                => new \Twig_Filter_Method($this, 'evaluate', array(
 				'needs_environment' => true,
 				'needs_context'     => true,
 				'is_safe'           => array(
@@ -79,28 +77,8 @@ class Indigo extends Twig_Extension
 	public function getTests()
 	{
 		return array(
-			'bool'     => new \Twig_Test_Function('is_bool'),
-			'fieldset' => new \Twig_Test_Method($this, 'isFieldset')
+			'bool' => new \Twig_Test_Function('is_bool'),
 		);
-	}
-
-	/**
-	 * Check whether given object is instance of Fieldset
-	 *
-	 * @param  mixed  $fieldset
-	 * @return boolean
-	 */
-	public function isFieldset($fieldset)
-	{
-		return $fieldset instanceof Fieldset;
-	}
-
-	/*
-	No general interface for now
-	 */
-	public function getFormElementType($element)
-	{
-		return strtolower(\Inflector::denamespace(get_class($element)));
 	}
 
 	/**
