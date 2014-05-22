@@ -35,7 +35,7 @@ class SkeletonTransformer extends TransformerAbstract
 
 	public function transform(Model $model)
 	{
-		$properties = $model->properties();
+		$properties = $model->lists();
 
 		$data = $model->to_array(false, false, true);
 		$data = Arr::subset($data, array_keys($properties));
