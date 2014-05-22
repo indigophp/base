@@ -30,7 +30,8 @@ class Fieldset extends Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			'getFormElementType' => new \Twig_Function_Method($this, 'getFormElementType'),
+			'getFormElementTemplate' => new \Twig_Function_Method($this, 'getFormElementTemplate'),
+			'getFormElementType'     => new \Twig_Function_Method($this, 'getFormElementType'),
 		);
 	}
 
@@ -68,22 +69,42 @@ class Fieldset extends Twig_Extension
 	/*
 	No general interface for now
 	 */
-	public function getFormElementType($element)
+	public function getFormElementTemplate($element)
 	{
 		$type = $element->getMeta('template', false);
 
 		if ($type === false)
 		{
-			$type = strtolower(\Inflector::denamespace(get_class($element)));
+			$type = $this->getFormElementType($element);
 		}
 
 		return $type;
 	}
 
-	public function arrayToAttr($array, array $keys = array(), $delete = false)
+	/*
+	No general interface for now
+	 */
+	public function getFormElementType($element)
+	{
+		return strtolower(\Inflector::denamespace(get_class($element)));
+	}
+
+	/**
+	 * Convert array to attribute string
+	 *
+	 * @param  array   $array
+	 * @param  array   $keys   Filter these keys from the array
+	 * @param  boolean $delete Delete the given keys
+	 * @return string
+	 */
+	public function arrayToAttr($array, array $keys = null, $delete = false)
 	{
 		$array = (array) $array;
-		$array = \Arr::filter_keys($array, $keys, $delete);
+
+		if (empty($keys) === false)
+		{
+			$array = \Arr::filter_keys($array, $keys, $delete);
+		}
 
 		return array_to_attr($array);
 	}
