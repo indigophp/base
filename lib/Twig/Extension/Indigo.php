@@ -134,7 +134,7 @@ class Indigo extends Twig_Extension
 	// base_url() ~ 'assets/theme/img/icons/' ~ (model.group_id == 6 ? 'admin' : model.group_id == 1 ? 'user_cancel' : 'user') ~ '.png' | url_encode
 	public function getDefaultImage(\Auth\Model\Auth_User $model)
 	{
-		return urlencode(Uri::create('assets/theme/img/icons/' . ($model->group_id == 6 ? 'admin' : ($model->group_id == 1 ? 'banned' : 'user') ) . '.png'));
+		return urlencode(\Uri::create('assets/theme/img/icons/' . ($model->group_id == 6 ? 'admin' : ($model->group_id == 1 ? 'banned' : 'user') ) . '.png'));
 	}
 
 	public function dateFormat($timestamp, $pattern_key = 'local', $timezone = null)
