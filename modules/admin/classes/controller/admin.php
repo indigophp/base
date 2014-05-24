@@ -8,9 +8,14 @@ class Controller_Admin extends \Controller_Base
 
 	public $theme_type = 'admin';
 
+	protected $alert;
+
 	public function before($data = null)
 	{
 		parent::before($data);
+
+		$this->alert = new \Monolog\Logger('alert');
+		$this->alert->pushHandler(new \Monolog\Handler\AlertHandler);
 
 		if (get_called_class() !== get_class() or ! in_array($this->request->action, array('login', 'logout')))
 		{
@@ -18,7 +23,7 @@ class Controller_Admin extends \Controller_Base
 			{
 				if ( ! \Auth::has_access('admin.view'))
 				{
-					\Session::set_flash('error', gettext('You are not authorized to use the administration panel.'));
+					$this->alert->error(gettext('You are not authorized to use the administration panel.'));
 					\Response::redirect('/');
 				}
 			}
@@ -50,12 +55,20 @@ class Controller_Admin extends \Controller_Base
 				if ($auth->login())
 				{
 					$current_user = \Model\Auth_User::find_by_username(\Auth::get_screen_name());
-					\Session::set_flash('success', strtr(gettext('Welcome, %fullname%!'), array('%fullname%' => $current_user->fullname)));
+
+					$context = array(
+						'template' => 'success',
+						'from'     => '%fullname%',
+						'to'       => $current_user->fullname,
+					);
+
+					$this->alert->info(gettext('Welcome, %fullname%!'), $context);
+
 					\Response::redirect(\Input::get('uri') ? : \Uri::admin());
 				}
 				else
 				{
-					\Session::set_flash('error', gettext('Wrong credentials!'));
+					$this->alert->error(gettext('Wrong credentials!'));
 				}
 			}
 			else

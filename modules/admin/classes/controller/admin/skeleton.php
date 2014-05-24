@@ -36,9 +36,6 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		parent::before($data);
 
-		$this->alert = new \Monolog\Logger('alert');
-		$this->alert->pushHandler(new \Monolog\Handler\AlertHandler);
-
 		$this->access();
 
 		if (empty($this->url))
@@ -423,9 +420,12 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			else
 			{
 				$form->repopulate();
-				$errors = $result->getErrors();
 
-				$this->alert->error(gettext('There were some errors.'));
+				$context = array(
+					'errors' => $result->getErrors(),
+				);
+
+				$this->alert->error(gettext('There were some errors.'), $context);
 			}
 		}
 
@@ -475,9 +475,12 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			else
 			{
 				$form->repopulate();
-				$errors = $result->getErrors();
 
-				$this->alert->error(gettext('There were some errors.'));
+				$context = array(
+					'errors' => $result->getErrors(),
+				);
+
+				$this->alert->error(gettext('There were some errors.'), $context);
 			}
 		}
 		else

@@ -36,7 +36,7 @@ class AlertHandler extends AbstractProcessingHandler
 	 */
 	protected function write(array $record)
 	{
-		\Session::set_flash('alert.'.$this->getTemplate($record), $record['formatted']);
+		\Session::set_flash('alert.'.$this->getTemplate($record), $record);
 	}
 
 	/**
