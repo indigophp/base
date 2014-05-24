@@ -29,6 +29,7 @@
             "Fuel\\Fieldset\\": "lib/",
             "Fuel\\Validation\\": "lib/",
             "League\\Fractal\\": "lib/",
+            "Monolog\\": "lib/",
             "Twig\\Extension\\": "lib/"
         },
         "psr-4": {

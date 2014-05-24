@@ -36,6 +36,9 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		parent::before($data);
 
+		$this->alert = new \Monolog\Logger('alert');
+		$this->alert->pushHandler(new \Monolog\Handler\AlertHandler);
+
 		$this->access();
 
 		if (empty($this->url))
@@ -104,6 +107,19 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	public function has_access($access)
 	{
 		return \Auth::has_access($this->module . '.' . $access);
+	}
+
+	/**
+	 * Set title
+	 *
+	 * @param  string $title
+	 * @return Controller_Skeleton
+	 */
+	public function set_title($title)
+	{
+		$this->template->set_global('title', $title);
+
+		return $this;
 	}
 
 	/**
@@ -370,7 +386,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		}
 		else
 		{
-			$this->template->set_global('title', ucfirst($this->name(999)));
+			$this->set_title(ucfirst($this->name(999)));
 
 			$this->template->content = $this->view('admin/skeleton/list');
 			$this->template->content->set('filters', $this->filters(), false);
@@ -394,9 +410,13 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 				$data = \Arr::filter_keys($post, $result->getValidated());
 				$model->set($data)->save();
 
-				\Session::set_flash('success', ucfirst(
-					\Str::trans(gettext('%item% successfully created.'), '%item%', $this->name())
-				));
+				$context = array(
+					'template' => 'success',
+					'from'     => '%item%',
+					'to'       => $this->name(),
+				);
+
+				$this->alert->info(gettext('%item% successfully created.'), $context);
 
 				return $this->redirect($this->url . '/view/' . $model->id);
 			}
@@ -405,13 +425,11 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 				$form->repopulate();
 				$errors = $result->getErrors();
 
-				\Session::set_flash('error', gettext('There were some errors.'));
+				$this->alert->error(gettext('There were some errors.'));
 			}
 		}
 
-		$this->template->set_global('title', ucfirst(
-			\Str::trans(gettext('New %item%'), '%item%', $this->name())
-		));
+		$this->set_title(ucfirst(\Str::trans(gettext('New %item%'), '%item%', $this->name())));
 
 		$this->template->content = $this->view('admin/skeleton/create');
 		$this->template->content->set('form', $form, false);
@@ -422,9 +440,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		$model = $this->find($id);
 
-		$this->template->set_global('title', ucfirst(
-			\Str::trans(gettext('View %item%'), '%item%', $this->name())
-		));
+		$this->set_title(ucfirst(\Str::trans(gettext('View %item%'), '%item%', $this->name())));
 		$this->template->content = $this->view('admin/skeleton/view');
 		$this->template->content->set('model', $model, false);
 	}
@@ -446,9 +462,13 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 				$data = \Arr::filter_keys($post, $result->getValidated());
 				$model->set($data)->save();
 
-				\Session::set_flash('success', ucfirst(
-					\Str::trans(gettext('%item% successfully updated.'), '%item%', $this->name())
-				));
+				$context = array(
+					'template' => 'success',
+					'from'     => '%item%',
+					'to'       => $this->name(),
+				);
+
+				$this->alert->info(gettext('%item% successfully created.'), $context);
 
 				return $this->redirect($this->url);
 			}
@@ -457,7 +477,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 				$form->repopulate();
 				$errors = $result->getErrors();
 
-				\Session::set_flash('error', gettext('There were some errors.'));
+				$this->alert->error(gettext('There were some errors.'));
 			}
 		}
 		else
@@ -465,9 +485,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 			$form->populate($model);
 		}
 
-		$this->template->set_global('title', ucfirst(
-			\Str::trans(gettext('Edit %item%'), '%item%', $this->name())
-		));
+		$this->set_title(ucfirst(\Str::trans(gettext('Edit %item%'), '%item%', $this->name())));
 
 		$this->template->content = $this->view('admin/skeleton/edit');
 		$this->template->content->set('model', $model, false);
@@ -481,14 +499,20 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 		if ($model->delete())
 		{
-			$message = \Str::trans(gettext('%item% successfully deleted.'), '%item%', $this->name());
+			$message = gettext('%item% successfully deleted.');
 		}
 		else
 		{
-			$message = \Str::trans(gettext('%item% cannot be deleted.'), '%item%', $this->name());
+			$message = gettext('%item% cannot be deleted.');
 		}
 
-		\Session::set_flash('success', ucfirst($message));
+		$context = array(
+			'template' => 'success',
+			'from'     => '%item%',
+			'to'       => $this->name(),
+		);
+
+		$this->alert->info($message, $context);
 
 		return \Response::redirect_back();
 	}
