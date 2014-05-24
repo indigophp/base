@@ -32,7 +32,7 @@ class Str extends \Fuel\Core\Str
 	 */
 	public static function trans($string, $array = array(), $to = null)
 	{
-		if (is_string($string))
+		if (is_string($string) and empty($array) === false)
 		{
 			if ( ! is_array($array))
 			{
