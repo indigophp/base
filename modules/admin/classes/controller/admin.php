@@ -3,21 +3,38 @@
 namespace Admin;
 
 use Fuel\Validation\Validator;
+use Monolog\Logger;
+use Monolog\Handler\AlertHandler;
 
 class Controller_Admin extends \Controller_Base
 {
+	/**
+	 * Template name
+	 *
+	 * @var string
+	 */
 	public $template = 'admin/template';
 
+	/**
+	 * Theme type (admin or frontend)
+	 *
+	 * @var string
+	 */
 	public $theme_type = 'admin';
 
+	/**
+	 * Alert logger object
+	 *
+	 * @var Logger
+	 */
 	protected $alert;
 
 	public function before($data = null)
 	{
 		parent::before($data);
 
-		$this->alert = new \Monolog\Logger('alert');
-		$this->alert->pushHandler(new \Monolog\Handler\AlertHandler);
+		$this->alert = new Logger('alert');
+		$this->alert->pushHandler(new AlertHandler);
 
 		if (get_called_class() !== get_class() or ! in_array($this->request->action, array('login', 'logout')))
 		{
@@ -90,10 +107,7 @@ class Controller_Admin extends \Controller_Base
 	}
 
 	/**
-	 * The logout action.
-	 *
-	 * @access  public
-	 * @return  void
+	 * The logout action
 	 */
 	public function action_logout()
 	{
