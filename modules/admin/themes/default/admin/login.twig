@@ -82,8 +82,7 @@
 					<h2 class="panel-title">{% trans 'Please sign in' %}</h2>
 				</div>
 				<div class="panel-body">
-					<p class="text-danger">{{ session_get_flash('error') }}</p>
-					<p class="text-success">{{ session_get_flash('success') }}</p>
+					<p class="text-danger">{{ session_get_flash('alert.error').formatted }}</p>
 					<input name="username" type="text" class="form-control" placeholder="{% trans 'Email address' %}" autofocus required>
 					<input name="password" type="password" class="form-control" placeholder="{% trans 'Password' %}" required>
 					<div class="checkbox">

@@ -2,6 +2,8 @@
 
 namespace Admin;
 
+use Fuel\Validation\Validator;
+
 class Controller_Admin extends \Controller_Base
 {
 	public $template = 'admin/template';
@@ -39,16 +41,18 @@ class Controller_Admin extends \Controller_Base
 		// Already logged in
 		\Auth::check() and \Response::redirect(\Input::get('uri') ? : \Uri::admin());
 
-		$val = \Validation::forge();
-
 		if (\Input::method() == 'POST')
 		{
-			$val->add(\Config::get('auth.username_post_key', 'username'), gettext('E-mail, or username'))
-				->add_rule('required');
-			$val->add(\Config::get('auth.password_post_key', 'password'), gettext('Password'))
-				->add_rule('required');
+			$val = new Validator;
 
-			if ($val->run())
+			$val->addField(\Config::get('auth.username_post_key', 'username'), gettext('E-mail, or username'))
+				->required();
+			$val->addField(\Config::get('auth.password_post_key', 'password'), gettext('Password'))
+				->required();
+
+			$result = $val->run(\Input::post());
+
+			if ($result->isValid())
 			{
 				$auth = \Auth::instance();
 
@@ -73,12 +77,16 @@ class Controller_Admin extends \Controller_Base
 			}
 			else
 			{
-				\Session::set_flash('error', implode('<br>', $val->error()));
+				$context = array(
+					'errors' => $result->getErrors(),
+				);
+
+				$this->alert->error(gettext('There were some errors.'), $context);
 			}
 		}
 
 		$this->template->title = gettext('Login');
-		$this->template->content = $this->theme->view('admin/login', array('val' => $val), false);
+		$this->template->content = $this->theme->view('admin/login');
 	}
 
 	/**
