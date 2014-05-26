@@ -1,0 +1,13 @@
+Indigo Base:
+
+  Skeleton:
+    ☐ Review redirection from actions
+    ☐ Review list action
+    ☐ Rereview SkeletonTrait
+    ☐ Review form elements
+
+  Themes:
+    ☐ Review Twig template loading and order
+    ☐ Review messages (success, failure)
+    ☐ Login picture
+    ☐ Assets
