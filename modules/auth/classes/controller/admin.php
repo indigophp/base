@@ -2,21 +2,36 @@
 
 namespace Auth;
 
-class Controller_Admin extends \Admin\Controller_Admin
+use Fuel\Fieldset\Input;
+use Orm\Query;
+use League\Fractal\Transformer\AuthTransformer;
+
+class Controller_Admin extends \Admin\Controller_Admin_Skeleton
 {
-	public function before($data = null)
+	protected $module = 'auth';
+
+	protected $name = array(
+		'user',
+		'users'
+	);
+
+	protected $model = 'Model\\Auth_User';
+
+	/**
+	 * {@inheritdocs}
+	 */
+	protected function query($options = array())
 	{
-		parent::before($data);
+		return parent::query($options)
+			->where('id', '>', 0);
 	}
 
-	public function action_index()
+	/**
+	 * {@inheritdocs}
+	 */
+	protected function transformer($actions = true)
 	{
-		if ( ! Auth::has_access('users.list'))
-		{
-			return HttpForbiddenException();
-		}
-		$this->template->content = $this->theme->view('admin/user/list');
-		$this->template->content->groups = Model\Auth_Group::query()->get();
+		return new AuthTransformer($this, $actions);
 	}
 
 	public function action_create($clone_id = null)
@@ -73,36 +88,6 @@ class Controller_Admin extends \Admin\Controller_Admin
 			$this->template->content->model = Model\Auth_User::forge($original_post);
 		}
 
-	}
-
-	public function action_delete($id = null)
-	{
-		if ( ! Auth::has_access('users.delete'))
-		{
-			\Session::set_flash('error', gettext('You are not authorized to delete users.'));
-			\Response::redirect_back();
-		}
-
-		if (is_null($id))
-		{
-			throw new \HttpNotFoundException();
-		}
-
-		$model = Model\Auth_User::query()->where('id', $id)->get_one();
-		if ( ! $model)
-		{
-			throw new \HttpNotFoundException();
-		}
-
-		if (Auth::delete_user($model->username))
-		{
-			\Session::set_flash('success', gettext('Successfully deleted user.'));
-		}
-		else
-		{
-			\Session::set_flash('error', gettext('Could not delete user.'));
-		}
-		\Response::redirect_back();
 	}
 
 	public function action_edit($id = null)
@@ -179,4 +164,31 @@ class Controller_Admin extends \Admin\Controller_Admin
 		$this->template->content->set('model', $model, false);
 	}
 
+	public function action_delete($id = null)
+	{
+		$model = $this->find($id);
+		$user = \Auth::get_user_id();
+
+		if ($model->id == $user[1])
+		{
+			$this->alert->error(gettext('You cannot delete yourself.'));
+
+			\Response::redirect_back();
+		}
+
+		if (Auth::delete_user($model->username))
+		{
+			$context = array(
+				'template' => 'success'
+			);
+
+			$this->alert->info(gettext('Successfully deleted user.'), $context);
+		}
+		else
+		{
+			$this->alert->error(gettext('Could not delete user.'));
+		}
+
+		\Response::redirect_back();
+	}
 }

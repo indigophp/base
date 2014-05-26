@@ -71,7 +71,7 @@ trait SkeletonTrait
 
 			foreach ($properties as $key => $value)
 			{
-				if (strpos($key, '.') !== false or \Arr::get($value, 'eav', false) !== false)
+				if (strpos($key, '.') !== false or \Arr::get($value, 'eav', false) !== false or \Arr::get($value, 'virtual', false) === true)
 				{
 					unset($properties[$key]);
 				}

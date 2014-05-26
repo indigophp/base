@@ -189,7 +189,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	 * @param  boolean $actions Use actions
 	 * @return SkeletonTransformer
 	 */
-	public function transformer($actions = true)
+	protected function transformer($actions = true)
 	{
 		return new Fractal\Transformer\SkeletonTransformer($this, $actions);
 	}
@@ -245,7 +245,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 		// Count all items
 		$all_items_count = $query->count();
 
-		// Process incoming sortng values
+		// Process incoming sorting values
 		$sort = array();
 		for ($i = 0; $i < \Input::param('iSortingCols'); $i++)
 		{
@@ -265,15 +265,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 
 			for ($j=0; $j < count($rels) - 1 and count($rels) > 1; $j++)
 			{
-				if (empty($rel))
-				{
-					$rel = $rels[$j];
-				}
-				else
-				{
-					$rel .= '.' . $rels[$j];
-				}
-
+				$rel .= '.' . $rels[$j];
 				$query->related($rel);
 			}
 
@@ -284,6 +276,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 				$query->related($rel . '.' . $eav);
 			}
 
+			// Order by statement
 			if (\Input::param('bSortable_'.$i, true) and \Arr::get($value, 'list.sort', true) and array_key_exists($i,  $sort))
 			{
 				$order_by[$key] = $sort[$i];

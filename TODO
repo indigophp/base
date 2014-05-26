@@ -2,9 +2,10 @@ Indigo Base:
 
   Skeleton:
     ☐ Review redirection from actions
-    ☐ Review list action
+    ☐ Review list action (process_query, etc)
     ☐ Rereview SkeletonTrait
     ☐ Review form elements
+    ☐ List EAV filter
 
   Themes:
     ☐ Review Twig template loading and order
