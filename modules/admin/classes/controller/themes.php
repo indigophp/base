@@ -4,7 +4,6 @@ namespace Admin;
 
 class Controller_Themes extends Controller_Admin
 {
-
 	public function action_index()
 	{
 		$this->template->content = $this->theme->view('admin/themes/index');
@@ -12,28 +11,27 @@ class Controller_Themes extends Controller_Admin
 		$this->template->content->frontend_themes = $this->themes('frontend');
 	}
 
-	public function action_activate($type = 'frontend', $name = null)
+	public function action_activate($name, $type = 'frontend')
 	{
-		if (is_null($name) or is_null($type) or ! in_array($type, array('frontend', 'admin')))
-		{
-			throw new \HttpNotFoundException();
-		}
-
-		if ( ! $this->theme->find($name))
+		if ( ! in_array($type, array('frontend', 'admin')) or ! $this->theme->find($name))
 		{
 			throw new \HttpNotFoundException();
 		}
 
 		if ( ! \Auth::has_access('themes.change'))
 		{
-			\Session::set_flash('error', gettext('You have no permission to change the theme of this site.'));
+			$this->alert->error(gettext('You have no permission to change the theme of this site.'));
 			\Response::redirect_back('admin');
 		}
 
 		\Config::set('base.theme.' . $type, $name);
 		\Config::save('base', 'base');
 
-		\Session::set_flash('success', gettext('Theme successfully changed.'));
+		$context = array(
+			'template' => 'success'
+		);
+
+		$this->alert->info(gettext('Theme successfully changed.'), $context);
 		\Response::redirect_back('admin/themes');
 	}
 
