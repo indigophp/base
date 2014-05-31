@@ -17,7 +17,7 @@ use Monolog\Formatter\AlertFormatter;
 /**
  * Alert Handler
  *
- * Handle log messages in oil console
+ * Handle alert messages
  *
  * @author Márk-Sági-Kazár <mark.sagikazar@gmail.com>
  */

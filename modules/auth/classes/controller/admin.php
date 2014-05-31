@@ -5,6 +5,7 @@ namespace Auth;
 use Fuel\Fieldset\Input;
 use Orm\Query;
 use League\Fractal\Transformer\AuthTransformer;
+use Indigo\Core\Logger;
 
 class Controller_Admin extends \Admin\Controller_Admin_Skeleton
 {
@@ -171,7 +172,7 @@ class Controller_Admin extends \Admin\Controller_Admin_Skeleton
 
 		if ($model->id == $user[1])
 		{
-			$this->alert->error(gettext('You cannot delete yourself.'));
+			Logger::instance('alert')->error(gettext('You cannot delete yourself.'));
 
 			\Response::redirect_back();
 		}
@@ -182,13 +183,13 @@ class Controller_Admin extends \Admin\Controller_Admin_Skeleton
 				'template' => 'success'
 			);
 
-			$this->alert->info(gettext('Successfully deleted user.'), $context);
+			Logger::instance('alert')->info(gettext('Successfully deleted user.'), $context);
 		}
 		else
 		{
-			$this->alert->error(gettext('Could not delete user.'));
+			Logger::instance('alert')->error(gettext('Could not delete user.'));
 		}
 
-		\Response::redirect_back();
+		return \Response::redirect_back();
 	}
 }

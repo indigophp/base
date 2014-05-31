@@ -8,6 +8,7 @@ use Fuel\Validation\Validator;
 use Fuel\Fieldset\Form;
 use Fuel\Common\Arr;
 use League\Fractal;
+use Indigo\Core\Logger;
 
 abstract class Controller_Admin_Skeleton extends Controller_Admin
 {
@@ -406,7 +407,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 					'to'       => $this->name(),
 				);
 
-				$this->alert->info(gettext('%item% successfully created.'), $context);
+				Logger::instance('alert')->info(gettext('%item% successfully created.'), $context);
 
 				return $this->redirect($this->url . '/view/' . $model->id);
 			}
@@ -418,7 +419,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 					'errors' => $result->getErrors(),
 				);
 
-				$this->alert->error(gettext('There were some errors.'), $context);
+				Logger::instance('alert')->error(gettext('There were some errors.'), $context);
 			}
 		}
 
@@ -461,7 +462,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 					'to'       => $this->name(),
 				);
 
-				$this->alert->info(gettext('%item% successfully created.'), $context);
+				Logger::instance('alert')->info(gettext('%item% successfully created.'), $context);
 
 				return $this->redirect($this->url);
 			}
@@ -473,7 +474,7 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 					'errors' => $result->getErrors(),
 				);
 
-				$this->alert->error(gettext('There were some errors.'), $context);
+				Logger::instance('alert')->error(gettext('There were some errors.'), $context);
 			}
 		}
 		else
@@ -493,22 +494,20 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		$model = $this->find($id);
 
+		$context = array(
+			'from' => '%item%',
+			'to'   => $this->name(),
+		);
+
 		if ($model->delete())
 		{
-			$message = gettext('%item% successfully deleted.');
+			$context['template'] = 'success';
+			Logger::instance('alert')->info(gettext('%item% successfully deleted.'), $context);
 		}
 		else
 		{
-			$message = gettext('%item% cannot be deleted.');
+			Logger::instance('alert')->error(gettext('%item% cannot be deleted.'), $context);
 		}
-
-		$context = array(
-			'template' => 'success',
-			'from'     => '%item%',
-			'to'       => $this->name(),
-		);
-
-		$this->alert->info($message, $context);
 
 		return \Response::redirect_back();
 	}

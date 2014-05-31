@@ -20,7 +20,7 @@ class Controller_Themes extends Controller_Admin
 
 		if ( ! \Auth::has_access('themes.change'))
 		{
-			$this->alert->error(gettext('You have no permission to change the theme of this site.'));
+			\Logger::instance('alert')->error(gettext('You have no permission to change the theme of this site.'));
 			\Response::redirect_back('admin');
 		}
 
@@ -31,7 +31,7 @@ class Controller_Themes extends Controller_Admin
 			'template' => 'success'
 		);
 
-		$this->alert->info(gettext('Theme successfully changed.'), $context);
+		\Logger::instance('alert')->info(gettext('Theme successfully changed.'), $context);
 		\Response::redirect_back('admin/themes');
 	}
 

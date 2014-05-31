@@ -3,7 +3,7 @@
 namespace Admin;
 
 use Fuel\Validation\Validator;
-use Monolog\Logger;
+use Indigo\Core\Logger;
 use Monolog\Handler\AlertHandler;
 
 class Controller_Admin extends \Controller_Base
@@ -33,8 +33,10 @@ class Controller_Admin extends \Controller_Base
 	{
 		parent::before($data);
 
-		$this->alert = new Logger('alert');
-		$this->alert->pushHandler(new AlertHandler);
+		$alert = \Logger::forge('alert');
+
+		// $this->alert = new Logger('alert');
+		// $this->alert->pushHandler(new AlertHandler);
 
 		if (get_called_class() !== get_class() or ! in_array($this->request->action, array('login', 'logout')))
 		{
@@ -42,7 +44,7 @@ class Controller_Admin extends \Controller_Base
 			{
 				if ( ! \Auth::has_access('admin.view'))
 				{
-					$this->alert->error(gettext('You are not authorized to use the administration panel.'));
+					\Logger::instance('alert')->error(gettext('You are not authorized to use the administration panel.'));
 					\Response::redirect('/');
 				}
 			}
@@ -83,13 +85,13 @@ class Controller_Admin extends \Controller_Base
 						'to'       => $current_user->fullname,
 					);
 
-					$this->alert->info(gettext('Welcome, %fullname%!'), $context);
+					\Logger::instance('alert')->info(gettext('Welcome, %fullname%!'), $context);
 
 					\Response::redirect(\Input::get('uri') ? : \Uri::admin());
 				}
 				else
 				{
-					$this->alert->error(gettext('Wrong credentials!'));
+					\Logger::instance('alert')->error(gettext('Wrong credentials!'));
 				}
 			}
 			else
@@ -98,7 +100,7 @@ class Controller_Admin extends \Controller_Base
 					'errors' => $result->getErrors(),
 				);
 
-				$this->alert->error(gettext('There were some errors.'), $context);
+				\Logger::instance('alert')->error(gettext('There were some errors.'), $context);
 			}
 		}
 

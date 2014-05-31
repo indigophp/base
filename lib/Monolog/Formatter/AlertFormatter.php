@@ -11,38 +11,20 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
- * Alert Handler
+ * Alert Formatter
  *
- * Handle log messages in oil console
+ * Format alert messages
  *
  * @author Márk-Sági-Kazár <mark.sagikazar@gmail.com>
  */
-class AlertFormatter implements FormatterInterface
+class AlertFormatter extends TransFormatter
 {
 	/**
 	 * {@inheritdocs}
 	 */
 	public function format(array $record)
 	{
-		$from = \Arr::get($record, 'context.from');
-		$to   = \Arr::get($record, 'context.to');
-
-		return ucfirst(\Str::trans($record['message'], $from, $to));
-	}
-
-	/**
-	 * {@inheritdocs}
-	 */
-	public function formatBatch(array $records)
-	{
-		$message = '';
-		foreach ($records as $record) {
-			$message .= $this->format($record);
-		}
-
-		return $message;
+		return ucfirst(parent::format($record));
 	}
 }

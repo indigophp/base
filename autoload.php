@@ -14,15 +14,15 @@
  */
 
 // This instance makes sure that namespace is resolved after all classes has been aliased
-$manager = new Fuel\Alias\Manager;
-$manager->register();
+use Indigo\Core\Alias;
+
+$manager = Alias::instance('namespace');
 $manager->aliasNamespace('Indigo\\Base', '');
 $manager->aliasNamespace('Indigo\\Base\\Exception', '');
-$manager->cache(__DIR__.'/autoload_cache.php', 'unwind');
+// $manager->cache(__DIR__.'/autoload_cache.php', 'unwind');
 
-$manager = new Fuel\Alias\Manager;
-$manager->register();
-$manager->cache(__DIR__.'/autoload_cache.php', 'unwind');
+$manager = Alias::forge();
+// $manager->cache(__DIR__.'/autoload_cache.php', 'unwind');
 
 $manager->alias(array(
 	// Enum models
