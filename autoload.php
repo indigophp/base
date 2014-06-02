@@ -21,7 +21,7 @@ $manager->aliasNamespace('Indigo\\Base', '');
 $manager->aliasNamespace('Indigo\\Base\\Exception', '');
 // $manager->cache(__DIR__.'/autoload_cache.php', 'unwind');
 
-$manager = Alias::forge();
+$manager = Alias::instance('default');
 // $manager->cache(__DIR__.'/autoload_cache.php', 'unwind');
 
 $manager->alias(array(
