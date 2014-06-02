@@ -17,7 +17,6 @@
     ],
     "require": {
         "composer/installers": "~1.0",
-        "fuelphp/alias": "dev-master",
         "indigophp/fuel-core": "dev-develop",
         "indigophp/fuel-menu": "dev-develop",
         "fuelphp/fieldset": "dev-master",
