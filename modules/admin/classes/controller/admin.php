@@ -3,7 +3,6 @@
 namespace Admin;
 
 use Fuel\Validation\Validator;
-use Indigo\Core\Logger;
 use Monolog\Handler\AlertHandler;
 
 class Controller_Admin extends \Controller_Base
