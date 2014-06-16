@@ -16,6 +16,7 @@
         }
     ],
     "require": {
+        "php": ">=5.4.0",
         "composer/installers": "~1.0",
         "twig/twig": "dev-master",
         "twig/extensions": "dev-master",
