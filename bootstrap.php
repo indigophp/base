@@ -46,6 +46,7 @@ textdomain('indigoadmin');
 \Module::load('auth');
 
 \Package::load('menu');
+\Package::load('parser');
 
 // Disgusting hack. If I don't apply the locale here, the menu part of the translation does
 // not work, because the locale is "C".
