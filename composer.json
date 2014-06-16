@@ -23,7 +23,8 @@
         "indigophp/fuel-menu": "dev-develop",
         "fuelphp/fieldset": "dev-master",
         "fuelphp/validation": "dev-master",
-        "league/fractal": "~0.7.0"
+        "league/fractal": "~0.7.0",
+        "indigophp/fuel-gravatar": "~1.0.0"
     },
     "autoload": {
         "psr-0": {
