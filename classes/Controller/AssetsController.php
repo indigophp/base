@@ -20,24 +20,24 @@ namespace Indigo\Base\Controller;
  */
 class AssetsController extends \Controller
 {
+	/**
+	 * Theme instance
+	 *
+	 * @var Theme
+	 */
+	protected $theme;
+
+	public function before($data = null)
+	{
+		$this->theme = \Theme::instance('indigo');
+	}
 
 	public function action_theme()
 	{
-		$this->theme = \Theme::instance('indigo');
-		// We need the URL to know what to serve
-		$segments = \Uri::segments();
-		array_shift($segments);
-		array_shift($segments);
-
-		$url = implode('/', $segments) . '.' . \Input::extension();
-
-		if(false !== strpos($url, '..'))
-		{
-			throw new \HttpForbiddenException();
-		}
+		$url = $this->get_url();
 
 		$theme_name = \Arr::get($this->theme->active(), 'name');
-		$theme_path = realpath(\Arr::get($this->theme->active(), 'path')) . DS;
+		$theme_path = realpath(\Arr::get($this->theme->active(), 'path')) . DS.'assets';
 
 		$search_paths = array(
 			$theme_path
@@ -61,7 +61,23 @@ class AssetsController extends \Controller
 		}
 
 		throw new \HttpNotFoundException();
+	}
 
+	public function get_url()
+	{
+		// We need the URL to know what to serve
+		$segments = \Uri::segments();
+		array_shift($segments);
+		array_shift($segments);
+
+		$url = implode('/', $segments) . '.' . \Input::extension();
+
+		if(false !== strpos($url, '..'))
+		{
+			throw new \HttpForbiddenException();
+		}
+
+		return $url;
 	}
 
 	protected function mime_content_type($filename) {

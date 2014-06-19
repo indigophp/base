@@ -9,6 +9,7 @@ return array(
 	$admin_url.'logout/(.*?)'             => 'admin/logout/$1',
 
 	$admin_url.'cms/:type(/.*)?'          => 'cms/admin$2',
+	$admin_url.'assets(/.*)?'             => 'admin/assets$1',
 	$admin_url.'themes(/.*)?'             => 'admin/themes$1',
 	$admin_url.'enum(/.*)?'               => 'admin/enum$1',
 	$admin_url.'ajax(/.*)?'               => 'admin/ajax$1',
