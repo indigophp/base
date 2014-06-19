@@ -8,9 +8,8 @@ use Fuel\Validation\Validator;
 use Fuel\Fieldset\Form;
 use Fuel\Common\Arr;
 use League\Fractal;
-use Indigo\Core\Logger;
 
-abstract class Controller_Admin_Skeleton extends Controller_Admin
+abstract class Controller_Admin_Skeleton extends Controller_Base
 {
 	/**
 	 * Module name
@@ -81,16 +80,14 @@ abstract class Controller_Admin_Skeleton extends Controller_Admin
 	{
 		if ( ! $this->has_access($this->request->action))
 		{
-			\Session::set_flash(
-				'error',
-				\Str::trans(
-					gettext('You are not authorized to %action% %items%.'),
-					array(
-						'%action%' => $this->request->action,
-						'%items%'  => $this->name(999),
-					)
+			$context = array(
+				'form' => array(
+					'%action%' => $this->request->action,
+					'%items%'  => $this->name(999),
 				)
 			);
+
+			\Logger::instance('alert')->error(gettext('You are not authorized to %action% %items%.'), $context);
 
 			return \Response::redirect_back(\Uri::admin(false));
 		}

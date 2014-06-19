@@ -3,61 +3,28 @@
 namespace Admin;
 
 use Fuel\Validation\Validator;
-use Monolog\Handler\AlertHandler;
 
-class Controller_Admin extends \Controller_Base
+class Controller_Admin extends Controller_Base
 {
-	/**
-	 * Template name
-	 *
-	 * @var string
-	 */
-	public $template = 'admin/template';
-
-	/**
-	 * Theme type (admin or frontend)
-	 *
-	 * @var string
-	 */
-	public $theme_type = 'admin';
-
-	/**
-	 * Alert logger object
-	 *
-	 * @var Logger
-	 */
-	protected $alert;
-
 	public function before($data = null)
 	{
-		parent::before($data);
-
-		$alert = \Logger::forge('alert');
-
-		// $this->alert = new Logger('alert');
-		// $this->alert->pushHandler(new AlertHandler);
-
-		if (get_called_class() !== get_class() or ! in_array($this->request->action, array('login', 'logout')))
+		if (in_array($this->request->action, array('login', 'logout')))
 		{
-			if (\Auth::check())
-			{
-				if ( ! \Auth::has_access('admin.view'))
-				{
-					\Logger::instance('alert')->error(gettext('You are not authorized to use the administration panel.'));
-					\Response::redirect('/');
-				}
-			}
-			else
-			{
-				\Response::redirect(\Uri::admin() . 'login?uri=' . urlencode(\Uri::string()));
-			}
+			$alert = \Logger::forge('alert');
+			\Controller_Base::before($data);
+		}
+		else
+		{
+			parent::before($data);
 		}
 	}
 
 	public function action_login()
 	{
-		// Already logged in
-		\Auth::check() and \Response::redirect(\Input::get('uri') ? : \Uri::admin());
+		if (\Auth::check())
+		{
+			return \Response::redirect(\Input::get('uri', \Uri::admin()));
+		}
 
 		if (\Input::method() == 'POST')
 		{
@@ -86,7 +53,7 @@ class Controller_Admin extends \Controller_Base
 
 					\Logger::instance('alert')->info(gettext('Welcome, %fullname%!'), $context);
 
-					\Response::redirect(\Input::get('uri') ? : \Uri::admin());
+					return \Response::redirect(\Input::get('uri', \Uri::admin()));
 				}
 				else
 				{
@@ -113,7 +80,7 @@ class Controller_Admin extends \Controller_Base
 	public function action_logout()
 	{
 		\Auth::logout();
-		\Response::redirect(\Uri::admin());
+		return \Response::redirect(\Uri::admin());
 	}
 
 	public function action_index()
