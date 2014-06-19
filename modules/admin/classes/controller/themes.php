@@ -2,13 +2,14 @@
 
 namespace Admin;
 
-class Controller_Themes extends Controller_Admin
+class Controller_Themes extends Controller_Base
 {
 	public function action_index()
 	{
 		$this->template->content = $this->theme->view('admin/themes/index');
 		$this->template->content->admin_themes    = $this->themes('admin');
 		$this->template->content->frontend_themes = $this->themes('frontend');
+		$this->template->title = gettext('Themes');
 	}
 
 	public function action_activate($name, $type = 'frontend')
