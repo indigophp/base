@@ -20,6 +20,8 @@
         "composer/installers": "~1.0",
         "twig/twig": "dev-master",
         "twig/extensions": "dev-master",
+        "indigophp/indigo-admin": "dev-develop",
+        "indigophp/indigo-auth": "dev-develop",
         "indigophp/indigo-theme-default": "dev-develop",
         "indigophp/fuel-core": "dev-develop",
         "indigophp/fuel-menu": "dev-develop",

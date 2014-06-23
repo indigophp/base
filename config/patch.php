@@ -27,7 +27,4 @@ return array(
 			'Fuel\\Core\\Validation'
 		)
 	),
-	'module_paths' => array(
-		BASEPATH.'modules'.DS,
-	),
 );
