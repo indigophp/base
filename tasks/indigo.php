@@ -48,7 +48,8 @@ class Indigo
 				\Config::set('db.default.connection.username', $username);
 				\Config::set('db.default.connection.password', $password);
 
-				\Config::save('db', 'db');
+				// Make config to be saved in env directory
+				\Config::save(\Fuel::$env.'/db', 'db');
 			}
 		}
 		else
