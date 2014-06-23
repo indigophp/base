@@ -2,8 +2,6 @@
 
 define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
-\Config::load('theme', true);
-\Config::load('patch');
 \Config::load('base', true);
 
 if ( ! \Fuel::$is_cli)
@@ -33,12 +31,6 @@ bind_textdomain_codeset('indigoadmin', 'UTF-8');
 
 // Choose domain
 textdomain('indigoadmin');
-
-\Module::load('admin');
-\Module::load('auth');
-
-\Package::load('menu');
-\Package::load('parser');
 
 // Disgusting hack. If I don't apply the locale here, the menu part of the translation does
 // not work, because the locale is "C".
