@@ -2,9 +2,7 @@
 
 return array(
 	'paths' => array(
-		__DIR__ . '/../themes',
+		APPPATH.'../themes',
 	),
-	'assets_folder' => 'themes',
-	'view_ext' => '.php',
-	'use_modules' => true
+	'use_modules' => true,
 );

@@ -1,6 +1,0 @@
-{% set attributes = element.getAttributes()|merge(['multiple']) %}
-<select {{ attributes|attr }}>
-		{% for item in element %}
-			<option {{ item.getAttributes()|attr }}>{{ item.getLabel() }}</option>
-		{% endfor %}
-</select>

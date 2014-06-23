@@ -2,7 +2,7 @@
 
 define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
-\Config::load('theme', true, true);
+\Config::load('theme', true);
 \Config::load('patch');
 \Config::load('base', true);
 
@@ -26,14 +26,6 @@ Autoloader::add_classes(array(
 	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
 	'Fuel\\Migrations\\Migration_Enum' => __DIR__ . '/migrations/enum.php',
 ));
-
-// Adding the possible theme paths to the config of Theme.
-$theme_paths = array();
-$theme_paths[] = BASEPATH.'themes';
-$theme_paths[] = BASEPATH.'modules'.DS.'auth'.DS.'themes';
-$theme_paths[] = BASEPATH.'modules'.DS.'admin'.DS.'themes';
-\Theme::instance('indigo')->add_paths($theme_paths);
-
 
 // GNU Gettext translation settings
 bindtextdomain('indigoadmin', APPPATH.'lang');
