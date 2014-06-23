@@ -23,7 +23,9 @@ namespace Indigo\Base;
 class Uri extends \Fuel\Core\Uri
 {
 	/**
-	 * Gets the admin URL.
+	 * Gets the admin URL
+	 *
+	 * @param boolean $absolute Whether to return absolute URL
 	 *
 	 * @return  string
 	 */
@@ -34,7 +36,7 @@ class Uri extends \Fuel\Core\Uri
 
 		if (empty($relative_url))
 		{
-			$relative_url = \Config::get('admin_url');
+			$relative_url = \Config::get('indigo.admin_url');
 			$absolute_url = static::base() . $relative_url;
 		}
 		return $absolute ? $absolute_url : $relative_url;
