@@ -46,13 +46,13 @@ class ThemeController extends \Controller
 			$this->theme = \Theme::instance('indigo');
 		}
 
-		if ( ! $this->theme->find(\Config::get('base.theme.' . $this->theme_type)))
+		if ( ! $this->theme->find(\Config::get('indigo.theme.' . $this->theme_type)))
 		{
-			\Config::set('base.theme.' . $this->theme_type, 'default');
-			\Config::save('base', 'base');
+			\Config::set('indigo.theme.' . $this->theme_type, 'default');
+			\Config::save('indigo', 'indigo');
 		}
 
-		$this->theme->active(\Config::get('base.theme.' . $this->theme_type, 'default'));
+		$this->theme->active(\Config::get('indigo.theme.' . $this->theme_type, 'default'));
 
 		if ($engine = $this->theme->get_info('engine'))
 		{
