@@ -64,7 +64,7 @@ class ThemeController extends \Controller
 			$this->template = $this->theme->set_template($this->template);
 		}
 
-		$this->template->set_global('asset', $this->theme->asset, false);
+		$this->template->set_global('theme', $this->theme, false);
 
 		return parent::before($data);
 	}
