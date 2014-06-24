@@ -27,34 +27,45 @@ class AssetsController extends \Controller
 	 */
 	protected $theme;
 
+	/**
+	 * {@inheritdocs}
+	 */
 	public function before($data = null)
 	{
 		$this->theme = \Theme::instance('indigo');
 	}
 
-	public function action_theme()
+	/**
+	 * {@inheritdocs}
+	 *
+	 * Search for a theme
+	 */
+	public function router($theme, $segments)
 	{
-		$url = $this->get_url();
-
-		$theme_name = \Arr::get($this->theme->active(), 'name');
-		$theme_path = realpath(\Arr::get($this->theme->active(), 'path')) . DS.'assets';
-
 		$search_paths = array(
-			$theme_path
+			$this->theme->find($theme).'assets',
 		);
+
+		$file = implode('/', $segments) . '.' . \Input::extension();
+
+		if(false !== strpos($file, '..'))
+		{
+			throw new \HttpForbiddenException();
+		}
 
 		foreach (\Package::loaded() as $package => $path)
 		{
-			$search_paths[] = $path.'themes'.DS.$theme_name.DS.'assets';
+			$search_paths[] = $this->asset_path($theme, $path);
 		}
+
 		foreach (\Module::loaded() as $module => $path)
 		{
-			$search_paths[] = $path.'themes'.DS.$theme_name.DS.'assets';
+			$search_paths[] = $this->asset_path($theme, $path);
 		}
 
 		foreach ($search_paths as $path)
 		{
-			if (file_exists($file_path = $path.DS.$url))
+			if (file_exists($file_path = $path.DS.$file))
 			{
 				return new \Response(\File::read($file_path, true), 200, array('Content-type' => $this->mime_content_type($file_path)));
 			}
@@ -63,21 +74,17 @@ class AssetsController extends \Controller
 		throw new \HttpNotFoundException();
 	}
 
-	public function get_url()
+	/**
+	 * Returns an asset path
+	 *
+	 * @param string $theme
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	protected function asset_path($theme, $path)
 	{
-		// We need the URL to know what to serve
-		$segments = \Uri::segments();
-		array_shift($segments);
-		array_shift($segments);
-
-		$url = implode('/', $segments) . '.' . \Input::extension();
-
-		if(false !== strpos($url, '..'))
-		{
-			throw new \HttpForbiddenException();
-		}
-
-		return $url;
+		return $path.'themes'.DS.$theme.DS.$this->theme->get_config('assets_folder');
 	}
 
 	protected function mime_content_type($filename) {
