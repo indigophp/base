@@ -2,16 +2,6 @@
 
 define('BASEPATH', __DIR__.DIRECTORY_SEPARATOR);
 
-\Config::load('base', true);
-
-if ( ! \Fuel::$is_cli)
-{
-	if (\Config::get('admin_url') === null)
-	{
-		\Config::set('admin_url', 'admin/');
-	}
-}
-
 Autoloader::add_core_namespace('Indigo\\Base');
 
 Autoloader::add_classes(array(
