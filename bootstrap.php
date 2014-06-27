@@ -7,7 +7,6 @@ Autoloader::add_core_namespace('Indigo\\Base');
 Autoloader::add_classes(array(
 	// Core extensions
 	'Indigo\\Base\\Uri'            => __DIR__ . '/classes/uri.php',
-	'Indigo\\Base\\Str'            => __DIR__ . '/classes/str.php',
 	'Indigo\\Orm\\Observer_Typing' => __DIR__ . '/classes/observer/typing.php',
 
 	// Menu
