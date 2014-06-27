@@ -11,8 +11,6 @@
 
 namespace Twig\Extension;
 
-use Fuel\Fieldset\Element;
-use Fuel\Fieldset\Fieldset;
 use Twig_Extension;
 
 class Indigo extends Twig_Extension
