@@ -48,21 +48,25 @@ class AssetsController extends \Controller
 
 		$file = implode('/', $segments) . '.' . \Input::extension();
 
+		// Invalid path, STOP HACKING
 		if(false !== strpos($file, '..'))
 		{
 			throw new \HttpForbiddenException();
 		}
 
+		// Adds loaded packages to search paths
 		foreach (\Package::loaded() as $package => $path)
 		{
 			$search_paths[] = $this->asset_path($theme, $path);
 		}
 
+		// Adds loaded modules to search paths
 		foreach (\Module::loaded() as $module => $path)
 		{
 			$search_paths[] = $this->asset_path($theme, $path);
 		}
 
+		// Looks for file and returns it
 		foreach ($search_paths as $path)
 		{
 			if (file_exists($file_path = $path.DS.$file))
@@ -71,6 +75,7 @@ class AssetsController extends \Controller
 			}
 		}
 
+		// Nothing found
 		throw new \HttpNotFoundException();
 	}
 
@@ -87,79 +92,40 @@ class AssetsController extends \Controller
 		return $path.'themes'.DS.$theme.DS.$this->theme->get_config('assets_folder');
 	}
 
-	protected function mime_content_type($filename) {
+	/**
+	 * Returns MIME type of file
+	 *
+	 * Checks extension in internal mime list
+	 * Uses finfo
+	 * Returns default mime type
+	 *
+	 * @param string $filename
+	 *
+	 * @return string
+	 */
+	protected function mime_content_type($filename)
+	{
+		\Config::load('mimes', true);
 
-		$mime_types = array(
-
-			'txt' => 'text/plain',
-			'htm' => 'text/html',
-			'html' => 'text/html',
-			'php' => 'text/html',
-			'css' => 'text/css',
-			'js' => 'application/javascript',
-			'json' => 'application/json',
-			'xml' => 'application/xml',
-			'swf' => 'application/x-shockwave-flash',
-			'flv' => 'video/x-flv',
-
-            // images
-			'png' => 'image/png',
-			'jpe' => 'image/jpeg',
-			'jpeg' => 'image/jpeg',
-			'jpg' => 'image/jpeg',
-			'gif' => 'image/gif',
-			'bmp' => 'image/bmp',
-			'ico' => 'image/vnd.microsoft.icon',
-			'tiff' => 'image/tiff',
-			'tif' => 'image/tiff',
-			'svg' => 'image/svg+xml',
-			'svgz' => 'image/svg+xml',
-
-            // archives
-			'zip' => 'application/zip',
-			'rar' => 'application/x-rar-compressed',
-			'exe' => 'application/x-msdownload',
-			'msi' => 'application/x-msdownload',
-			'cab' => 'application/vnd.ms-cab-compressed',
-
-            // audio/video
-			'mp3' => 'audio/mpeg',
-			'qt' => 'video/quicktime',
-			'mov' => 'video/quicktime',
-
-            // adobe
-			'pdf' => 'application/pdf',
-			'psd' => 'image/vnd.adobe.photoshop',
-			'ai' => 'application/postscript',
-			'eps' => 'application/postscript',
-			'ps' => 'application/postscript',
-
-            // ms office
-			'doc' => 'application/msword',
-			'rtf' => 'application/rtf',
-			'xls' => 'application/vnd.ms-excel',
-			'ppt' => 'application/vnd.ms-powerpoint',
-
-            // open office
-			'odt' => 'application/vnd.oasis.opendocument.text',
-			'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-		);
+		$mime_types = \Config::get('mimes');
 
 		$ext = \Arr::get(\File::file_info($filename), 'extension');
+
 		if (array_key_exists($ext, $mime_types))
 		{
-			return $mime_types[$ext];
+			$mimetype = $mime_types[$ext];
 		}
 		elseif (function_exists('finfo_open'))
 		{
 			$finfo = finfo_open(FILEINFO_MIME);
 			$mimetype = finfo_file($finfo, $filename);
 			finfo_close($finfo);
-			return $mimetype;
 		}
 		else
 		{
-			return 'application/octet-stream';
+			$mimetype = 'application/octet-stream';
 		}
+
+		return $mimetype;
 	}
 }
