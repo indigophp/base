@@ -28,7 +28,16 @@ class TransFormatter implements FormatterInterface
 		$from = \Arr::get($record, 'context.from');
 		$to   = \Arr::get($record, 'context.to');
 
-		return \Str::trans($record['message'], $from, $to);
+		if (empty($from))
+		{
+			return $record['message'];
+		}
+		elseif(is_array($from) === false)
+		{
+			$from = array($from => $to);
+		}
+
+		return strtr($record['message'], $from);
 	}
 
 	/**
