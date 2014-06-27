@@ -14,6 +14,8 @@ namespace Indigo\Base\Controller;
 /**
  * Translation Controller
  *
+ * Temporarily handles translations for some JS modules
+ *
  * @author Tamás Barta <barta.tamas.d@gmail.com>
  */
 class TranslationController extends \Controller_Rest
