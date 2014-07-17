@@ -22,11 +22,6 @@ $manager->aliasNamespace('Indigo\\Base\\Exception', '');
 $manager = Alias::instance('default');
 
 $manager->alias(array(
-	// Enum models
-	'Indigo\\Base\\Model_Enum'      => 'Indigo\\Base\\Model\\EnumModel',
-	'Indigo\\Base\\Model_Enum_Item' => 'Indigo\\Base\\Model\\Enum\\ItemModel',
-	'Indigo\\Base\\Model_Enum_Meta' => 'Indigo\\Base\\Model\\Enum\\MetaModel',
-
 	// Controllers
 	'Indigo\\Base\\Controller_Assets'      => 'Indigo\\Base\\Controller\\AssetsController',
 	'Indigo\\Base\\Controller_Base'        => 'Indigo\\Base\\Controller\\BaseController',

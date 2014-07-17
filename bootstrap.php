@@ -11,7 +11,6 @@ Autoloader::add_classes(array(
 
 	// Menu
 	'Indigo\\Base\\Menu_Admin' => __DIR__ . '/classes/menu/admin.php',
-	'Fuel\\Migrations\\Migration_Enum' => __DIR__ . '/migrations/enum.php',
 ));
 
 // GNU Gettext translation settings
