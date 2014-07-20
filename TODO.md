@@ -9,6 +9,7 @@
 - [ ] Review form elements
 - [ ] List EAV filter (insert, sub query)
 - [ ] Different properties for different actions
+- [ ] Move Skeleton to admin
 
 
 
