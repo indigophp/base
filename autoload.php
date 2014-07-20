@@ -17,7 +17,6 @@ use Indigo\Core\Alias;
 
 $manager = Alias::instance('namespace');
 $manager->aliasNamespace('Indigo\\Base', '');
-$manager->aliasNamespace('Indigo\\Base\\Exception', '');
 
 $manager = Alias::instance('default');
 
