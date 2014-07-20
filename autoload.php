@@ -26,6 +26,4 @@ $manager->alias(array(
 	'Indigo\\Base\\Controller_Base'        => 'Indigo\\Base\\Controller\\BaseController',
 	'Indigo\\Base\\Controller_Theme'       => 'Indigo\\Base\\Controller\\ThemeController',
 	'Indigo\\Base\\Controller_Translation' => 'Indigo\\Base\\Controller\\TranslationController',
-
-	'Model\\Auth_User' => 'Indigo\\Base\\Model\\Auth\\UserModel',
 ));
