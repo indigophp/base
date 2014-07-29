@@ -21,9 +21,9 @@ class BaseController extends \Controller_Theme
 	/**
 	 * {@inheritdocs}
 	 */
-	public function before($data = null)
+	public function before()
 	{
-		parent::before($data);
+		parent::before();
 
 		// Makes the site name available in all views
 		$this->template->set_global('site_name', \Config::get('indigo.site_name', 'Indigo Admin'));

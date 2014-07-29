@@ -19,7 +19,7 @@ namespace Indigo\Base\Controller;
 class ThemeController extends \Controller
 {
 	use \Indigo\Core\Controller\ThemeController {
-		before as theme_before;
+		init as theme_init;
 	}
 
 	/**
@@ -44,16 +44,9 @@ class ThemeController extends \Controller
 	public $theme = 'indigo';
 
 	/**
-	 * Active theme
-	 *
-	 * @var string
-	 */
-	public $theme_active = 'default';
-
-	/**
 	 * {@inheritdocs}
 	 */
-	public function before($data = null)
+	public function before()
 	{
 		// Clones theme instance in case of HMVC request
 		if ($this->request->is_hmvc())
@@ -78,7 +71,7 @@ class ThemeController extends \Controller
 			\Config::save('indigo', 'indigo');
 		}
 
-		$this->theme_active = $theme;
+		$this->theme->active($theme);
 
 		// Sets theme extension
 		if ($engine = $this->theme->get_info('engine'))
@@ -86,6 +79,6 @@ class ThemeController extends \Controller
 			$this->theme->set_config('view_ext', '.' . $engine);
 		}
 
-		return $this->theme_before();
+		return $this->theme_init();
 	}
 }
