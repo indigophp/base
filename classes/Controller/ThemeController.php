@@ -18,6 +18,10 @@ namespace Indigo\Base\Controller;
  */
 class ThemeController extends \Controller
 {
+	use \Indigo\Core\Controller\ThemeController {
+		before as theme_before;
+	}
+
 	/**
 	 * Page template
 	 *
@@ -33,6 +37,20 @@ class ThemeController extends \Controller
 	public $theme_type = 'frontend';
 
 	/**
+	 * Theme instance
+	 *
+	 * @var string
+	 */
+	public $theme = 'indigo';
+
+	/**
+	 * Active theme
+	 *
+	 * @var string
+	 */
+	public $theme_active = 'default';
+
+	/**
 	 * {@inheritdocs}
 	 */
 	public function before($data = null)
@@ -40,7 +58,7 @@ class ThemeController extends \Controller
 		// Clones theme instance in case of HMVC request
 		if ($this->request->is_hmvc())
 		{
-			$this->theme = clone \Theme::instance('indigo');
+			$this->theme = clone \Theme::instance($this->theme);
 		}
 		else
 		{
@@ -60,7 +78,7 @@ class ThemeController extends \Controller
 			\Config::save('indigo', 'indigo');
 		}
 
-		$this->theme->active($theme);
+		$this->theme_active = $theme;
 
 		// Sets theme extension
 		if ($engine = $this->theme->get_info('engine'))
@@ -68,32 +86,6 @@ class ThemeController extends \Controller
 			$this->theme->set_config('view_ext', '.' . $engine);
 		}
 
-		// Sets template
-		if ( ! empty($this->template) and is_string($this->template))
-		{
-			$this->template = $this->theme->set_template($this->template);
-		}
-
-		// Makes the theme instance available in all views
-		$this->template->set_global('theme', $this->theme, false);
-
-		return parent::before($data);
-	}
-
-	/**
-	 * {@inheritdocs}
-	 *
-	 * keep the after() as standard as possible to allow custom responses from actions
-	 */
-	public function after($response)
-	{
-		// If no response object was returned by the action
-		if (empty($response) or  ! $response instanceof \Response)
-		{
-			// render the defined template
-			$response = \Response::forge($this->theme->render());
-		}
-
-		return parent::after($response);
+		return $this->theme_before();
 	}
 }

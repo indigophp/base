@@ -28,7 +28,7 @@ class AssetsController extends \Controller
 	protected $theme;
 
 	/**
-	 * {@inheritdocs}
+	 * {@inheritdoc}
 	 */
 	public function before($data = null)
 	{
@@ -36,7 +36,7 @@ class AssetsController extends \Controller
 	}
 
 	/**
-	 * {@inheritdocs}
+	 * {@inheritdoc}
 	 *
 	 * Search for a theme
 	 */
