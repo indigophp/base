@@ -114,6 +114,8 @@ class AssetsController extends \Controller
 		if (array_key_exists($ext, $mime_types))
 		{
 			$mimetype = $mime_types[$ext];
+
+			is_array($mimetype) and $mimetype = reset($mimetype);
 		}
 		elseif (function_exists('finfo_open'))
 		{

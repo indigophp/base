@@ -20,6 +20,7 @@ class ThemeController extends \Controller
 {
 	use \Indigo\Core\Controller\ThemeController {
 		init as theme_init;
+		view as public;
 	}
 
 	/**
