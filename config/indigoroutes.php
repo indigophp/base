@@ -13,6 +13,8 @@ return array(
 	$admin_url.'themes(/.*)?'             => 'admin/themes$1',
 	$admin_url.'ajax(/.*)?'               => 'admin/ajax$1',
 
+	// submodules
+	$admin_url.'(.*?)/(.*?)/(.*?)'        => '$1/$2/admin/$3',
 	$admin_url.'(.*?)/(.*?)'              => '$1/admin/$2',
 	$admin_url.'(.*?)'                    => '$1/admin/index',
 	rtrim($admin_url, '/')                => 'admin',
