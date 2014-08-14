@@ -45,7 +45,7 @@ class ThemeController extends \Controller
 	public $theme = 'indigo';
 
 	/**
-	 * {@inheritdocs}
+	 * {@inheritdoc}
 	 */
 	public function before()
 	{

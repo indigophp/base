@@ -19,7 +19,7 @@ namespace Indigo\Base\Controller;
 class BaseController extends \Controller_Theme
 {
 	/**
-	 * {@inheritdocs}
+	 * {@inheritdoc}
 	 */
 	public function before()
 	{
