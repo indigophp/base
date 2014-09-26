@@ -19,6 +19,7 @@
         "php": ">=5.4.0",
         "composer/installers": "~1.0",
         "indigophp/fuel-core": "~1.0.0",
+        "indigophp/fuel-dependency": "dev-develop",
         "indigophp/fuel-menu": "dev-develop",
         "fuelphp/fieldset": "dev-master",
         "fuelphp/validation": "dev-master",

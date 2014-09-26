@@ -23,10 +23,7 @@ class FuelServiceProvider extends ServiceProvider
 	/**
 	 * {@inheritdoc}
 	 */
-	public $provides = [
-		'logger',
-		'logger.alert',
-	];
+	public $provides = true;
 
 	/**
 	 * {@inheritdoc}
@@ -40,6 +37,90 @@ class FuelServiceProvider extends ServiceProvider
 			$logger->pushHandler($handler);
 
 			return $logger;
+		});
+
+		// register Twig Environment
+		$this->registerSingleton('twig', function($dic)
+		{
+			return \View_Twig::parser();
+		});
+
+		// inject menu extension in the twig
+		$this->extend('twig', function($dic, $twig)
+		{
+			$extension = $dic->resolve('menu.twig.extension');
+
+			$twig->addExtension($extension);
+		});
+
+		$this->provideMenu();
+	}
+
+	/**
+	 * Provides admin menu items
+	 */
+	private function provideMenu()
+	{
+		$container = $this->multiton('container', 'menu');
+
+		$container->register('admin', function($dic)
+		{
+			// $menu = $dic->resolve('__parent__')->resolve('menu', [dgettext('indigoadmin', 'Indigo Admin')]);
+			$menu = $this->resolve('menu', [dgettext('indigoadmin', 'Indigo Admin')]);
+
+			$menu->addChild('dashboard', [
+				'label' => dgettext('indigoadmin', 'Dashboard'),
+				'uri'   => \Uri::admin(false),
+				'extras' => [
+					'icon' => 'glyphicon glyphicon-dashboard',
+				],
+				'sort'  => 1,
+			]);
+
+			$authItem = $menu->addChild('authentication', [
+				'label' => dgettext('indigoadmin', 'Authentication'),
+				'extras' => [
+					'icon' => 'glyphicon glyphicon-user',
+				],
+				'sort'  => 10,
+			]);
+
+			$authItem->addChild('users', [
+				'label' => dgettext('indigoadmin', 'Users'),
+				'uri'   => \Uri::admin(false).'auth',
+			]);
+
+			$authItem->addChild('permissions', [
+				'label' => dgettext('indigoadmin', 'Permissions'),
+				'uri'   => \Uri::admin(false).'auth/permissions',
+			]);
+
+			$settingsItem = $menu->addChild('settings', [
+				'label' => dgettext('indigoadmin', 'Settings'),
+				'extras' => [
+					'icon' => 'fa fa-cogs',
+				],
+				'sort' => 100,
+			]);
+
+			$settingsItem->addChild('themes', [
+				'label' => dgettext('indigoadmin', 'Themes'),
+				'uri'   => \Uri::admin(false).'themes',
+			]);
+
+			$settingsItem->addChild('enums', [
+				'label' => dgettext('indigoadmin', 'Enums'),
+				'uri' => \Uri::admin(false).'enum',
+			]);
+
+			return $menu;
+		});
+
+		$container = $this->multiton('container', 'menu.renderer');
+
+		$container->registerSingleton('admin', function($dic)
+		{
+			return $dic->resolve('twig');
 		});
 	}
 }
