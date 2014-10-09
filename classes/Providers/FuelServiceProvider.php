@@ -61,12 +61,11 @@ class FuelServiceProvider extends ServiceProvider
 	 */
 	private function provideMenu()
 	{
-		$container = $this->multiton('container', 'menu');
-
-		$container->register('admin', function($dic)
+		$this->extendMultiton('menu', 'admin', function($dic, $menu)
 		{
 			// $menu = $dic->resolve('__parent__')->resolve('menu', [dgettext('indigoadmin', 'Indigo Admin')]);
-			$menu = $this->resolve('menu', [dgettext('indigoadmin', 'Indigo Admin')]);
+			// $menu = $this->resolve('menu', [dgettext('indigoadmin', 'Indigo Admin')]);
+			$menu->setName(dgettext('indigoadmin', 'Indigo Admin'));
 
 			$menu->addChild('dashboard', [
 				'label' => dgettext('indigoadmin', 'Dashboard'),
@@ -116,11 +115,11 @@ class FuelServiceProvider extends ServiceProvider
 			return $menu;
 		});
 
-		$container = $this->multiton('container', 'menu.renderer');
+		// $container = $this->multiton('container', 'menu.renderer');
 
-		$container->registerSingleton('admin', function($dic)
-		{
-			return $dic->resolve('twig');
-		});
+		// $container->registerSingleton('admin', function($dic)
+		// {
+		// 	return $dic->resolve('twig');
+		// });
 	}
 }
