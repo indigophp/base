@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "composer/installers": "dev-master",
+        "fuelphp/component-installer": "dev-master",
         "indigophp/fuelphp-menu": "dev-develop"
     },
     "autoload": {
