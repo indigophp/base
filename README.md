@@ -2,7 +2,7 @@
 
 [![Packagist Version](https://img.shields.io/packagist/v/indigophp/base.svg?style=flat-square)](https://packagist.org/packages/indigophp/base)
 [![Total Downloads](https://img.shields.io/packagist/dt/indigophp/base.svg?style=flat-square)](https://packagist.org/packages/indigophp/base)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 **IndigoPHP Base component.**
 
