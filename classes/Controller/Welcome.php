@@ -20,6 +20,7 @@ class Welcome extends \Fuel\Controller\Base
 	 */
 	public function actionIndex()
 	{
+		// var_dump(\Application::getInstance()->getViewManager()->getFinder()); exit;
 		return \View::forge('welcome/index.twig');
 	}
 
