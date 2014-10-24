@@ -1,6 +1,6 @@
 {
     "name": "indigophp/indigo-base",
-    "type": "fuel-component",
+    "type": "fuelphp-component",
     "description": "IndigoPHP base component",
     "keywords": ["indigo", "base", "fuelphp"],
     "homepage": "https://indigophp.com",
@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "fuelphp/component-installer": "dev-master",
+        "composer/installers": "dev-master",
         "indigophp/fuelphp-menu": "dev-develop"
     },
     "autoload": {
