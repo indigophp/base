@@ -1,7 +1,7 @@
 # Indigo Base
 
-[![Packagist Version](https://img.shields.io/packagist/v/indigophp/indigo-base.svg?style=flat-square)](https://packagist.org/packages/indigophp/indigo-base)
-[![Total Downloads](https://img.shields.io/packagist/dt/indigophp/indigo-base.svg?style=flat-square)](https://packagist.org/packages/indigophp/indigo-base)
+[![Packagist Version](https://img.shields.io/packagist/v/indigophp/base.svg?style=flat-square)](https://packagist.org/packages/indigophp/base)
+[![Total Downloads](https://img.shields.io/packagist/dt/indigophp/base.svg?style=flat-square)](https://packagist.org/packages/indigophp/base)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
 **IndigoPHP Base component.**
@@ -14,7 +14,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "indigophp/indigo-base": "@stable"
+        "indigophp/base": "@stable"
     }
 }
 ```
@@ -25,16 +25,16 @@ Via Composer
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/indigophp/indigo-base/blob/develop/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/indigophp/base/blob/develop/CONTRIBUTING.md) for details.
 
 
 ## Credits
 
 - [Tamás Barta](https://github.com/TamasBarta)
 - [Márk Sági-Kazár](https://github.com/sagikazarmark)
-- [All Contributors](https://github.com/indigophp/indigo-base/contributors)
+- [All Contributors](https://github.com/indigophp/base/contributors)
 
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/indigophp/indigo-base/blob/develop/LICENSE) for more information.
+The MIT License (MIT). Please see [License File](https://github.com/indigophp/base/blob/develop/LICENSE) for more information.
