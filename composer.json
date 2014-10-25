@@ -1,30 +1,30 @@
 {
-    "name": "indigophp/base",
-    "type": "fuelphp-component",
-    "description": "IndigoPHP base component",
-    "keywords": ["indigo", "base", "fuelphp"],
-    "homepage": "https://indigophp.com",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Márk Sági-Kazár",
-            "email": "mark.sagikazar@gmail.com"
-        },
-        {
-            "name": "Tamás Barta",
-            "email": "barta.tamas.d@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "composer/installers": "dev-master",
-        "twig/twig": "dev-master"
-    },
-    "autoload": {
-        "psr-4": {
-            "Indigo\\Base\\": "classes/"
-        }
-    },
-    "prefer-stable": true,
-    "minimum-stability": "dev"
+	"name": "indigophp/base",
+	"type": "fuelphp-component",
+	"description": "IndigoPHP base component",
+	"keywords": ["indigo", "base", "fuelphp"],
+	"homepage": "https://indigophp.com",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Márk Sági-Kazár",
+			"email": "mark.sagikazar@gmail.com"
+		},
+		{
+			"name": "Tamás Barta",
+			"email": "barta.tamas.d@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"composer/installers": "dev-master",
+		"twig/twig": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"Indigo\\Base\\": "classes/"
+		}
+	},
+	"prefer-stable": true,
+	"minimum-stability": "dev"
 }
