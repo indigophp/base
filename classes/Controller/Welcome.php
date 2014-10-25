@@ -11,6 +11,11 @@
 
 namespace Indigo\Base\Controller;
 
+/**
+ * Welcome controller
+ *
+ * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
+ */
 class Welcome extends \Fuel\Controller\Base
 {
 	/**
@@ -32,5 +37,4 @@ class Welcome extends \Fuel\Controller\Base
 	{
 		return \Response::forge('html', \View::forge('welcome/404.twig'), 404);
 	}
-
 }
