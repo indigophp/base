@@ -7,12 +7,12 @@
 	"license": "MIT",
 	"authors": [
 		{
-			"name": "Márk Sági-Kazár",
-			"email": "mark.sagikazar@gmail.com"
-		},
-		{
 			"name": "Tamás Barta",
 			"email": "barta.tamas.d@gmail.com"
+		},
+		{
+			"name": "Márk Sági-Kazár",
+			"email": "mark.sagikazar@gmail.com"
 		}
 	],
 	"require": {
