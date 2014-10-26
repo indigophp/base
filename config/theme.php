@@ -10,5 +10,8 @@
  */
 
 return [
-	'name' => 'Indigo',
+	'active' => 'default',
+	'paths' => [
+		DOCROOT.'../themes/'
+	],
 ];
