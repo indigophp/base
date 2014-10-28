@@ -3,17 +3,17 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="shortcut icon" href="assets/ico/favicon.png">
+	<link rel="shortcut icon" href="/{{ asset_path ~ theme }}/ico/favicon.png">
 
 	<title>{% if not title is empty %}{{ title }} &raquo; {% endif %}{{ site_name }}</title>
 
 	{% block head %}
-	<link rel="stylesheet" href="css/style.css" title="Indigo theme">
+	<link rel="stylesheet" href="/{{ asset_path ~ theme }}/css/style.css" title="Indigo theme">
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
-		<script src="js/lib/html5shiv.js"></script>
-		<script src="js/lib/respond.min.js"></script>
+		<script src="/{{ asset_path ~ theme }}/js/lib/html5shiv.js"></script>
+		<script src="/{{ asset_path ~ theme }}/js/lib/respond.min.js"></script>
 	<![endif]-->
 	{% endblock %}
 
@@ -48,9 +48,9 @@
 
 
 	{% block javascript %}
-	<script src="js/lib/jquery.min.js"></script>
-	<script src="js/lib/jquery-migrate.min.js"></script>
-	<script src="js/lib/bootstrap.min.js"></script>
+	<script src="/{{ asset_path ~ theme }}/js/lib/jquery.min.js"></script>
+	<script src="/{{ asset_path ~ theme }}/js/lib/jquery-migrate.min.js"></script>
+	<script src="/{{ asset_path ~ theme }}/js/lib/bootstrap.min.js"></script>
 	{% endblock %}
 
 	<script type="text/javascript">
