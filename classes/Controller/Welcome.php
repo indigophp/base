@@ -18,6 +18,8 @@ namespace Indigo\Base\Controller;
  */
 class Welcome extends \Fuel\Controller\Base
 {
+	use \Indigo\Common\Controller\Theme;
+
 	/**
 	 * The basic welcome message
 	 *
