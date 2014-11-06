@@ -21,9 +21,3 @@ $this->router->all(null, 'welcome/404', '404');
 
 // homepage route
 $this->router->all('/', 'welcome/index', 'root');
-
-$this->router->get('themes/{segment}/{any}')
-	->filters([
-		'controller' => 'Indigo\Common\Controller\Assets',
-		'action' => 'index',
-	]);

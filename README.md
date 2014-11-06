@@ -11,21 +11,27 @@
 
 Via Composer
 
-``` json
-{
-    "require": {
-        "indigophp/base": "@stable"
-    }
-}
+``` bash
+$ composer require indigophp/base
 ```
 
 
 ## Usage
 
+If not using with the [indigophp/indigophp](https://github.com/indigophp/indigophp) repo put this into `public/index.php`
+
+``` php
+$this->router->get('themes/{segment}/{any}')
+	->filters([
+		'controller' => 'Indigo\Common\Controller\Assets',
+		'action' => 'index',
+	]);
+```
+
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/indigophp/base/blob/develop/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
 ## Credits
@@ -37,4 +43,4 @@ Please see [CONTRIBUTING](https://github.com/indigophp/base/blob/develop/CONTRIB
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/indigophp/base/blob/develop/LICENSE) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
